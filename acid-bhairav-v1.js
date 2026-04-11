@@ -17,10 +17,6 @@ setcpm(32)
 stack(
 
   // --- 303 ACID BASSLINE (LOWER) ---
-  // Bhairav intervals: Sa (C), komal Re (Db), Ga (E), Pa (G), komal Dha (Ab)
-  // Perlin cutoff = breathing acid wah. Resonance 23 = nasal 303 squelch.
-  // fast(8) + long decay ceiling = unpredictable note lengths, alive not programmed.
-  // Nested <ab2 db2 c3 e3> = octave leap, classic TB-303 register jump behaviour.
   note("<c2 db2 e2 c2> <g2 <ab2 db2 c3 e3> db2 e2>")
     .s("pulse")
     .cutoff(perlin.slow(3).range(100, 3500))
@@ -31,8 +27,6 @@ stack(
     .fast(8),
 
   // --- 303 ACID BASSLINE (UPPER — PSYCHEDELIC DOUBLE) ---
-  // Fifth up. Slower Perlin rate = drifts out of phase with lower line.
-  // Two pulse oscillators phasing against each other = Hendrix-in-a-computer.
   note("<c3 db3 e3 c3> <g3 ab3 db3 e3>")
     .s("pulse")
     .cutoff(perlin.slow(7).range(80, 2000))
@@ -51,7 +45,6 @@ stack(
     .gain(0.8),
 
   // --- 16th-NOTE HI-HATS ---
-  // Perlin on gain = human feel. Slow sine pan = stereo breathe.
   s("hh*16")
     .gain(perlin.range(0.2, 0.55))
     .pan(sine.slow(7).range(0.3, 0.7)),
@@ -61,9 +54,6 @@ stack(
     .gain(0.45),
 
   // --- BHAIRAV MELODIC MOTIF ---
-  // Half-time haze. room(0.9) = full cave reverb — motif becomes tonal cloud,
-  // not melody. The acid cuts through it. <g4 g4*2> = tabla ornament micro-pulse.
-  // rand pan + heavy room = spatial chaos glued by reverb tail.
   note("<[c4 db4 ~ ~] [e4 ~ ~ g4] [ab4 <g4 g4*2> ~ ~] [e4 db4 c4 ~]>")
     .s("sawtooth")
     .cutoff(1200)
