@@ -51,8 +51,9 @@ Bong Lebowski is the intersection of all of this.
 ## Stack
 
 - [Strudel](https://strudel.cc) — live coding pattern language (TidalCycles port to JS)
-- Web Audio API — all synthesis runs in the browser, no installs
-- Perlin noise + sine LFOs — for organic modulation
+- Perlin noise on filter cutoff, sine on decay — the two acid basslines in `acid-bhairav-v1.js`
+  run Perlin at deliberately mismatched rates (`slow(3)` vs `slow(7)`) against each other, so they
+  drift out of phase instead of repeating identically
 - Raag Bhairav — Hindustani Classical, morning raga, associated with Lord Shiva (Bhairav form)
 
 ---
