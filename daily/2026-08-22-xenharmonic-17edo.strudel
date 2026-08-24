@@ -1,0 +1,83 @@
+// ============================================================================
+// XENHARMONIC DAILY — 17edo exploration
+// Saturday slot: a short, single-continuous pattern exploring a tuning
+// outside standard 12edo, via Strudel's xen() function (see learn/xen.md).
+// ============================================================================
+//
+// THEORY NOTES:
+// 17edo divides the octave into 17 EQUAL steps, each 1200/17 ≈ 70.59 cents
+// (vs. 100 cents per semitone in familiar 12edo). Its best fifth is 10 steps
+// ≈ 705.9 cents — noticeably WIDER than 12edo's 700-cent fifth, putting it
+// in the "superpythagorean" temperament family. That wide fifth pushes the
+// tuning's thirds toward a "neutral" color, sitting between a 12edo major
+// and minor third rather than landing on either — a flavor 12-tone tuning
+// literally cannot produce.
+//
+// xen("17edo") maps a pattern of integer scale-STEPS (not scale degrees in
+// a named mode — raw 1/17-octave steps) straight to frequency, assuming a
+// base of 220Hz (A3) at step 0 and repeating every octave (2/1), per
+// learn/xen.md. Unlike tune(), xen() bakes the freq conversion in — no
+// separate .mul()/.freq() needed, mirroring the docs' own examples
+// (`i("0 8 18").xen("31edo").piano()`).
+//
+// Because everything is relative to step-0 = 220Hz, octave register is
+// controlled by adding/subtracting whole multiples of 17 (one octave =
+// 17 steps) to the step numbers — not by .mul()-ing the output, which
+// would double-apply the frequency mapping xen() already did.
+//
+// RHYTHM: melody uses .euclid(7, 17) — 7 onsets distributed across 17
+// steps per cycle. The step COUNT (17) is the same number as the EDO's
+// own division count, so the meter and the tuning share one number,
+// the same "tradition's own math drives the pattern" idea used for
+// Carnatic melakarta days, applied here to a tuning system instead of a
+// raga system.
+//
+// gm_kalimba below follows Strudel's General MIDI soundfont naming
+// convention (same family as gm_pad_warm, confirmed elsewhere in this
+// repo) but wasn't individually reconfirmed against the live sample list
+// offline — if it doesn't resolve, swap in whatever plucked/pitched-
+// percussion sound is closest in the REPL's "sounds" tab; this is a taste
+// choice, not a structural one.
+// ============================================================================
+
+setcpm(48) // 16 cycles @ 48cpm = 20s total (see CYCLES below / daily/2026-08-22.json)
+let CYCLES = 16
+
+// low drone: root (step 0) and the 17edo "fifth" (step 10), two octaves
+// down (-34 steps = -2 octaves), alternating slowly across 4 cycles
+let drone = i("<-34 -24>/4")
+  .xen("17edo")
+  .sound("gm_pad_warm")
+  .gain(.25)
+  .room(4)
+  .attack(2).release(3)
+
+// melody: wanders fairly evenly across the 17 available steps (0, 3, 6,
+// 8, 10, 13, 15 -- roughly a 7-note spread through the octave) so the ear
+// hears the tuning's overall color, not just notes near the root.
+// euclid(7,17) ties the onset count + step count to the EDO itself.
+let melody = i("0 3 6 8 10 13 15 10 8 6 3 0")
+  .euclid(7, 17)
+  .xen("17edo")
+  .sound("gm_kalimba")
+  .gain(.5)
+  .room(2)
+  .delay(.15)
+  .sometimes(x => x.ply(2)) // <- improv hook: occasional double-strike
+
+// acid-flavored bass (the taste layer from CREATIVE-DIRECTION.md applies
+// even on a math/tuning-driven day) -- one octave down (-17 steps),
+// walking between root and fifth
+let bass = i("-17 -7 -17 -24")
+  .xen("17edo")
+  .sound("sawtooth")
+  .lpf(sine.range(200, 1400).slow(6))
+  .lpq(14)
+  .distort(.25)
+  .gain(.35)
+
+let pulse = s("hh*8")
+  .degradeBy(.4)
+  .gain(.12)
+
+stack(drone, melody, bass, pulse)

@@ -24,6 +24,20 @@ The *komal Re* (Db) and *komal Dha* (Ab) are the soul of the raga. Over a 303 wi
 
 ---
 
+## Daily archive
+
+[`daily/`](./daily) holds the short (~15-25s) patterns from the daily rotation — one `.strudel`
+file plus a `.json` metadata twin (topic, cycle count, target duration) per day. This is the
+public half of a larger private pipeline; the pattern code here is real and playable, it's just
+the render/publish tooling around it that stays closed. Synced automatically from the daily
+pipeline — see [bonglebowski.in](https://bonglebowski.in) for the finished videos and the daily
+YouTube playlist.
+
+**To run any day's pattern:** paste the `.strudel` file into [strudel.cc](https://strudel.cc) and
+hit play.
+
+---
+
 ## Philosophy
 
 Ragas are not scales. They are living things, with time of day, mood, ascent, descent, characteristic phrases. Bhairav is meant to be heard at dawn. Running it through acid house at 128 BPM is not disrespect. It is a different kind of devotion.

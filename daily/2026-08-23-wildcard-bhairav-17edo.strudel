@@ -1,0 +1,85 @@
+// ============================================================================
+// WILDCARD DAILY — Bhairav's pakad, retuned into 17edo
+// Sunday slot: freeform, "combine elements from the week." Only one day of
+// history exists so far (Saturday's 17edo xenharmonic clip), so the riff
+// here is literal: take the reference raga from CREATIVE-DIRECTION.md
+// (Bhairav — the flagship, see sets/bhairav-session-v1.strudel) and ask what
+// its own pakad (identity phrase) sounds like mapped honestly into 17edo
+// (learn/xen.md) instead of standard 12edo. Math-first, taste-second, in
+// the spirit of both lanes at once.
+// ============================================================================
+//
+// THEORY NOTES:
+// Bhairav's swaras (from sets/bhairav-session-v1.strudel, semitone offsets
+// from tonic in 12edo): S=0 r=1 G=4 M=5 P=7 d=8 N=11
+//
+// To retune honestly into 17edo (17 equal steps/octave, ~70.59 cents each —
+// see daily/2026-08-22-xenharmonic-17edo.strudel), each 12edo semitone
+// offset is rescaled by 17/12 and rounded to the nearest integer step:
+//   S: round(0  * 17/12) = 0
+//   r: round(1  * 17/12) = 1
+//   G: round(4  * 17/12) = 6
+//   M: round(5  * 17/12) = 7
+//   P: round(7  * 17/12) = 10   <- matches Saturday's "fifth" step exactly
+//   d: round(8  * 17/12) = 11
+//   N: round(11 * 17/12) = 16
+// This is an approximation (17edo has no notion of "the same interval" as
+// 12edo — that's the whole point of a xenharmonic tuning), but the rounding
+// is transparent and reproducible, not a fabricated substitute.
+//
+// PAKAD: same identity phrase as the flagship set (degrees into S r G M P d
+// N S': 0 1 2 3 | 1 1 0 | 2 3 4 | 3 5 6 7), translated swara-by-swara into
+// the 17edo steps above. S' (octave) = step 17 (one octave = 17 steps).
+//   degrees: S r G M | r r S | G M P | M d N S'
+//   steps:   0 1 6 7 | 1 1 0 | 6 7 10 | 7 11 16 17
+//
+// VADI/SAMVADI: Bhairav's vadi (dominant) is Dha = step 11, samvadi is
+// Re = step 1 (per the flagship set's theory notes). The bass line below
+// walks S -> vadi -> S -> samvadi, one octave down, so the raga's own
+// hierarchy — not an arbitrary bassline — drives the "acid" part.
+//
+// TASTE LAYER: acid bass (sawtooth, lpf/lpq sweep, distort) per
+// CREATIVE-DIRECTION.md's taste-layer rule — applies regardless of which
+// system (Hindustani theory here) drives the notes.
+// ============================================================================
+
+setcpm(48) // 16 cycles @ 48cpm = 20s total (see daily/2026-08-23.json)
+let CYCLES = 16
+
+// tanpura-style drone: S and P (tonic + fifth), one octave down, per the
+// flagship set's alap drone -- alternating slowly across 4 cycles
+let drone = i("<-17 -7>/4")
+  .xen("17edo")
+  .sound("gm_pad_warm")
+  .gain(.25)
+  .room(4)
+  .attack(2).release(3)
+
+// the pakad itself, retuned -- see STEPS derivation above. Rests placed to
+// mirror the phrasing of the original alap line in the flagship set.
+let melody = i("0 1 6 7 1 1 0 ~ 6 7 10 ~ 7 11 16 17")
+  .xen("17edo")
+  .sound("gm_sitar")
+  .gain(.55)
+  .room(2.5)
+  .delay(.15)
+  .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament/double-strike
+
+// acid bass walking S -> vadi (Dha) -> S -> samvadi (Re), one octave down --
+// the raga's own hierarchy drives the walk, not an arbitrary bassline
+let bass = i("-17 -6 -17 -16")
+  .xen("17edo")
+  .sound("sawtooth")
+  .lpf(sine.range(250, 1800).slow(6))
+  .lpq(16)
+  .distort(.3)
+  .gain(.4)
+
+// light pulse, euclid(3,17) keeps the "17" of the tuning system present in
+// the rhythm too, echoing Saturday's euclid-tied-to-the-edo idea
+let pulse = stack(
+  s("rim").euclid(3, 17).gain(.25).room(1),
+  s("hh*8").degradeBy(.35).gain(.12)
+)
+
+stack(drone, melody, bass, pulse)

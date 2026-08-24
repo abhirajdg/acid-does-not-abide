@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-23",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "BHAIRAV IN 17EDO",
+  "pattern_file": "daily/2026-08-23-wildcard-bhairav-17edo.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let melody = i(\"0 1 6 7 1 1 0 ~ 6 7 10 ~ 7 11 16 17\")", "  .xen(\"17edo\")"]
+}
