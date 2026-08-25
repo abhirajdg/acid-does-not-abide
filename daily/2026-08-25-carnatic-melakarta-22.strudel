@@ -1,0 +1,76 @@
+// ============================================================================
+// DAILY — 2026-08-25 (Tuesday) — Carnatic melakarta math
+// Melakarta #22: Kharaharapriya
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (not katapayadi today — using the melakarta system's
+// own combinatorial structure instead, which the task brief explicitly
+// allows as an alternative "real melakarta-numbering scheme"):
+//
+// The 72 melakartas are organized into 12 "chakras" of 6 ragas each.
+// The CHAKRA a number falls into fixes its Ri-Ga combination; the POSITION
+// within that chakra (1-6) fixes its Dha-Ni combination. Ma is shuddha for
+// melakartas 1-36, prati for 37-72.
+//
+//   chakra   = ceil(N / 6)
+//   position = N - 6*(chakra - 1)
+//
+// For N = 22:
+//   chakra   = ceil(22/6) = 4   -> Ri-Ga combo #4 = R2 G2 (chatushruti Ri,
+//                                  sadharana Ga)
+//   position = 22 - 6*3 = 4     -> Dha-Ni combo #4 = D2 N2 (chatushruti Dha,
+//                                  kaisiki Ni)
+//   N <= 36                     -> shuddha Ma (M1)
+//
+// So melakarta 22 = S R2 G2 M1 P D2 N2.
+// Mapping Carnatic swara-sthanas to semitones (12-tone chromatic):
+//   S=0  R1=1  R2/G1=2  R3/G2=3  G3=4  M1=5  M2=6  P=7  D1=8  D2/N1=9  D3/N2=10  N3=11
+// -> R2=2, G2=3, M1=5, D2=9, N2=10
+// -> semitone set: 0 2 3 5 7 9 10
+// This is EXACTLY the Dorian mode's interval set — verified against tonaljs's
+// own "dorian" scale-type data, so .scale("E:dorian") is an honest, confirmed
+// match for Kharaharapriya (this is also the well-known identity: Kharahara-
+// priya = the Kafi thaat in Hindustani terms = Western Dorian).
+//
+// THE NUMBER DRIVES THE RHYTHM (the whole point of Tuesday):
+//   - the bd pulse uses euclid(4, 22) — 4 = the Ri-Ga chakra-family index,
+//     22 = the melakarta number itself used directly as the step count.
+//   - the rim layer uses euclid(4, 16) — 4 = the Dha-Ni position index,
+//     reused against a plain 16-step grid as a second, denser reading of the
+//     same "4".
+//   - the cycle count below (22) is the melakarta number itself.
+//
+// TASTE LAYER: light acid bass under the Carnatic scale — sawtooth + lpf
+// sweep — same 303-ish palette as the flagship Bhairav set, kept subtle
+// since today's focus is the math, not the sound design.
+// ============================================================================
+
+setcpm(60) // 1 cycle = 1 second at this cpm, so cycles == seconds directly
+let CYCLES = 22 // = the melakarta number itself; 22 * 60/60 = 22s
+
+let chakra = 4   // ceil(22/6) -> Ri2 Ga2 (chatushruti Ri, sadharana Ga)
+let position = 4 // 22 - 6*(chakra-1) -> Dha2 Ni2 (chatushruti Dha, kaisiki Ni)
+
+let melody = n("0 2 3 5 4 3 2 0 5 6 5 3 2 0")
+  .scale("E:dorian")
+  .sound("gm_sitar")
+  .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+  .gain(.55)
+  .room(2)
+  .delay(.15)
+
+let drums = stack(
+  s("bd").euclid(chakra, 22).bank("RolandTR909"),        // 4 pulses / 22 steps
+  s("rim").euclid(position, 16).gain(.4).bank("RolandTR909"), // 4 pulses / 16 steps
+  s("hh*8").degradeBy(.2).gain(.15)
+)
+
+let bass = n("0 ~ 5 3 ~ 2 0 ~")
+  .scale("E2:dorian")
+  .sound("sawtooth")
+  .lpf(sine.range(300, 1800).slow(6))
+  .lpq(14)
+  .distort(.25)
+  .gain(.4)
+
+stack(melody, drums, bass)
