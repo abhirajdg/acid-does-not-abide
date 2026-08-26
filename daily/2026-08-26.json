@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-26",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "26 . 08 . 2026",
+  "pattern_file": "daily/2026-08-26-date-pattern.strudel",
+  "cycles": 26,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["n(\"2 0 2 6 0 8 2 6\")", "s(\"bd\").euclid(2, 6).bank(\"RolandTR909\").gain(.4),"]
+}

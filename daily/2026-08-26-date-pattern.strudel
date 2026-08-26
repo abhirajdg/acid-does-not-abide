@@ -1,0 +1,61 @@
+// ============================================================================
+// DAILY — 2026-08-26 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: Wednesday = the calendar date itself drives the
+// pattern. Today is 2026-08-26 (IST) -- day 26, month 08 (August), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   - MELODY: the full date written as YYYYMMDD -> 2 0 2 6 0 8 2 6 -- used
+//     verbatim as scale degrees in n(). Degree 8 overshoots the 7-note
+//     scale and simply lands an octave up (same behaviour already relied on
+//     for degree 7 in the Bhairav/Kalyan/Kharaharapriya patterns in this
+//     repo -- Strudel's scale() octaves overshooting numbers rather than
+//     clipping them).
+//   - KICK: day = 26 -> read directly as euclid(2,6) -- 2 pulses over 6
+//     steps, the day's own two digits used as the two euclid parameters.
+//   - RIM: day's units digit (6) over month (8) -> euclid(6,8) -- a denser,
+//     syncopated complement to the kick, built from the same two digits in
+//     a different pairing.
+//   - HATS: month = 8 (August) -> 8 hi-hats per cycle, i.e. "hh*8".
+//   - CYCLE COUNT: 26, the day of month -- and, by a genuine coincidence
+//     worth flagging rather than hiding, the digit sum of the WHOLE date
+//     also comes out to 26: 2+0+2+6+0+8+2+6 = 26. setcpm(78) * 26 cycles /
+//     60 = 20s exactly.
+//
+// Scale: C major (Bilawal thaat, if you want the Hindustani name for it) --
+// deliberately the plainest possible scale so nothing here reads as "trying
+// to be a raga day." Today the numbers are the whole idea, not the mode.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(78)
+let CYCLES = 26 // day-of-month AND the date's own digit sum -- see note above
+
+stack(
+  // drone: tonic + fifth, quiet and roomy
+  note("<c2 g2>/4")
+    .sound("gm_pad_warm")
+    .gain(.22)
+    .room(4)
+    .attack(1.5).release(2.5),
+
+  // melody: the date's own digits (YYYYMMDD = 20260826) as scale degrees
+  n("2 0 2 6 0 8 2 6")
+    .scale("C:major")
+    .sound("gm_epiano1")
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.5)
+    .room(2.5)
+    .delay(.2),
+
+  // kick: day = 26 -> euclid(2,6), read straight off the day's own digits
+  s("bd").euclid(2, 6).bank("RolandTR909").gain(.4),
+
+  // rim: day's units digit (6) over month (8) -> euclid(6,8)
+  s("rim").euclid(6, 8).bank("RolandTR909").gain(.2).degradeBy(.3),
+
+  // hats: month = 8 -> 8 hits per cycle
+  s("hh*8").gain(.12).degradeBy(.2)
+)
