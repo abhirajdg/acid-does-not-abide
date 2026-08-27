@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-27",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "FIBONACCI RUN",
+  "pattern_file": "daily/2026-08-27-fibonacci-run.strudel",
+  "cycles": 13,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["n(\"1 1 2 3 0 3 3 1\")", "s(\"bd\").euclid(3, 5).bank(\"RolandTR909\").gain(.4),"]
+}

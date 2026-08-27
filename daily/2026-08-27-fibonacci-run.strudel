@@ -1,0 +1,62 @@
+// ============================================================================
+// DAILY — 2026-08-27 (Thursday): Pure math sequence — Fibonacci
+// ============================================================================
+//
+// THE SEQUENCE (this is the whole point of the day):
+//   Fibonacci: F(1)=1, F(2)=1, F(3)=2, F(4)=3, F(5)=5, F(6)=8, F(7)=13, F(8)=21
+//
+//   MELODY: the first 8 Fibonacci terms, taken mod 5 (5 = the pentatonic
+//   scale's own note count) to land as scale degrees:
+//     1 1 2 3 5 8 13 21  mod 5  ->  1 1 2 3 0 3 3 1
+//   -> n("1 1 2 3 0 3 3 1").scale("C:minor:pentatonic")
+//
+//   RHYTHM: three consecutive Fibonacci pairs drive three euclid() layers,
+//   each pair shifted one step further along the sequence than the last, so
+//   rhythmic density itself climbs the sequence, coarse to fine:
+//     kick:  euclid(3,5)   <- F(4),F(5)
+//     rim:   euclid(5,8)   <- F(5),F(6)
+//     hats:  euclid(8,13)  <- F(6),F(7)
+//   This isn't arbitrary -- consecutive Fibonacci ratios are the best small-
+//   integer approximations of the golden ratio (8/13 = 0.615..., already
+//   close to 1/phi = 0.618...), which is the actual reason Fibonacci pairs
+//   make good polyrhythm generators: the layers interlock without the
+//   accents ever quite lining up.
+//
+//   CYCLE COUNT: 13 -- itself a Fibonacci term (F(7)). setcpm(39) x 13
+//   cycles / 60 = 20s exactly.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(39)
+let CYCLES = 13 // F(7) -- the cycle count is itself a term of the sequence
+
+stack(
+  // drone: tonic, quiet and roomy -- same gm_pad_warm/room convention used
+  // across this repo's drones
+  note("c2")
+    .sound("gm_pad_warm")
+    .gain(.2)
+    .room(5)
+    .attack(1.5).release(2.5),
+
+  // melody: Fibonacci terms F(1)..F(8) mod 5 as pentatonic scale degrees --
+  // see header for the derivation
+  n("1 1 2 3 0 3 3 1")
+    .scale("C:minor:pentatonic")
+    .sound("gm_kalimba")
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.45)
+    .room(3)
+    .delay(.25),
+
+  // kick: F(4),F(5) = 3,5
+  s("bd").euclid(3, 5).bank("RolandTR909").gain(.4),
+
+  // rim: F(5),F(6) = 5,8 -- one step further along the sequence than the kick
+  s("rim").euclid(5, 8).bank("RolandTR909").gain(.22).degradeBy(.2),
+
+  // hats: F(6),F(7) = 8,13 -- another step along, densest layer
+  s("hh").euclid(8, 13).gain(.14).degradeBy(.15)
+)
