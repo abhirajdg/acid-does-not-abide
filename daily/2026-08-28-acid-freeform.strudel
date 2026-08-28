@@ -1,0 +1,59 @@
+// ============================================================================
+// DAILY — 2026-08-28 (Friday): Acid / psychedelia free jam
+// ============================================================================
+//
+// Friday's slot is taste-first, not theory-first (CREATIVE-DIRECTION.md) — no
+// raga or math derivation gates today's notes. Built from MUSIC-KNOWLEDGE.md's
+// two research threads instead:
+//   §4 (Acid/303 technique) — square/saw oscillator, lpf+lpq resonance, post-
+//      filter distort, and (the actual point of that section) THREE automation
+//      parameters drifting on different cycle lengths so the patch reads as
+//      evolving, not one knob turning.
+//   §6 (Goa trance) — split the acid voice in two: a low, near-static rolling
+//      bassline (tonic/fifth only, minimal movement, pure low-end mass) under
+//      a separate, more melodic lead. The lead's phrase peaks with an octave
+//      lift (§6's "pitch-lift as climax device") instead of a new layer.
+//
+// SCALE: D harmonic minor — darker/more exotic than the plain minor used the
+// last two daily drops, the same "snake-charmer" flavor cited for Goa
+// trance's harmonic tension. Degrees: 0=D 1=E 2=F 3=G 4=A 5=Bb 6=C# 7=D'.
+//
+// LEAD PHRASE (per MUSIC-QC-LOOP.md — real leaps + rests + development, not a
+// scale run), three phrases rotating one per cycle:
+//   A (call, rising tension):  0 ~ 3 4 ~ 6 7 6
+//   B (response, falls home):  6 7 6 ~ 4 3 ~ 0   -- answers A, lands on tonic
+//   C (peak, octave lift):     0 7 4 ~ 10 7 4 0   -- 10 = octave+3rd above, the
+//                                                     Goa-trance "lift" moment
+//   rotation <A B A C> repeats every 4 cycles across the 18-cycle clip.
+//
+// CYCLES: 18. setcpm(50) -> 18 * 60/50 = 21.6s.
+// ============================================================================
+
+setcpm(50)
+let CYCLES = 18
+
+stack(
+  // sub-bass: near-static, tonic/fifth only -- pure low-end mass, no melody
+  // of its own (Goa trance voice split, §6) -- leaves all the room for the lead
+  note("<d1 d1 a1 d1>")
+    .sound("sawtooth")
+    .lpf(300)
+    .gain(.28),
+
+  // acid lead: three-phrase rotation (see header), square wave, three filter
+  // params drifting independently (§4) on non-multiple cycle lengths (6/4/7)
+  // so the sweep never repeats identically across the clip
+  n("<[0 ~ 3 4 ~ 6 7 6] [6 7 6 ~ 4 3 ~ 0] [0 ~ 3 4 ~ 6 7 6] [0 7 4 ~ 10 7 4 0]>")
+    .scale("D:harmonic:minor")
+    .sound("square")
+    .lpf(sine.range(300, 2200).slow(6))
+    .lpq(sine.range(8, 22).slow(4))
+    .distort(sine.range(.2, .6).slow(7))
+    .sometimes(x => x.ply(2)) // improv hook: occasional squelchy ornament
+    .delay(.3)
+    .gain(.38),
+
+  // hypnotic 4-on-floor + offbeat hats -- classic acid house pulse underneath
+  s("bd*4").bank("RolandTR909").gain(.42),
+  s("hh*8").gain(.1).degradeBy(.25),
+)

@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-28",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "ACID FREE JAM",
+  "pattern_file": "daily/2026-08-28-acid-freeform.strudel",
+  "cycles": 18,
+  "target_duration_sec": 22,
+  "code_highlight_lines": ["n(\"<[0 ~ 3 4 ~ 6 7 6] [6 7 6 ~ 4 3 ~ 0] [0 ~ 3 4 ~ 6 7 6] [0 7 4 ~ 10 7 4 0]>\")", ".lpf(sine.range(300, 2200).slow(6))"]
+}
