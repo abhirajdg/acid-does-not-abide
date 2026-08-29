@@ -1,0 +1,88 @@
+// ============================================================================
+// DAILY — 2026-08-29 (Saturday): Xenharmonic tuning experiment — 19edo
+// ============================================================================
+//
+// THE TUNING: 19edo divides the octave into 19 EQUAL steps of 1200/19 ≈
+// 63.16 cents each (vs. 100 cents in 12edo). Unlike last Saturday's 17edo
+// (daily/2026-08-22-xenharmonic-17edo.strudel), 19edo is a MEANTONE tuning:
+// its best fifth is 11 steps ≈ 694.7 cents — narrower than 12edo's 700
+// cents — which pushes its major third (6 steps ≈ 378.9 cents) almost
+// exactly onto the pure 5:4 ratio (386.3 cents), noticeably sweeter/purer
+// than 12edo's third (400 cents). It also does something 12edo structurally
+// cannot: it keeps sharps and flats as genuinely DIFFERENT pitches rather
+// than collapsing them to one key, because 19 doesn't factor the same way
+// 12 does.
+//
+// THE SCALE (why these step numbers): the familiar diatonic/major scale is
+// built from a chain of fifths, and its whole-tone/semitone step pattern is
+// L L s L L L s. In meantone tunings, L (whole tone) = 3 steps and
+// s (diatonic semitone) = 2 steps — and 5L + 2s = 5*3 + 2*2 = 19, landing
+// EXACTLY on the octave. So 19edo is one of the tunings where the ordinary
+// 7-note diatonic scale maps onto the edo with no leftover error:
+//   degree:  1  2  3  4  5  6  7  8(=1')
+//   step:    0  3  6  8  11 14 17 19
+// Degree 5 (step 11) is the meantone fifth; degree 3 (step 6) is the sweet
+// major third described above. i() below takes raw 19edo STEP numbers
+// (not scale degrees), so the phrases spell out the step list directly.
+//
+// MELODY: three alternating phrases (call / retrograde response / sparse
+// resolve, same call-and-response device as prior daily patterns), built
+// from that 7-note scale plus one passing tone (step 10) that sits between
+// degree 4 (step 8) and degree 5 (step 11) — a genuinely in-between color
+// no 12edo scale step can land on, the whole point of a xenharmonic day:
+//   call:     0 ~ 6 11 19        (tonic, third, fifth, octave — a rising
+//                                  triad-plus-octave leap)
+//   response: 19 11 ~ 10 6 0     (retrograde of the call's pitches — octave,
+//                                  fifth, tonic, third — with a rest and the
+//                                  step-10 in-between color inserted before
+//                                  the final descent to third then tonic)
+//   resolve:  17 ~ 11 ~ 3 0      (degree-7 leading tone down through the
+//                                  fifth to degree-2, landing on the tonic)
+//
+// RHYTHM: euclid(7, 19) ties the beat to the same two numbers that generate
+// the scale itself (7-note diatonic scale inside 19 edo steps) — the same
+// "the tuning's own math drives the pattern" idea used on 17edo/melakarta
+// days, here pointed at the meantone-generator structure instead of the
+// edo count alone.
+// ============================================================================
+
+setcpm(42)
+let CYCLES = 14 // 14 cycles @ 42cpm = 20s exactly
+
+// low drone: root (step 0) and the meantone fifth (step 11), two octaves
+// down (-38 steps = -2 * 19), alternating slowly across 4 cycles
+let drone = i("<-38 -27>/4")
+  .xen("19edo")
+  .sound("gm_pad_warm")
+  .gain(.25)
+  .room(4)
+  .attack(2).release(3)
+
+// melody: three alternating phrases (see header) — call, retrograde
+// response w/ in-between passing tone, sparse resolve
+let melody = i("<[0 ~ 6 11 19] [19 11 ~ 10 6 0] [17 ~ 11 ~ 3 0]>")
+  .euclid(7, 19)
+  .xen("19edo")
+  .sound("gm_kalimba")
+  .gain(.5)
+  .room(2)
+  .delay(.15)
+  .sometimes(x => x.ply(2)) // improv hook: occasional double-strike
+
+// acid-flavored bass (taste layer per CREATIVE-DIRECTION.md, applies even
+// on a tuning-driven day) — one octave down (-19 steps), walking between
+// root and the meantone fifth
+let bass = i("-19 -8 -19 -27")
+  .xen("19edo")
+  .sound("sawtooth")
+  .lpf(sine.range(200, 1400).slow(6))
+  .lpq(14)
+  .distort(.25)
+  .gain(.35)
+
+let pulse = s("hh")
+  .euclid(7, 19)
+  .degradeBy(.3)
+  .gain(.12)
+
+stack(drone, melody, bass, pulse)

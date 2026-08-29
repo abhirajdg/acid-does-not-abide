@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-29",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "19EDO",
+  "pattern_file": "daily/2026-08-29-xenharmonic-19edo.strudel",
+  "cycles": 14,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let melody = i(\"<[0 ~ 6 11 19] [19 11 ~ 10 6 0] [17 ~ 11 ~ 3 0]>\")", "  .euclid(7, 19)", "  .xen(\"19edo\")"]
+}
