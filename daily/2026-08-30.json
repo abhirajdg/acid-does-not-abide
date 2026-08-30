@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-30",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "22 TRADES WITH FIBONACCI",
+  "pattern_file": "daily/2026-08-30-wildcard-number-hocket.strudel",
+  "cycles": 13,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let sitarVoice = n(\"<[0 ~ 2 4 ~ ~ ~ ~ 6 4 2 0] [~ ~ ~ ~ ~ 7 8 7 ~ ~ ~ ~]>\")", "let pulse = s(\"rim\").euclid(4, 22).gain(.22).room(1.5)"]
+}

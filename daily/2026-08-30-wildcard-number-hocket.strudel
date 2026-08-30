@@ -1,0 +1,113 @@
+// ============================================================================
+// DAILY — 2026-08-30 (Sunday): Wildcard — a hocket duet between two of this
+// week's number systems: Tuesday's Carnatic melakarta math and Thursday's
+// Fibonacci sequence, trading ONE melodic line note-by-note.
+// ============================================================================
+//
+// WHY THIS COMBINATION (the Step 0 check against last Sunday's file):
+// 2026-08-23's wildcard combined Hindustani theory with a xenharmonic tuning
+// (Bhairav's pakad retuned into 17edo) as one continuous single-voice melody.
+// This week's other reuse-by-default failure (19edo copying 17edo's whole
+// arrangement, MUSIC-KNOWLEDGE.md's 29 Aug entry) is the same trap in a
+// different shape: doing the same THING again. So today doesn't retune a
+// raga into a tuning — it puts two of the week's math-driven days in actual
+// dialogue, using a device this project's daily lane hasn't used yet: true
+// hocket (MUSIC-KNOWLEDGE.md §2, demoed once in
+// sets/hocket-raga-blues-demo.strudel, flagged there as "worth reaching for
+// on a future daily pattern where the topic itself suggests two voices in
+// dialogue" — a Carnatic/Fibonacci jugalbandi is exactly that topic).
+//
+// SHARED SCALE: E:dorian — Tuesday's file (daily/2026-08-25) already derived
+// and verified this: melakarta 22 (Kharaharapriya) = S R2 G2 M1 P D2 N2 =
+// semitone set 0 2 3 5 7 9 10 = tonaljs's own "dorian" interval set, exactly.
+// Reusing that verified scale (not re-deriving it) so both "speakers" in
+// today's duet share one tonal home — the hocket needs a common language to
+// trade a line in, the same way a real jugalbandi shares a raga.
+//
+// THE MELODIC LINE (one phrase, 12 scale-degree slots, real shape — rises
+// through a fifth to an octave-plus-step peak, then descends by thirds):
+//   Phrase A: 0 ~ 2 4 7 8 7 ~ 6 4 2 0
+//   Phrase B: retrograde of A (literal reverse of all 12 slots, rests
+//             included) — the checklist's "retrograde" device, applied to
+//             the master line before it's even split between voices:
+//             0 2 4 6 ~ 7 8 7 4 2 ~ 0
+//
+// THE HOCKET SPLIT — driven by Fibonacci, not arbitrary alternation:
+// the 12 slots are divided into consecutive "turns" whose lengths are the
+// first five Fibonacci terms in order — F(1..5) = 1,1,2,3,5 — which sum to
+// exactly 12, the phrase length. Turns alternate instrument. Melakarta's
+// sitar (Carnatic voice, rich/plucked) and a vibraphone (pure/soft, per
+// MUSIC-KNOWLEDGE.md §1's timbre table — deliberate CONTRAST with sitar so
+// two conversing voices stay legible, §2) trade the line:
+//   Phrase A turns: S(1) V(1) S(2) V(3) S(5)  — sitar starts, holds the
+//     final long turn (the descent/resolve)
+//   Phrase B turns: V(5) S(3) V(2) S(1) V(1)  — reversed turn order AND
+//     swapped starting voice, so retrograde applies to the CONVERSATION
+//     structure too, not just the pitches
+// Each voice is SILENT exactly where the other plays (true hocket, per the
+// hocket-raga-blues-demo precedent) — verify by reading the two strings
+// below side by side: no slot has a real note in both.
+//
+// RHYTHM: euclid(4, 22) on the pulse — 4 is melakarta 22's own chakra number
+// (chakra = ceil(22/6) = 4, per Tuesday's derivation), 22 is the melakarta
+// number itself. Same "the raga's own number generates the pattern" rule
+// Tuesday used, pointed at today's rhythm instead of duration.
+//
+// TASTE LAYER, deliberately minimal: CREATIVE-DIRECTION.md's acid/psych
+// layer applies regardless of system, but stacking a full acid bassline
+// under a two-voice call-and-response would bury the exact thing today's
+// piece is about (Tuesday's v1-v3 notes: "four layers fighting for the same
+// space" was the actual problem, not the melakarta math). So the taste layer
+// here is a quiet sine pedal with ONE slow filter drift — enough evolving
+// motion to satisfy MUSIC-QC-LOOP.md's automation check, none of the
+// distortion/resonance that would compete with the voices. Same reasoning
+// Saturday's 19edo file used to drop distortion when ITS topic called for
+// something else (MUSIC-KNOWLEDGE.md, 29 Aug entry) — a real choice per
+// topic, not a template.
+//
+// CYCLE COUNT: 13 = F(7), a deliberate callback (this piece IS about
+// Fibonacci) rather than an accidental repeat of Thursday's cycle count.
+// setcpm(40) x 13 cycles / 60 = 19.5s.
+// ============================================================================
+
+setcpm(40)
+let CYCLES = 13 // F(7) — deliberate Fibonacci callback, see header
+
+// quiet sub pedal, tonic/fifth of E dorian — stands in for both the tanpura
+// drone convention and the taste layer's usual acid treatment. One slow lpf
+// drift is the only automation: real motion, but not enough to compete with
+// the hocket exchange above it.
+let pedal = note("<e1 b1>/4")
+  .sound("sine")
+  .lpf(sine.range(200, 900).slow(8))
+  .gain(.18)
+  .attack(.05).release(.4)
+
+// Carnatic voice — sitar, panned left. Silent everywhere the vibraphone
+// plays (see header derivation). .ply(2) ornament hook left loose for ear.
+let sitarVoice = n("<[0 ~ 2 4 ~ ~ ~ ~ 6 4 2 0] [~ ~ ~ ~ ~ 7 8 7 ~ ~ ~ ~]>")
+  .scale("E:dorian")
+  .sound("gm_sitar")
+  .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+  .gain(.5)
+  .pan(.3)
+  .room(2)
+  .delay(.15)
+
+// Fibonacci voice — vibraphone (pure/soft, contrasts sitar's rich/plucked
+// category per MUSIC-KNOWLEDGE.md §1-2), panned right. Silent everywhere the
+// sitar plays. .rev() hook nods to Fibonacci's own self-referential
+// recursion (echoes Thursday's retrograde-phrase idea) — improv hook.
+let vibraphoneVoice = n("<[~ ~ ~ ~ 7 8 7 ~ ~ ~ ~ ~] [0 2 4 6 ~ ~ ~ ~ 4 2 ~ 0]>")
+  .scale("E:dorian")
+  .sound("gm_vibraphone")
+  .rarely(x => x.rev()) // improv hook: occasional reversal
+  .gain(.45)
+  .pan(.7)
+  .room(3.5)
+
+// pulse: melakarta 22's own chakra(4) and index(22) drive the euclidean
+// grid — see header
+let pulse = s("rim").euclid(4, 22).gain(.22).room(1.5)
+
+stack(pedal, sitarVoice, vibraphoneVoice, pulse)
