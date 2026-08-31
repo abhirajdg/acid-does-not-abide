@@ -1,0 +1,90 @@
+// ============================================================================
+// DAILY — 2026-08-31 (Monday): Hindustani raga of the day — RAGA BHAIRAVI
+// ============================================================================
+// Weekly rotation slot: Monday = one of the 10 parent thaats. Only one prior
+// Monday exists in daily/ history (2026-08-24, Kalyan) -- avoiding that one,
+// and also not reaching for Bhairav (already the flagship reference in
+// sets/bhairav-session-v1.strudel). Going with Bhairavi: the "closing raga"
+// of a classical recital, all-komal-except-Ma, the most overtly emotional/
+// devotional of the 10 thaats -- a real contrast to Kalyan's bright, open
+// lydian character last Monday.
+//
+// THEORY NOTES:
+// Bhairavi's swaras: S r g M P d n  (r/g/d/n = komal Re/Ga/Dha/Ni; Ma shuddh)
+//   -> semitone offsets from tonic: 0, 1, 3, 5, 7, 8, 10
+//   -> this IS the exact interval set of the Western "phrygian" mode (half,
+//      whole, whole, whole, half, whole, whole) -- no substitution needed,
+//      same discipline as Kalyan/lydian two Mondays ago: phrygian is one of
+//      the 7 standard diatonic modes tonaljs ships natively, so
+//      .scale("E:phrygian") honestly represents Bhairavi's scale.
+//   -> tonic set to E (Kalyan used D, Bhairav/Fibonacci both used C --
+//      picking a fresh tanpura pitch rather than reusing one).
+//   -> scale degree numbers used in n() below map like this in "E:phrygian":
+//        0=S(E)  1=r(F)  2=g(G)  3=M(A)  4=P(B)  5=d(C)  6=n(D)  7=S'(E5)
+//   -> vadi (dominant) = Ma = degree 3, samvadi (sub-dominant) = Sa = degree 0
+//
+// MELODY -- three alternating phrases (call / leap-and-peak response /
+// descending resolve), anchored on vadi Ma throughout, not a scale run:
+//   phrase A (call, rising arc, settles on vadi):    S ~ g M ~ P M
+//     -> n: 0 ~ 2 3 ~ 4 3 -- climbs through a leap (S->g, a third) to P,
+//        then steps back down to rest on the vadi (M) -- tension, not yet resolved
+//   phrase B (response, the climax): M P S' ~ P M
+//     -> n: 3 4 7 ~ 4 3 -- leaps a fourth from P up to the octave (S'), holds
+//        the peak across a rest, then falls back to the same vadi anchor as A
+//   phrase C (resolve, full descending sweep through the komal color tones,
+//     landing on samvadi Sa): n d M g r S ~
+//     -> n: 6 5 3 2 1 0 ~ -- unbroken descent through every komal swara that
+//        gives Bhairavi its pathos, closing on the tonic with a trailing rest
+//   -> n("<[0 ~ 2 3 ~ 4 3] [3 4 7 ~ 4 3] [6 5 3 2 1 0 ~]>").scale("E:phrygian")
+//   Real leaps (a third in A, a fourth in B), deliberate rests, and a clear
+//   tension(A)->climax(B)->resolution(C) arc -- not a flat scale exercise.
+//
+// ARRANGEMENT -- a genuinely different production choice from Kalyan's
+// pad+flute+909-pulse formula two Mondays ago, driven by what's actually
+// different about Bhairavi (devotional/vocal pathos, not open brightness):
+//   drone:  gm_voice_oohs instead of the usual gm_pad_warm/gm_church_organ --
+//           a wordless human-voice-like pad, tuned to the tanpura convention
+//           (tonic + fifth, see MUSIC-KNOWLEDGE.md §3), because Bhairavi's
+//           character is the most vocal/devotional of the 10 thaats -- a
+//           choir-like texture reads truer here than a synth pad or organ.
+//   lead:   gm_sitar -- plucked/struck against the sustained voice drone for
+//           timbre contrast (MUSIC-KNOWLEDGE.md §2), so the melody stays
+//           legible against the sustained bed rather than blending into it.
+//   rhythm: single sparse kick voice only (no second layer) -- Bhairavi is
+//           traditionally the most spacious, unhurried of the 10 thaats, so
+//           this deliberately drops Kalyan's two-voice euclidean pulse
+//           (bd+rim) rather than defaulting to it; one breathing pulse
+//           leaves room for the voice drone and sitar to actually be heard.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc. setcpm(45) * 15 cycles = 20s (60/45 = 1.33s/cycle).
+// ============================================================================
+
+setcpm(45)
+let CYCLES = 15 // 15 * 60/45 = 20s
+
+stack(
+  // drone: tonic + fifth (S and P), voice-like instead of pad/organ -- see
+  // ARRANGEMENT note above. Slow attack/release so it swells in rather than
+  // starting abruptly.
+  note("<e2 b2>/4")
+    .sound("gm_voice_oohs")
+    .gain(.18)
+    .room(5)
+    .attack(2).release(3),
+
+  // melody: three alternating phrases (call / leap-to-climax / descending
+  // resolve) anchored on the vadi -- see THEORY/MELODY notes above.
+  n("<[0 ~ 2 3 ~ 4 3] [3 4 7 ~ 4 3] [6 5 3 2 1 0 ~]>")
+    .scale("E:phrygian")
+    .sound("gm_sitar")
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.5)
+    .room(2.5)
+    .delay(.15),
+
+  // rhythm: one sparse, breathing kick voice -- no second layer, see
+  // ARRANGEMENT note above. degradeBy loosens it further so it doesn't lock
+  // into a mechanical grid.
+  s("bd").euclid(2, 7).bank("RolandTR909").gain(.3).degradeBy(.15)
+)

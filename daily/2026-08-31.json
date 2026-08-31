@@ -1,0 +1,10 @@
+{
+  "date": "2026-08-31",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "RAGA BHAIRAVI",
+  "pattern_file": "daily/2026-08-31-hindustani-bhairavi.strudel",
+  "cycles": 15,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["n(\"<[0 ~ 2 3 ~ 4 3] [3 4 7 ~ 4 3] [6 5 3 2 1 0 ~]>\")", "    .scale(\"E:phrygian\")"]
+}
