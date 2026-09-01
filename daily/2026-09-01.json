@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-01",
+  "weekday": "Tuesday",
+  "topic": "carnatic-melakarta",
+  "topic_label": "MELAKARTA 64",
+  "pattern_file": "daily/2026-09-01-carnatic-melakarta-64.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["s(\"bd\").euclid(4, 6).bank(\"RolandTR909\").gain(.32).degradeBy(.1)", "    [g3 ~ b3 c#4 ~ d4 ~ g4]"]
+}

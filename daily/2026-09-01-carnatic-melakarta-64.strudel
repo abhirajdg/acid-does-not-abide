@@ -1,0 +1,94 @@
+// ============================================================================
+// DAILY — 2026-09-01 (Tuesday) — Carnatic melakarta math
+// Melakarta #64: Vachaspati
+// ============================================================================
+//
+// KATAPAYADI DERIVATION (the actual system, not the chakra/position shortcut
+// used last Tuesday — this project's own DAILY-PIPELINE.md names katapayadi
+// specifically for this slot, worth using it directly for once):
+//   Katapayadi consonant->digit groups (first two consonants of a melakarta
+//   name only): 1=k/t/p/y 2=kh/th/ph/r 3=g/d/b/l 4=gh/dh/bh/v 5=ng/n/m/sh
+//   6=c/t(soft)/sh(retroflex) 7=ch/th/s 8=j/d(soft) 9=jh/dh 0=ny/n
+//   To go from a NAME to a number: take the two digits in speaking order,
+//   then REVERSE them to read the number.
+//     "Va-chaspati" -> va=4 (gh/dh/bh/v group), cha=6 (c/t/sh group)
+//     speaking order (4,6) -> reversed -> tens=6, units=4 -> 64
+//   Checks out against the standard melakarta table (64 = Vachaspati), same
+//   way "gypsy" was checked against tonaljs source for Bhairav.
+//
+// SWARAS (from the standard melakarta-64 table, chakra 11 "Rudra", so Ma is
+// PRATI/raised — Ma2, the defining color of this whole chakra):
+//   S R2 G3 M2 P D2 N2  ->  semitones from tonic: 0 2 4 6 7 9 10
+// That's a raised 4th + flat 7th against the tonic — i.e. Western "Lydian
+// dominant" (4th mode of melodic minor). Not using .scale("lydian dominant")
+// here: unlike the 7 plain diatonic modes already used elsewhere in this repo
+// (dorian/phrygian/lydian), a melodic-minor-mode name isn't one I can verify
+// against tonaljs's own source from this session (no tonaljs available to
+// check locally, no browser allowed for this task) — so per this project's
+// own fallback rule for unverified scale names, the swaras are spelled out
+// as literal notes instead (tonic G): S=g R=a G=b M=c# P=d D=e N=f.
+//
+// THE NUMBER DRIVES THE RHYTHM (the whole point of Tuesday): the two
+// katapayadi digits that MAKE 64 — units=4 (from "va"), steps=6 (from
+// "cha") — feed euclid(4,6) on the kick below, and set the period (in
+// cycles) of the two filter-automation LFOs on the lead, so 64's own digits
+// are literally what's moving.
+//
+// ARRANGEMENT (a fresh decision for this specific raga, not last Tuesday's
+// template — see MUSIC-KNOWLEDGE.md's 29 Aug note on not reusing an
+// arrangement wholesale): Vachaspati's whole identity is that raised 4th —
+// a tritone against the tonic. Rather than a static tonic+fifth tanpura
+// drone (last Tuesday's choice), the drone here spends the first half of
+// the piece on the stable S-P fifth, then the second half on the S-M
+// tritone dyad itself, so the piece audibly moves from consonance into the
+// exact interval that defines this melakarta. Synth basics throughout per
+// MUSIC-KNOWLEDGE.md §2.5 (sine drone, sawtooth lead) — no gm_* samples.
+//
+// MELODY — three phrases, not a scale run:
+//   A (establish + the tritone leap): S ~ G M ~ P ~ S'
+//     -> leaps a third (S->G) then lands the raised Ma right after, and a
+//        fourth (P->S') closing the octave — real leaps, not adjacent steps.
+//   B (the color motif — outlines a dominant-7#11 against the tonic, which
+//     is exactly what Ma2+Ni2 over S spells): S M S M ~ N M S
+//   C (resolve — full descent through the scale, closing on the tonic with
+//     a trailing rest): S' N D P M G R S ~
+//
+// setcpm(48) * 16 cycles = 20s (60/48 = 1.25s/cycle).
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16 // 16 * 60/48 = 20s
+
+stack(
+  // drone: S-P (fifth) for the first 8 cycles, then S-M (tritone) for the
+  // last 8 -- the piece moves from stable to the raga's own defining sour
+  // interval instead of sitting on the fifth the whole way through.
+  note("<[g2,d3] [g2,c#3]>/8")
+    .sound("sine")
+    .gain(.2)
+    .attack(3).release(4)
+    .room(6).roomsize(8),
+
+  // lead: three alternating phrases (establish+leap / color motif /
+  // descending resolve) -- see MELODY note above. sawtooth + resonant lpf
+  // for the acid-taste layer this project applies to every system, cutoff
+  // and resonance both swept on periods taken straight from 64's own
+  // katapayadi digits (6 and 4) so the number is what's actually moving.
+  note("<
+    [g3 ~ b3 c#4 ~ d4 ~ g4]
+    [g3 c#4 g3 c#4 ~ f4 c#4 g3]
+    [g4 f4 e4 d4 c#4 b3 a3 g3 ~]
+  >")
+    .sound("sawtooth")
+    .attack(.01).decay(.12).sustain(.25).release(.15)
+    .cutoff(sine.range(700, 2600).slow(6))
+    .resonance(sine.range(6, 14).slow(4))
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.38)
+    .room(2.5)
+    .delay(.15),
+
+  // rhythm: euclid(4,6) -- 4 and 6 are literally the katapayadi digits that
+  // make up 64 ("va"=4, "cha"=6), not an arbitrary pulse/step choice.
+  s("bd").euclid(4, 6).bank("RolandTR909").gain(.32).degradeBy(.1)
+)
