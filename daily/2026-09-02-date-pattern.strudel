@@ -1,0 +1,91 @@
+// ============================================================================
+// DAILY — 2026-09-02 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-09-02 -- day 02, month 09 (September), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Rather than one melody line reading off the digits in sequence (last
+//   Wednesday's approach, 2026-08-26), this run gives DAY / MONTH / YEAR each
+//   their own voice, using ONLY that component's own digits, and — the actual
+//   new idea — sets each voice's REPEAT RATE to how fast that calendar unit
+//   actually changes: day changes every day (fastest), month every ~30 days
+//   (slower), year slowest of all. So the arrangement itself is a small clock.
+//     - DAY  (02 -> digits 0,2): a new phrase EVERY cycle.
+//     - MONTH(09 -> digits 0,9): a phrase that spans 3 cycles per statement
+//       (.slow(3)) -- the "9" is used raw as a scale degree, which overshoots
+//       the 7-note scale and lands an octave + a 2nd higher (same
+//       overshoot-not-clip behaviour already relied on for degree 7/8/9 in
+//       other daily patterns) -- a real wide leap that reads as "calling out"
+//       a bigger number than the day voice ever states.
+//     - YEAR (2026 -> digits 2,0,2,6): a phrase that spans 7 cycles per
+//       statement (.slow(7)), low register, long attack/release -- doubling
+//       as the drone/bass, so there is no separate pad layer this time.
+//   21 total cycles = the FULL date's digit sum (2+0+2+6+0+9+0+2 = 21), and
+//   21 = 3 x 7 -- the same two factors that set month's and year's repeat
+//   spans, so month completes exactly 7 statements and year exactly 3 over
+//   the clip's length, with no remainder. RIM percussion reuses that same
+//   factorisation directly: euclid(3, 7). KICK instead reads day and month
+//   straight as euclid's own two parameters: euclid(2, 9).
+//   setcpm(70) x 21 cycles / 60 = 18s.
+//
+// Scale: A minor (Aeolian) -- deliberately plain, same reasoning as last
+// Wednesday: the numbers are the idea, not the mode.
+//
+// JAZZ-IMPROV DEVICES: month and year each alternate a forward statement with
+// its own RETROGRADE every other repeat (a real motif-and-variation device,
+// not a flat loop); day's fast phrase call-and-responds against month's slow
+// one across the stereo field (day panned right, month panned left).
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(70)
+let CYCLES = 21 // = 2+0+2+6+0+9+0+2, the full date's own digit sum -- see note above
+
+stack(
+  // DAY voice (02 -> digits 0,2): fastest-changing, new phrase every cycle.
+  // Small register, crisp/percussive timbre so it reads as the "quick" voice.
+  n("<[0 2 0 ~ 2 0 ~ ~] [2 0 2 ~ 0 2 ~ ~]>")
+    .scale("A4:minor")
+    .sound("square")
+    .attack(.01).decay(.12).sustain(0).release(.05)
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.32)
+    .pan(.62)
+    .room(1.5),
+
+  // MONTH voice (09 -> digits 0,9): one statement per 3 cycles, alternating
+  // forward / retrograde. Degree 9 overshoots the 7-note scale on purpose --
+  // a real octave+2nd leap, "calling out" against day's small motif.
+  n("<[0 ~ ~ ~ 9 ~ ~ ~] [9 ~ ~ ~ 0 ~ ~ ~]>")
+    .slow(3)
+    .scale("A3:minor")
+    .sound("sawtooth")
+    .lpf(sine.range(400, 1800).slow(9)) // sweep period = the month number itself
+    .lpq(6)
+    .attack(.02).release(.4)
+    .gain(.34)
+    .pan(.38)
+    .room(2),
+
+  // YEAR voice (2026 -> digits 2,0,2,6): one statement per 7 cycles,
+  // alternating forward / retrograde. Low register, long attack/release --
+  // this IS the drone this time, no separate pad layer underneath it.
+  n("<[2 0 2 6] [6 2 0 2]>")
+    .slow(7)
+    .scale("A2:minor")
+    .sound("sine")
+    .attack(1.4).release(2.2)
+    .gain(.24)
+    .pan(.5)
+    .room(4),
+
+  // KICK: day and month read straight as euclid's own two parameters.
+  s("bd").euclid(2, 9).bank("RolandTR909").gain(.4),
+
+  // RIM: the date's digit-sum (21) factored as 3 x 7 -- the same pair that
+  // sets month's and year's repeat spans above.
+  s("rim").euclid(3, 7).bank("RolandTR909").gain(.2).degradeBy(.25)
+)

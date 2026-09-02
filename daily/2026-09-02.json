@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-02",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "02 . 09 . 2026",
+  "pattern_file": "daily/2026-09-02-date-pattern.strudel",
+  "cycles": 21,
+  "target_duration_sec": 18,
+  "code_highlight_lines": ["let CYCLES = 21 // = 2+0+2+6+0+9+0+2, the full date's own digit sum -- see note above", "s(\"bd\").euclid(2, 9).bank(\"RolandTR909\").gain(.4),"]
+}
