@@ -32,10 +32,21 @@
 // Scale: A minor (Aeolian) -- deliberately plain, same reasoning as last
 // Wednesday: the numbers are the idea, not the mode.
 //
-// JAZZ-IMPROV DEVICES: month and year each alternate a forward statement with
-// its own RETROGRADE every other repeat (a real motif-and-variation device,
-// not a flat loop); day's fast phrase call-and-responds against month's slow
-// one across the stereo field (day panned right, month panned left).
+// REVISION (post-listen, same day): first draft's month voice ("horn") had a
+// short release that clipped its own sustain -- lengthened attack/release for
+// a real horn swell. Also: alternating a phrase with its own retrograde only
+// gave 2 distinct shapes cycling back and forth, which read as "the same loop
+// twice" rather than real development, especially on month's 7 repeats over
+// the piece. Every voice below now cycles through DISTINCT phrase shapes (not
+// pairs) built only from that voice's own digits -- different placement,
+// direction and rhythmic grouping each time round, so each pass through the
+// cycle is audibly its own tune, not a mirror of the last one.
+//
+// JAZZ-IMPROV DEVICES: month's four shapes are motif-and-variation on the
+// same 0/9 call-and-answer idea (retrograde, compression, delayed entrance);
+// year's three shapes are a true arch -- ascend, descend, invert -- across
+// its three drone statements; day's four shapes call-and-respond against
+// month across the stereo field (day panned right, month panned left).
 //
 // This is a DAILY quick clip, not a flagship set -- one continuous pattern,
 // no alap/jor/jhala arc.
@@ -46,8 +57,10 @@ let CYCLES = 21 // = 2+0+2+6+0+9+0+2, the full date's own digit sum -- see note 
 
 stack(
   // DAY voice (02 -> digits 0,2): fastest-changing, new phrase every cycle.
-  // Small register, crisp/percussive timbre so it reads as the "quick" voice.
-  n("<[0 2 0 ~ 2 0 ~ ~] [2 0 2 ~ 0 2 ~ ~]>")
+  // Four distinct shapes (not a forward/retrograde pair) built only from 0
+  // and 2 -- front-loaded, back-loaded, syncopated-center, grouped-leap --
+  // so no two consecutive cycles read as the same gesture.
+  n("<[0 2 0 ~ 2 0 ~ ~] [2 0 2 ~ 0 2 ~ ~] [0 ~ 2 0 ~ ~ 2 0] [2 2 0 ~ 0 0 2 ~]>")
     .scale("A4:minor")
     .sound("square")
     .attack(.01).decay(.12).sustain(0).release(.05)
@@ -56,24 +69,29 @@ stack(
     .pan(.62)
     .room(1.5),
 
-  // MONTH voice (09 -> digits 0,9): one statement per 3 cycles, alternating
-  // forward / retrograde. Degree 9 overshoots the 7-note scale on purpose --
-  // a real octave+2nd leap, "calling out" against day's small motif.
-  n("<[0 ~ ~ ~ 9 ~ ~ ~] [9 ~ ~ ~ 0 ~ ~ ~]>")
+  // MONTH voice (09 -> digits 0,9): one statement per 3 cycles. Four shapes
+  // (call, retrograde-answer, compressed-tension, delayed-entrance) cycle
+  // through the voice's 7 statements so it never just alternates two mirror
+  // images -- true motif-and-variation, not a flat A/B loop. Release
+  // lengthened (was .4) so the "horn" timbre actually swells instead of
+  // getting cut short.
+  n("<[0 ~ ~ ~ 9 ~ ~ ~] [9 ~ ~ ~ 0 ~ ~ ~] [0 ~ 9 ~ ~ ~ ~ ~] [~ ~ ~ 9 ~ ~ ~ 0]>")
     .slow(3)
     .scale("A3:minor")
     .sound("sawtooth")
     .lpf(sine.range(400, 1800).slow(9)) // sweep period = the month number itself
     .lpq(6)
-    .attack(.02).release(.4)
+    .attack(.05).release(1.1)
     .gain(.34)
     .pan(.38)
     .room(2),
 
-  // YEAR voice (2026 -> digits 2,0,2,6): one statement per 7 cycles,
-  // alternating forward / retrograde. Low register, long attack/release --
-  // this IS the drone this time, no separate pad layer underneath it.
-  n("<[2 0 2 6] [6 2 0 2]>")
+  // YEAR voice (2026 -> digits 2,0,2,6): one statement per 7 cycles -- three
+  // statements total over the piece. A real arch across those three: ascend,
+  // descend, then an inverted contour -- not just a phrase and its mirror.
+  // Low register, long attack/release -- this IS the drone this time, no
+  // separate pad layer underneath it.
+  n("<[2 0 2 6] [6 2 0 2] [0 2 6 2]>")
     .slow(7)
     .scale("A2:minor")
     .sound("sine")
