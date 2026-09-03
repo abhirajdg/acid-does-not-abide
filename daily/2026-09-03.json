@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-03",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "COLLATZ CHAIN",
+  "pattern_file": "daily/2026-09-03-collatz-sequence.strudel",
+  "cycles": 12,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let kick = s(\"bd\").euclid(6, 19).bank(\"RolandTR909\").gain(.4)", ".scale(\"D:harmonic:minor\")"]
+}

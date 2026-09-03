@@ -1,0 +1,149 @@
+// ============================================================================
+// DAILY — 2026-09-03 (Thursday): Pure math sequence — the Collatz conjecture
+// ============================================================================
+//
+// THE SEQUENCE (this is the whole point of the day): seed = 9 (today's IST
+// month, September -- a legible, non-arbitrary choice of starting number,
+// not a random pick). Collatz's rule: if n is odd, next = 3n+1 ("O"); if n
+// is even, next = n/2 ("H"). Repeat until you hit 1 (conjectured to always
+// happen, unproven in general -- this is real, open mathematics, not a toy).
+//
+//   9, 28, 14, 7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1
+//   -> 20 terms, 19 operations. Op sequence: O H H O H O H O H H O H H H O H H H H
+//
+// NOT Fibonacci again (last Thursday, 2026-08-27, was Fibonacci): Collatz
+// has a genuinely different character -- Fibonacci grows forever in one
+// direction, Collatz zigzags unpredictably and (conjecturally) always
+// crashes back down to 1. MUSIC-KNOWLEDGE.md §3's solkattu/Fibonacci note is
+// specific to a future Fibonacci day, not applicable here -- today's device
+// (see ARRANGEMENT) is chosen for what's actually distinctive about THIS
+// sequence: two structurally different operations, not one additive rule.
+//
+// THE DERIVATION -- degree = floor(log2(n)), i.e. how many bits n needs.
+// 3n+1 roughly multiplies by 3 (a real jump in magnitude); n/2 exactly
+// halves (a steady, predictable step down). floor(log2(n)) turns that
+// real difference in HOW the number moves into a real difference in
+// melodic motion -- not a flat digit-to-pitch dump:
+//   n:      9  28  14  7  22  11  34  17  52  26  13  40  20  10  5  16  8  4  2  1
+//   degree: 3   4   3  2   4   3   5   4   5   4   3   5   4   3  2   4  3  2  1  0
+// The chain provably ends at degree 0 -- the melody's own cadence landing
+// on the tonic exactly when the math converges to 1, not a coincidence.
+//
+// ARRANGEMENT -- true hocket (MUSIC-KNOWLEDGE.md §2) split by OPERATION
+// TYPE, not by arbitrary turn-taking: every "O" step (3n+1) is voiced by
+// leapVoice, every "H" step (n/2) by descentVoice, so the two operations
+// that actually behave differently in the math get two audibly different
+// voices. O-hits are pushed up an octave (+7 scale steps on top of the raw
+// degree) to dramatize the "shoves the number up" jump that floor(log2)
+// alone only shows as a +1/+2 step; H-hits stay in the low register as a
+// steady stepwise unwind. This IS the tension (leap) -> release (descent)
+// device the QC checklist asks for, and it's driven directly by which
+// operation produced each term, not decorated on afterward. Twelve groups
+// below = the 12 runs of consecutive same-operation steps in the chain
+// (O, HH, O, H, O, H, O, HH, O, HHH, O, HHHH) -- one group per cycle, so
+// CYCLES = 12, not 19 or 20; term 1 (the seed, 9) is the implicit tonic
+// reference the whole chain departs from and returns near.
+// Scale: D harmonic minor -- unused recently in daily/, and its raised
+// leading tone adds real tension, fitting a sequence whose next move is
+// never obvious. Rim accents double ONLY the leap hits (percussion marking
+// the structurally dramatic moments, silent through the calm halving runs).
+// Kick's euclid(6, 19): 6 = this exact chain's O-count, 19 = its total step
+// count -- both real facts about this run, read straight off the sequence
+// above, same discipline as the rest of this project's euclid parameters.
+//
+// CYCLE COUNT: 12 (one per operation-run, see above). setcpm(36) x 12
+// cycles / 60 = 20s exactly.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(36)
+let CYCLES = 12 // one cycle per run of consecutive same-operation steps (see header)
+
+// LEAP VOICE -- plays only on "O" cycles (n odd -> 3n+1). Square wave,
+// punchy and resonant, degree pushed up an octave (+7) to dramatize the
+// "3n+1 shoves the number up" jump. Sharp/abrasive timbre category
+// (MUSIC-KNOWLEDGE.md §1) -- power/intensity, matching what the operation
+// actually does to the number. Panned right.
+let leapVoice = n(`<
+  [~ 11 ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ 11 ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [12 ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ 12 ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ 12 ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ 11 ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+>`)
+  .scale("D:harmonic:minor")
+  .sound("square")
+  .attack(.01).decay(.12).sustain(.05).release(.08)
+  .lpf(sine.range(1200, 5000).slow(19)) // 19 = this chain's own step count
+  .lpq(13) // 13 = this chain's own halving-step count
+  .distort(.3)
+  .rarely(x => x.ply(2)) // improv hook: occasional stutter on the leap
+  .gain(.42)
+  .pan(.72)
+
+// DESCENT VOICE -- plays only on "H" cycles (n even -> n/2). Triangle wave,
+// soft attack, no distortion -- deliberate CONTRAST with leapVoice
+// (MUSIC-KNOWLEDGE.md §2): halving really is the calmer operation, so it
+// gets the calmer timbre. True hocket with leapVoice -- silent everywhere
+// leapVoice plays; check the two patterns above/below side by side, no slot
+// has a real note in both. Panned left.
+let descentVoice = n(`<
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [3 ~ ~ ~ 2 ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ 3 ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ 4 ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [4 ~ ~ ~ 3 ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [4 ~ 3 ~ ~ 2 ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [3 ~ 2 ~ 1 ~ 0 ~]
+>`)
+  .scale("D:harmonic:minor")
+  .sound("triangle")
+  .attack(.02).decay(.2).sustain(.3).release(.5)
+  .lpf(sine.range(400, 1800).slow(13)) // 13 = the chain's halving-step count, slower sweep
+  .sometimes(x => x.ply(2)) // improv hook: occasional stutter on the unwind
+  .delay(.25)
+  .gain(.4)
+  .pan(.28)
+
+// RIM accent -- fires only alongside leapVoice, marking each "3n+1" moment
+// percussively. Silent through every halving run, same operation-driven
+// logic as the melodic hocket above, just as one-shot accents.
+let rimAccent = s(`<
+  [~ rim ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ rim ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [rim ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ rim ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ rim ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ rim ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+>`)
+  .bank("RolandTR909")
+  .gain(.25)
+  .room(1.5)
+
+// KICK -- steady foundation pulse. euclid(6, 19): 6 = the number of "O"
+// (odd/3n+1) operations in this exact chain, 19 = its total operation
+// count -- both real facts read off this specific Collatz run, not
+// arbitrary euclid numbers.
+let kick = s("bd").euclid(6, 19).bank("RolandTR909").gain(.4)
+
+stack(leapVoice, descentVoice, rimAccent, kick)
