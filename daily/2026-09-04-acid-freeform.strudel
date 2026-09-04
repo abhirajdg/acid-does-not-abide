@@ -1,0 +1,99 @@
+// ============================================================================
+// DAILY — 2026-09-04 (Friday): Acid / psychedelia free jam
+// ============================================================================
+//
+// Friday's slot is taste-first, not theory-first (CREATIVE-DIRECTION.md) — no
+// raga or math derivation gates today's notes. This week's only prior Friday
+// (2026-08-28) built its taste around D harmonic minor, a Goa-trance-style
+// bass/lead voice split, and three slow-drifting acid filter params (lpf/lpq/
+// distort on 6/4/7-cycle sweeps). Checked before writing this one, per
+// DAILY-PIPELINE.md/MUSIC-KNOWLEDGE.md's "don't template last cycle" rule —
+// today picks a genuinely different scale AND a different production idea,
+// not just new pitch numbers in the same shape:
+//
+//   SCALE: E whole tone (E F# G# A# C D) — six equal whole-steps, no leading
+//   tone, no perfect fifth anywhere in it. That's the actual "psychedelia" in
+//   this pattern: a symmetric, tonic-less-feeling scale (Debussy's go-to for
+//   dream/haze) rather than harmonic minor's exotic-but-still-tonal pull.
+//   Because whole tone has no perfect 5th, the drone below leans on the
+//   scale's own "fifth substitute" — the augmented 5th/minor 6th (E to C,
+//   +8 semitones) — instead of forcing a conventional tanpura 5th onto it.
+//
+//   ARRANGEMENT, deliberately not last week's: instead of a separate static
+//   sub + a lead carrying all three acid automation params, today uses
+//     - MUSIC-KNOWLEDGE.md §7 "Sound on Sound": the drone is NOT a second
+//       patch, it's built from one sparse plucked voice through a long,
+//       high-feedback delay, so the notes ring and stack into a sustained
+//       wash themselves (Gilmour's trick for "Shine On"'s drone) — not yet
+//       used on a Friday.
+//     - MUSIC-KNOWLEDGE.md §9 wobble bass: the sub's lpf is modulated by a
+//       FAST lfo (.fast(4), i.e. once-per-beat-ish) instead of a slow acid
+//       sweep — a rhythmic pitch-color device, not a long filter build.
+//     - MUSIC-KNOWLEDGE.md §9 half-time drums: kick+clap land on steps 1 and
+//       5 of an 8-step bar (not four-on-the-floor), hats doubled up under it.
+//     - phaser() on the lead for swirl (CREATIVE-DIRECTION's taste-layer
+//       effects list names it; first actual use in this project) replaces
+//       last week's second and third automated params as the "movement"
+//       device — one thing sweeping slowly (lpf) plus one thing swirling
+//       (phaser), rather than three knobs all drifting independently.
+//
+// LEAD PHRASE (per MUSIC-QC-LOOP.md — real leaps + rests + development, not a
+// scale run), degrees against E whole tone (0=E 1=F# 2=G# 3=A#/tritone
+// 4=C/aug5th 5=D 6=E' octave):
+//   A (call, tension via tritone leap):  0 ~ 3 4 ~ 5 4 2
+//   B (response, resolves home):         4 2 0 ~ 2 4 ~ 0   -- answers A
+//   D (retrograde of A, literal reverse): 2 4 5 ~ 4 3 ~ 0  -- QC-loop's
+//                                          retrograde device, not used last Fri
+//   C (peak, octave lift):               0 4 2 ~ 6 4 2 0   -- 6 = octave above
+//                                          tonic, Goa-trance "lift" (§6),
+//                                          different notes/scale than last week
+//   rotation <A B D C> repeats every 4 cycles across the 16-cycle clip.
+//
+// CYCLES: 16. setcpm(48) -> 16 * 60/48 = 20s.
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16
+
+stack(
+  // "Sound on Sound" drone (§7): one sparse plucked voice, no separate pad
+  // patch -- the long, high-feedback delay is what sustains it, letting the
+  // whole-tone "fifth substitute" (E -> C, the aug5th/m6) actually ring out
+  note("<e3 ~ ~ ~ c4 ~ ~ ~>")
+    .sound("triangle")
+    .attack(.01)
+    .decay(.25)
+    .sustain(0)
+    .release(.05)
+    .delay(.85)
+    .delaytime(.55)
+    .delayfeedback(.88)
+    .gain(.32)
+    .pan(.7),
+
+  // wobble sub (§9): plain sine parked on tonic/aug5th, fast lpf lfo instead
+  // of a slow acid sweep -- rhythmic pitch-color under the lead, not a build
+  note("<e1 e1 c2 e1>")
+    .sound("sine")
+    .lpf(sine.range(150, 1200).fast(4))
+    .gain(.34)
+    .pan(.3),
+
+  // acid lead: four-phrase rotation (see header) incl. literal retrograde,
+  // square wave, ONE slow automated param (lpf) + phaser for swirl instead of
+  // three params all drifting -- kept quieter than the drum bed per §4
+  n("<[0 ~ 3 4 ~ 5 4 2] [4 2 0 ~ 2 4 ~ 0] [2 4 5 ~ 4 3 ~ 0] [0 4 2 ~ 6 4 2 0]>")
+    .scale("E:whole:tone")
+    .sound("square")
+    .lpf(sine.range(400, 3000).slow(5))
+    .lpq(12)
+    .phaser("<2 4>")
+    .distort(.22)
+    .sometimes(x => x.ply(2)) // improv hook: occasional squelchy ornament
+    .gain(.3),
+
+  // half-time drums (§9): kick + clap on steps 1 and 5 of an 8-step bar
+  // (not four-on-the-floor), hats doubled up to keep the top end busy
+  s("bd ~ ~ ~ cp ~ ~ ~").bank("RolandTR808").gain(.44),
+  s("hh*16").gain(.09).degradeBy(.3),
+)

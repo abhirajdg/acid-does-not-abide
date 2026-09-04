@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-04",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "ACID FREE JAM",
+  "pattern_file": "daily/2026-09-04-acid-freeform.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["n(\"<[0 ~ 3 4 ~ 5 4 2] [4 2 0 ~ 2 4 ~ 0] [2 4 5 ~ 4 3 ~ 0] [0 4 2 ~ 6 4 2 0]>\")", ".delay(.85).delaytime(.55).delayfeedback(.88)"]
+}
