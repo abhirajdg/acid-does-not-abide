@@ -1,0 +1,111 @@
+// ============================================================================
+// DAILY — 2026-09-05 (Saturday): Xenharmonic tuning experiment — 31edo
+// ============================================================================
+//
+// THE TUNING: 31edo divides the octave into 31 EQUAL steps of 1200/31 ≈
+// 38.71 cents each. Historically real, not a novelty division: Christiaan
+// Huygens described its close fit to quarter-comma meantone in the 17th
+// century, and physicist Adriaan Fokker built a working 31-tone organ off
+// the back of it in the 20th. Checked against the prior two Saturdays
+// before writing a note of this (daily/2026-08-22-xenharmonic-17edo.strudel,
+// daily/2026-08-29-xenharmonic-19edo.strudel) so today's arrangement is a
+// fresh decision, not last cycle's template with new pitch numbers — see
+// ARRANGEMENT below for what's actually different this week.
+//
+// WHY 31edo, SPECIFICALLY: like 19edo it's a meantone system (5 large steps
+// + 2 small steps per octave = 31, same generator logic as 19edo's meantone
+// diatonic scale), but it goes further — its major third (10 steps ≈
+// 387.1c) sits within ~1 cent of the pure 5:4 ratio (386.3c), AND its
+// harmonic/septimal seventh (25 steps ≈ 967.7c) sits within ~1 cent of the
+// pure 7:4 ratio (968.8c). 12edo's minor seventh (1000c) misses 7:4 by over
+// 30 cents and can never lock in tune the way this can. That's the specific,
+// citable "wow" of 31edo: it's accurate enough to stack a genuine 4:5:6:7
+// harmonic-seventh chord — root, major third, fifth, harmonic seventh — and
+// hear it ring nearly beatless, a chord 12edo can only ever approximate.
+//
+// THE CHORD (raw 31edo steps, xen() convention: step 0 = 220Hz, octave = 31
+// steps, repeats at 2/1):
+//   root  =  0   (unison)
+//   third = 10   (~387c, ~1c from just 5:4)
+//   fifth = 18   (~697c, standard 31edo/meantone fifth)
+//   7th   = 25   (~968c, ~1c from just 7:4 — the "septimal" seventh)
+//   8ve   = 31
+//
+// ARRANGEMENT, deliberately not last two Saturdays': 17edo used a separate
+// gm_pad_warm drone + acid-distorted sawtooth bass (edgy neutral third suited
+// acid's tension); 19edo dropped the acid bass for a Sound-on-Sound
+// kalimba-through-delay drone (a sweet meantone third suited consonance, not
+// edge). Neither fits today: the point this week isn't one melodic third,
+// it's a whole 4-note chord locking into near-just tuning, so the drone
+// becomes an actual SUSTAINED CHORD VOICING — four separate sine tones (one
+// per chord tone above), each panned to its own position across the stereo
+// field and held for the full clip, so the ear can hear all four intervals
+// ring together rather than one drone note at a time. Also, per
+// MUSIC-KNOWLEDGE.md §2.5 (synth basics on theory-driven days, not gm_*
+// acoustic samples): both prior Saturdays used gm_kalimba for melody/drone;
+// today drops that entirely in favor of sine (chord pad, for the purest tone
+// so the beating/non-beating is easy to hear) and supersaw (lead, for a
+// harmonically dense "plucked" attack per §2.5's own suggestion) — the first
+// Saturday to apply that correction. The lead ARPEGGIATES the same four
+// chord tones instead of running a euclidean scale-wander (both priors put
+// `.euclid()` directly on the melody) — today's euclidean rhythm moves to
+// the percussion layer instead, sized 4 against 31 (four pulses, tied to the
+// chord's own 4-note cardinality, not the usual 7-note-scale count reused
+// both prior weeks) so the melody can stay a clean, fully-voiced arpeggio.
+//
+// MELODY (four alternating phrases, degrees against the chord tones above
+// plus two passing tones — 5 = whole-tone neighbor, 41 = third an octave up):
+//   A (call, rising arpeggio across the whole chord):     0 ~ 10 18 ~ 25 31
+//   B (response, falls back through the chord, resolves):  25 18 ~ 10 ~ 0
+//   C (retrograde of A — literal reverse, QC-loop device): 31 25 ~ 18 10 ~ 0
+//   D (peak: Goa-trance octave pitch-lift on the third,
+//      MUSIC-KNOWLEDGE.md §6, using only pitches already established):
+//                                              0 10 18 25 ~ 41 ~ 25 18 0
+//   rotation <A B C D> over the 15-cycle clip.
+//
+// CYCLES: 15. setcpm(45) -> 15 * 60/45 = 20s.
+// ============================================================================
+
+setcpm(45)
+let CYCLES = 15
+
+stack(
+  // sustained 4:5:6:7 chord, one voice per interval, spread across the
+  // stereo field and held for the entire clip — the arrangement's whole
+  // point: let all four near-just intervals ring together and be heard
+  // locking in tune, not passed through one at a time
+  stack(
+    i("-31").xen("31edo").sound("sine").pan(0.15), // root, one octave down
+    i("-21").xen("31edo").sound("sine").pan(0.38), // third
+    i("-13").xen("31edo").sound("sine").pan(0.62), // fifth
+    i("-6").xen("31edo").sound("sine").pan(0.85),  // harmonic 7th
+  ).slow(CYCLES).attack(3).release(5).gain(.24).room(3),
+
+  // lead: arpeggiates the chord itself rather than wandering the scale —
+  // supersaw for a harmonically dense "plucked" attack (MUSIC-KNOWLEDGE.md
+  // §2.5), no euclidean gaps here so the full chord always reads clearly
+  i("<[0 ~ 10 18 ~ 25 31] [25 18 ~ 10 ~ 0] [31 25 ~ 18 10 ~ 0] [0 10 18 25 ~ 41 ~ 25 18 0]>")
+    .xen("31edo")
+    .sound("supersaw")
+    .attack(.01).decay(.18).sustain(.1).release(.12)
+    .lpf(2200)
+    .room(1.5)
+    .gain(.4)
+    .sometimes(x => x.ply(2)), // improv hook: occasional double-strike
+
+  // bass: plain sine sub, parked on the tonic almost the whole time with an
+  // occasional visit to the fifth (Goa-trance bass convention, §6) — two
+  // octaves down, nothing fighting the chord's ring
+  i("<-62 -62 -62 -44>/4")
+    .xen("31edo")
+    .sound("sine")
+    .lpf(500)
+    .gain(.3)
+    .attack(.02).release(.4),
+
+  // percussion: euclid(4,31) ties the rhythm to the chord's own 4-note
+  // count (root-third-fifth-seventh), not the usual 7-note-scale derivation
+  // both prior Saturdays used — a fresh rhythmic idea for a fresh topic
+  s("rim(4,31)").gain(.15).room(2),
+  s("hh*8").degradeBy(.5).gain(.08),
+)

@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-05",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "31EDO",
+  "pattern_file": "daily/2026-09-05-xenharmonic-31edo.strudel",
+  "cycles": 15,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["i(\"-31\").xen(\"31edo\").sound(\"sine\").pan(0.15), // root, one octave down", "s(\"rim(4,31)\").gain(.15).room(2),"]
+}
