@@ -1,0 +1,132 @@
+// ============================================================================
+// DAILY — 2026-09-06 (Sunday): Wildcard — 12edo vs 31edo, the same chord in
+// two tunings at once
+// ============================================================================
+//
+// WHY THIS (the Step 0 check against last Sunday's file): 2026-08-30's
+// wildcard put two of that week's math-driven days in a hocket duet (voices
+// trading ONE line, never sounding together). Doing another hocket duet
+// today would be reuse-by-default, not a fresh choice. So today reaches for
+// a device MUSIC-KNOWLEDGE.md §2 flags as "not yet done in this project's
+// daily patterns": real counterpoint -- two independent lines sounding AT
+// THE SAME TIME, not alternating. The two-Sundays-ago wildcard also
+// retuned a single raga melody into one xenharmonic tuning (2026-08-23);
+// today doesn't retune anything into 31edo, it plays the SAME chord in
+// 12edo and 31edo simultaneously so the two tunings' own disagreement about
+// where "in tune" is becomes the actual music.
+//
+// THE CHORD: Saturday's near-just discovery reused deliberately (this
+// week's most interesting result, per the Sunday brief's own permission to
+// riff on it) -- daily/2026-09-05-xenharmonic-31edo.strudel's root-major
+// 3rd-5th-septimal-7th chord, steps 0/10/18/25 of 31edo, built on the same
+// A3 = 220Hz root xen() already assumes as step 0. Today plays the plain
+// 12edo equivalent of that exact chord shape (A7: A C# E G) RIGHT ALONGSIDE
+// the 31edo version, so the two systems' different answers for "where is
+// the third/seventh" beat against each other in real time:
+//   interval   12edo (semitones->cents)   31edo (steps->cents)   diff
+//   3rd        4 st  = 400.0c             10 st = 387.1c         12.9c
+//   5th        7 st  = 700.0c             18 st = 696.8c          3.2c  (near-identical)
+//   b7         10 st = 1000.0c            25 st = 967.7c         32.3c (clearly audible)
+// The 5th is close enough in both systems to sound like agreement; the 3rd
+// drifts audibly; the b7 drifts the most -- three different "how in-tune is
+// this" answers from one chord shape, heard at once instead of read as a
+// table of numbers.
+//
+// ARRANGEMENT: real contrary-motion counterpoint, not hocket -- voice1
+// (12edo) and voice2 (31edo) play together every cycle, mirror images of
+// each other (voice2's pitch order is voice1's chord-tone order reversed,
+// same rest positions), so where one climbs the chord the other descends
+// it and they cross in the middle. Panned hard left/right (voice1/12edo
+// left, voice2/31edo right) -- the Pink Floyd stereo-duel device
+// (MUSIC-KNOWLEDGE.md §7), a deliberate reuse because today's whole point
+// literally IS two sides in opposition, the clearest justification for it
+// yet. Contrasting timbre per §1-2: sawtooth (sharp/abrasive -- the
+// "tempered" voice) vs triangle (pure/soft -- the "just" voice). Filter
+// sweep periods (4 vs 7, coprime) drift in and out of phase with each
+// other across the piece, a production-level echo of the same "in and out
+// of alignment" idea happening at the pitch level.
+// This is a theory-driven day (tuning theory, same rule Monday/Tuesday
+// follow) -- MUSIC-KNOWLEDGE.md §2.5: sawtooth/triangle/sine synth basics
+// throughout, no gm_* acoustic samples.
+//
+// FIVE PHRASE SHAPES (QC-loop devices -- shape2 is the literal retrograde
+// of shape1, shape4 the retrograde of shape3; shape3/4 compress the same
+// four chord tones into bigger leaps for real motif-and-variation rather
+// than a second pass at the same contour; shape5 is the arrival -- both
+// voices stop moving and just hold the full chord, tension->release after
+// four cycles of contrary motion): rotation repeats twice over the clip
+// (2 x 5 = 10 cycles).
+//
+// PERCUSSION reads the two tunings' own division counts straight: 5 pulses
+// over 12 (12edo's own step count) on the left/12edo side, 5 pulses over 31
+// (31edo's own step count) on the right/31edo side -- same numerator, each
+// system's own denominator, mirroring the voices' stereo split.
+//
+// CYCLES: 10 (two full passes of the 5-shape rotation). setcpm(30) x 10
+// cycles / 60 = 20s.
+// ============================================================================
+
+setcpm(30)
+let CYCLES = 10 // two passes of the 5-shape rotation below; 10 * 60/30 = 20s
+
+stack(
+  // DRONE -- the one thing both tunings agree on: a plain unison on the
+  // shared root A (220Hz = 12edo's A3 = 31edo's xen step 0). Long
+  // attack/release so it just sits underneath, not competing with the duel.
+  note("a2")
+    .sound("sine")
+    .attack(1.5).release(2)
+    .lpf(sine.range(300, 700).slow(11))
+    .gain(.16)
+    .pan(.5)
+    .room(4),
+
+  // VOICE 1 -- 12edo, tempered. Standard A7 chord tones (root A, 3rd C#,
+  // 5th E, b7 G). Ascends the chord in the call shapes, compresses into
+  // wider leaps in shapes 3-4, holds the full chord in shape 5. Sawtooth
+  // (sharp/abrasive, §1) for the more tense, "familiar but rougher" side of
+  // the duel. lpf sweep period 4 -- see header for the phase-drift note.
+  note(`<
+    [a3 ~ c#4 e4 ~ g4 a4 ~]
+    [~ a4 g4 ~ e4 c#4 ~ a3]
+    [a3 a4 ~ ~ c#4 ~ e4 g4]
+    [g4 e4 ~ c#4 ~ ~ a4 a3]
+    [a3,c#4,e4,g4]
+  >`)
+    .sound("sawtooth")
+    .attack(.01).decay(.15).sustain(.3).release(.5)
+    .lpf(sine.range(500, 3000).slow(4))
+    .lpq(8)
+    .distort(.12)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stutter
+    .gain(.36)
+    .pan(.25),
+
+  // VOICE 2 -- 31edo, near-just. Same chord shape at steps 0/10/18/25 (see
+  // header table), same root. Mirror image of voice1: pitch order reversed,
+  // rest positions identical, so the two sound together in real contrary
+  // motion, not hocket. Triangle (pure/soft, §1-2 -- deliberate CONTRAST
+  // with voice1's sawtooth) for the smoother, "in tune" side. lpf sweep
+  // period 7 against voice1's 4.
+  i(`<
+    [31 ~ 25 18 ~ 10 0 ~]
+    [~ 0 10 ~ 18 25 ~ 31]
+    [31 0 ~ ~ 25 ~ 18 10]
+    [10 18 ~ 25 ~ ~ 0 31]
+    [0,10,18,25]
+  >`)
+    .xen("31edo")
+    .sound("triangle")
+    .attack(.03).decay(.2).sustain(.5).release(.7)
+    .lpf(sine.range(600, 3400).slow(7))
+    .room(2.5)
+    .rarely(x => x.rev()) // improv hook: occasional reversal
+    .gain(.34)
+    .pan(.75),
+
+  // PERCUSSION -- each tuning's own division count as the euclid denominator
+  // (see header), mirroring the voices' L/R split.
+  s("bd").euclid(5, 12).bank("RolandTR909").pan(.25).gain(.38),
+  s("rim").euclid(5, 31).bank("RolandTR909").pan(.75).gain(.22).room(1.5),
+  s("hh*8").gain(.07).degradeBy(.35),
+)

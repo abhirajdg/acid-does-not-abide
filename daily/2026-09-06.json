@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-06",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "12EDO VS 31EDO",
+  "pattern_file": "daily/2026-09-06-wildcard-12edo-vs-31edo.strudel",
+  "cycles": 10,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["s(\"bd\").euclid(5, 12).bank(\"RolandTR909\").pan(.25).gain(.38),", "s(\"rim\").euclid(5, 31).bank(\"RolandTR909\").pan(.75).gain(.22).room(1.5),"]
+}
