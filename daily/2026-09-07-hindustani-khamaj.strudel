@@ -1,0 +1,106 @@
+// ============================================================================
+// DAILY — 2026-09-07 (Monday): Hindustani raga of the day — RAGA KHAMAJ
+// ============================================================================
+// Weekly rotation slot: Monday = one of the 10 parent thaats. Prior Mondays in
+// daily/ history: 2026-08-24 (Kalyan, bright/open lydian) and 2026-08-31
+// (Bhairavi, somber/devotional phrygian) -- avoiding both, and not touching
+// Bhairav (already the flagship reference in sets/bhairav-session-v1.strudel).
+// Going with Khamaj: the thaat behind thumri/tappa/dadra, the "light classical"
+// register -- playful, romantic, dance-adjacent -- a genuine mood contrast to
+// the two heavier Mondays so far.
+//
+// THEORY NOTES:
+// Khamaj's swaras: S R G M P D n  (komal Ni only; every other swara shuddh)
+//   -> semitone offsets from tonic: 0, 2, 4, 5, 7, 9, 10
+//   -> this IS the exact interval set of the Western "mixolydian" mode
+//      (W W H W W H W) -- no substitution needed, same discipline as Kalyan/
+//      lydian and Bhairavi/phrygian: mixolydian is one of the 7 standard
+//      diatonic church modes tonaljs ships natively, so .scale("G:mixolydian")
+//      honestly represents Khamaj's scale.
+//   -> tonic set to G -- a fresh tanpura pitch (Kalyan used D, Bhairavi used
+//      E), and a common pitch for light-classical vocal performance.
+//   -> scale degree numbers used in n() below map like this in "G:mixolydian":
+//        0=S(G)  1=R(A)  2=G(B)  3=M(C)  4=P(D)  5=D(E)  6=n(F)  7=S'(G5)
+//   -> vadi (dominant) = Ga = degree 2, samvadi (sub-dominant) = Ni = degree 6
+//      (the commonly cited vadi/samvadi pair for Khamaj itself, the thaat's
+//      namesake raga).
+//
+// MELODY -- three alternating phrases (playful call / leap-to-climax response
+// / descending resolve), anchored on vadi Ga, not a flat scale run:
+//   phrase A (call, a skipping rise to the vadi, then a further leap to Pa):
+//     S R G ~ G P ~  ->  n: 0 1 2 ~ 2 4 ~
+//     -> steps up through R to the vadi (G, degree 2), holds it across a
+//        rest, then leaps a third up to Pa -- the "skip" is the thumri-esque
+//        lilt Khamaj is known for, not a straight scalar climb.
+//   phrase B (response, the climax): G P n S' ~ n P  ->  n: 2 4 6 7 ~ 6 4
+//     -> leaps a fourth (P->S') to the octave, touching the samvadi (n) on
+//        the way, holds the peak across a rest, then falls back through the
+//        samvadi to Pa.
+//   phrase C (resolve, full descent from the octave back through Khamaj's
+//     one color tone -- komal Ni -- landing on the vadi):
+//     S' n D P M G ~  ->  n: 7 6 5 4 3 2 ~
+//     -> unbroken descent, closing on the vadi with a trailing rest rather
+//        than the tonic -- keeps the phrase feeling open/unresolved, fitting
+//        thumri's conversational, never-quite-settled character.
+//   -> n("<[0 1 2 ~ 2 4 ~] [2 4 6 7 ~ 6 4] [7 6 5 4 3 2 ~]>").scale("G:mixolydian")
+//
+// ARRANGEMENT -- a genuinely different technique from both prior Mondays
+// (Kalyan: gm_pad_warm drone + gm_flute lead + two stacked euclid() drum
+// voices; Bhairavi: sine drone + supersaw lead + one euclid() kick), driven
+// by what's actually distinctive about Khamaj -- it's the thumri/dance thaat,
+// so the rhythm should read as a real light-classical groove, not a math
+// pulse:
+//   drone:  sine, tonic + fifth (S/P as G2/D3, tanpura convention) -- purest
+//           waveform per MUSIC-KNOWLEDGE.md §2.5, synth basics not gm_sitar.
+//   lead:   sawtooth, fast-attack/short-decay envelope + a lowpass cutoff/
+//           resonance for buzz and a short delay for bounce -- reads as
+//           plucked/struck (thumri vocal ornament stand-in) without reaching
+//           for supersaw again, so it doesn't sound like a re-skin of
+//           Bhairavi's lead.
+//   rhythm: hand-written 8-matra KEHERWA theka (Dha Ge Na Ti Na Ka Dhi Na --
+//           the real light-classical/folk tala Khamaj compositions actually
+//           use) spelled out directly in mini-notation instead of derived
+//           from euclid(k,n) math, per the honesty argument
+//           sets/bhairav-session-v1.strudel's own TALA note raises about
+//           literal theka vs. Euclidean approximation. Dha/Na (the heavier
+//           bols) -> bd, Ge/Dhi (resonant fill) -> rim, Ti/Ka (light) -> hh.
+//           .swing(4) on top gives it the shuffled, dance-like feel that
+//           makes keherwa read as "light classical" rather than a straight
+//           marching pulse -- a device neither prior Monday used.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc. setcpm(50) * 17 cycles = 20.4s (60/50 = 1.2s/cycle).
+// ============================================================================
+
+setcpm(50)
+let CYCLES = 17 // 17 * 60/50 = 20.4s
+
+stack(
+  // drone: tonic + fifth (S and P), sine -- purest waveform, not a sample --
+  // see ARRANGEMENT note above. Slow attack/release so it swells in.
+  note("<g2 d3>/4")
+    .sound("sine")
+    .gain(.22)
+    .room(4.5)
+    .attack(2).release(3),
+
+  // melody: call (skip to vadi) / climax (leap to octave) / resolve
+  // (descent through the komal Ni color tone) -- see MELODY note above.
+  n("<[0 1 2 ~ 2 4 ~] [2 4 6 7 ~ 6 4] [7 6 5 4 3 2 ~]>")
+    .scale("G:mixolydian")
+    .sound("sawtooth")
+    .attack(.01).decay(.12).sustain(.2).release(.15)
+    .cutoff(1800).resonance(8)
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.42)
+    .room(2)
+    .delay(.18),
+
+  // rhythm: literal keherwa theka, not euclid() -- see ARRANGEMENT note.
+  // Dha Ge Na Ti | Na Ka Dhi Na, 8 matras, bd/rim/hh per bol weight.
+  s("bd rim rim hh bd hh rim rim")
+    .bank("RolandTR909")
+    .gain(.32)
+    .swing(4) // <- the light-classical shuffle; try removing to hear the diff
+    .degradeBy(.08)
+)

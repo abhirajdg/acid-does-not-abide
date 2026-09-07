@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-07",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "RAGA KHAMAJ",
+  "pattern_file": "daily/2026-09-07-hindustani-khamaj.strudel",
+  "cycles": 17,
+  "target_duration_sec": 20.4,
+  "code_highlight_lines": [
+    "n(\"<[0 1 2 ~ 2 4 ~] [2 4 6 7 ~ 6 4] [7 6 5 4 3 2 ~]>\").scale(\"G:mixolydian\")",
+    "s(\"bd rim rim hh bd hh rim rim\").bank(\"RolandTR909\").swing(4)"
+  ]
+}
