@@ -1,0 +1,132 @@
+// ============================================================================
+// DAILY — 2026-09-08 (Tuesday) — Carnatic melakarta math
+// Melakarta #57: Simhendramadhyamam
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (chakra/position scheme, same real combinatorial
+// structure used on 2026-08-25's #22 and 2026-09-01's #20 — not katapayadi
+// this time, but the brief's own "another real melakarta-numbering scheme"):
+//   chakra   = ceil(N / 6),  position = N - 6*(chakra - 1)
+// For N = 57: chakra = ceil(57/6) = 10 -> Ri-Ga combo (chakras 7-12 repeat
+//             chakras 1-6's combos, base index (10-6)=4) = R2 G2 (chatushruti
+//             Ri, sadharana Ga)
+//             position = 57 - 6*9 = 3 -> Dha-Ni combo #3 = D1 N3 (shuddha
+//             Dha, kakali Ni)
+//             N > 36 -> prati Ma (M2), not shuddha
+// melakarta 57 = S R2 G2 M2 P D1 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3 G3=4
+// M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 2 3 6 7 8 11.
+// -> verified against tonaljs's own scale-type data (same discipline as the
+//    Bhairav/"gypsy" and prior Tuesdays' matches): interval formula
+//    "1P 2M 3m 4A 5P 6m 7M" = 0 2 3 6 7 8 11 is EXACTLY tonaljs's "hungarian
+//    minor" scale. This identity is also independently documented for
+//    Simhendramadhyamam itself (ragajunglism.org: "equivalent to the
+//    Hungarian minor scale, also called the Gypsy minor scale in Western
+//    music") — an honest match, not a "close enough" guess.
+//    -> .scale("A:hungarian:minor") (tonic A, a fresh pitch center — G was
+//       used twice this week already, 09-01 and 09-07).
+// The scale's defining feature: TWO augmented-second gaps (3 semitones each,
+// not the usual 1 or 2) — G2->M2 (degrees 2->3) and D1->N3 (degrees 5->6).
+// This is the actual "vivadi" (dissonant-interval) character Carnatic
+// theory names Simhendramadhyamam for — an exotic, Middle-Eastern-flavored
+// sound, not a shade of major/minor like #20 (aeolian) or #22 (dorian) were.
+// Scale degree map in "A:hungarian:minor":
+//   0=S(A) 1=R2(B) 2=G2(C) 3=M2(D#) 4=P(E) 5=D1(F) 6=N3(G#) 7=S'(A5)
+//
+// A THIRD NUMBER, from N itself: digit sum 5+7 = 12 -> drives the hat
+// subdivision and the delay time below, so N's math shows up three separate
+// ways (chakra, position, digit sum), not just cycle count.
+//
+// ARRANGEMENT — deliberately NOT a repeat of 09-01's recipe (kick-locked
+// wobble sub-bass, no separate drone, sawtooth lead, techno/dubstep drum
+// alternation). What's actually distinctive about THIS melakarta is the
+// exotic double-augmented-second interval itself, and the classical way to
+// make an unusual raga's color audible is a steady tonic/fifth drone
+// underneath it — the Carnatic tambura, same principle as Hindustani tanpura
+// (MUSIC-KNOWLEDGE.md §3) — so the ear has a fixed reference to hear the
+// augmented seconds "sour" against. That's a genuine reason to bring the
+// drone convention BACK after 09-01 dropped it for a genre-fusion ask; it's
+// not reuse-by-default, it's what this specific raga needs to read as
+// exotic rather than just "another minor-ish scale."
+//   drone:  sine, tonic + fifth (S/P as a2/e3), tanpura convention, purest
+//           waveform per MUSIC-KNOWLEDGE.md §2.5.
+//   lead:   square (not sawtooth again — 09-01 and 09-07 both just used
+//           sawtooth) for a harder, more nasal edge that suits the scale's
+//           dissonant color; fast attack / short decay reads as a plucked
+//           attack without a sample. Filter LFO period is chakra (10) ->
+//           .slow(10), one slow sweep across most of the pattern; a touch
+//           of distortion adds grit appropriate to the "vivadi" tension.
+//   perc:   position (3) -> kick euclid(3,8); chakra (10) -> rim euclid
+//           (10,16), a denser, differently-patterned pulse from the kick so
+//           the two derived numbers read as two distinct rhythmic voices
+//           (same principle 09-01 used, different k/n pairs); digit sum
+//           (12) -> hh*12, and the same 12 sets the lead's delay time
+//           (1/12 of a cycle) so all three numbers actually drive something
+//           audible, not just cycle count.
+//
+// MELODY — four phrases (call / climax-response / drop / retrograde
+// variation), anchored on S and P (the two swaras every melakarta shares,
+// the closest Carnatic equivalent to a Hindustani vadi/samvadi pair here):
+//   A (call): establishes tonic, climbs into the FIRST augmented second
+//     (G2->M2) then leaps to P:            0 ~ 2 3 ~ 4 ~ ~
+//   B (response/climax): climbs through the SECOND augmented second
+//     (D1->N3), a half-step leading-tone rise to the octave, falls back:
+//                                            4 5 6 ~ 7 ~ 6 4
+//   C (the drop): the octave falls a tritone to M2 (the scale's sharp 4th —
+//     the "vivadi" clash made explicit as a leap, not just a passing tone),
+//     then another tritone down resolves to the tonic — tension deliberately
+//     exploited, then released:              7 ~ 3 ~ 0 ~ ~ ~
+//   D (retrograde variation of A, per MUSIC-QC-LOOP's motif-and-variation
+//     device): same four pitches reversed, closing with a leap from BELOW
+//     the tonic (degree -1, the octave-down N3 as a leading tone) instead of
+//     landing on it directly — a different cadence than any phrase before:
+//                                            4 ~ 3 2 ~ -1 0 ~
+//
+// CYCLES = 20, setcpm(60) -> 20 * 60/60 = 20s. 20 cycles = five full passes
+// of the 4-phrase alternation, a clean symmetric loop.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 20 // 20 * 60/60 = 20s; five passes of the 4-phrase melody
+
+stack(
+  // DRONE — tanpura convention, S + P (tonic/fifth), sine (purest waveform,
+  // not a sample — MUSIC-KNOWLEDGE.md §2.5). Slow attack/release so it swells
+  // in rather than snapping on, giving the exotic scale a stable bed to be
+  // heard against.
+  note("<a2 e3>/4")
+    .sound("sine")
+    .gain(.22)
+    .attack(2).release(3)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (thirds, tritones, the raga's
+  // own augmented seconds, a leap from below the tonic), rests for breathing
+  // room, tension->release (C) and retrograde-variation (D) as the required
+  // jazz-improv devices.
+  n(`<
+    0 ~ 2 3 ~ 4 ~ ~
+    4 5 6 ~ 7 ~ 6 4
+    7 ~ 3 ~ 0 ~ ~ ~
+    4 ~ 3 2 ~ -1 0 ~
+  >`)
+    .scale("A:hungarian:minor")
+    .sound("square")
+    .attack(.005).decay(.1).sustain(.15).release(.08)
+    .cutoff(1500).resonance(10)
+    .lpf(sine.range(700, 3400).slow(10)) // chakra (10) -> sweep period
+    .distort(.18)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.4)
+    .delay(.22)
+    .delaytime(1/12) // digit sum of 57 (5+7=12) -> a twelfth-note delay
+    .delayfeedback(.4),
+
+  // PERCUSSION — position (3) and chakra (10) drive two differently-shaped
+  // euclidean pulses; digit sum (12) drives the hat subdivision. Three
+  // numbers, three audible roles, none of them decorative.
+  stack(
+    s("bd").euclid(3, 8).bank("RolandTR909").gain(.56),
+    s("rim").euclid(10, 16).bank("RolandTR909").gain(.26),
+    s("hh*12").bank("RolandTR909").gain(.16).degradeBy(.25)
+  )
+)
