@@ -42,10 +42,6 @@
 //   clip, moving from tonic to fifth exactly once, at the midpoint (cycle
 //   9) -- "slowest unit" taken all the way to "changes once, ever."
 //
-//   KICK and RIM share the same pulse count (9, echoing day == month) over
-//   the same 16-step grid, but RIM is rotated by 10 -- the year's own digit
-//   sum (2+0+2+6) -- the one number in today's date that ISN'T the shared 9.
-//
 // Scale: D whole-tone (tonaljs "whole tone", written "D:whole:tone" per
 // tonal.md's space-to-colon rule for multi-word scale names -- verified
 // against tonaljs's own scale-type data, same discipline as Bhairav's
@@ -54,11 +50,21 @@
 // identically forwards and backwards -- a scale that is itself a musical
 // palindrome, which is exactly the shape of today's date.
 //
-// No hi-hats today -- the hocket needs the gaps to actually read as gaps;
-// filling the top end would bury the "who plays when" effect this whole
-// pattern is built around. Room size scales with each layer's time-unit:
-// DAY (smallest, closest) is driest, MONTH (middle) more spacious, YEAR
-// (largest, the drone) most spacious of all.
+// NO DRUM KIT — corrected 9 Sep 2026 (see MUSIC-QC-LOOP.md's autopilot-
+// percussion entry). The first draft's own comment argued for dropping hi-
+// hats because "the hocket needs the gaps to actually read as gaps; filling
+// the top end would bury the effect" -- correct reasoning that the draft
+// then didn't apply to itself: it still added a kick(9,16) + rotated-rim(16)
+// grid, which fills that exact same rhythmic space from below instead of
+// above. Same mistake, different frequency range. A euclidean drum layer was
+// never load-bearing here; the piece's actual rhythm IS the hocket, two
+// voices trading on a shared 16-step grid, and a metric pulse under it
+// competes with "who plays when" rather than supporting it. The year's digit
+// sum (10) still drives something audible -- the MONTH voice's filter sweep
+// period below -- without needing a rim to carry it too. Room size still
+// scales with each layer's time-unit: DAY (smallest, closest) is driest,
+// MONTH (middle) more spacious, YEAR (largest, the drone) most spacious of
+// all.
 //
 // This is a DAILY quick clip, not a flagship set -- one continuous pattern,
 // no alap/jor/jhala arc.
@@ -96,17 +102,13 @@ stack(
     .room(2.5), // medium -- month is the middle-sized unit
 
   // YEAR drone -- no repeating phrase, just a held tonic/fifth tanpura pad
-  // that changes exactly once, at the clip's midpoint.
+  // that changes exactly once, at the clip's midpoint. Gain raised slightly
+  // from the first draft (.18 -> .24) now that there's no drum layer beneath
+  // it -- the drone carries the low end instead.
   note("[d2 a2]/18")
     .sound("sine")
     .attack(2).release(3)
-    .gain(.18)
+    .gain(.24)
     .pan(.5)
-    .room(6), // most spacious -- year is the largest unit
-
-  // KICK / RIM: same pulse count (9, echoing day == month) over the same
-  // 16-step grid, RIM rotated by 10 -- the year's own digit sum -- the one
-  // number in today's date that ISN'T the shared 9.
-  s("bd").euclid(9, 16).bank("RolandTR909").gain(.4),
-  s("rim").euclidRot(9, 16, 10).bank("RolandTR909").gain(.18).degradeBy(.2)
+    .room(6) // most spacious -- year is the largest unit
 )

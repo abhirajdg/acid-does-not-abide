@@ -32,9 +32,9 @@
 // Scale degree map in "A:hungarian:minor":
 //   0=S(A) 1=R2(B) 2=G2(C) 3=M2(D#) 4=P(E) 5=D1(F) 6=N3(G#) 7=S'(A5)
 //
-// A THIRD NUMBER, from N itself: digit sum 5+7 = 12 -> drives the hat
-// subdivision and the delay time below, so N's math shows up three separate
-// ways (chakra, position, digit sum), not just cycle count.
+// A THIRD NUMBER, from N itself: digit sum 5+7 = 12 -> drives the delay time
+// below, so N's math shows up three separate ways (chakra, position, digit
+// sum), not just cycle count.
 //
 // ARRANGEMENT — deliberately NOT a repeat of 09-01's recipe (kick-locked
 // wobble sub-bass, no separate drone, sawtooth lead, techno/dubstep drum
@@ -55,13 +55,19 @@
 //           attack without a sample. Filter LFO period is chakra (10) ->
 //           .slow(10), one slow sweep across most of the pattern; a touch
 //           of distortion adds grit appropriate to the "vivadi" tension.
-//   perc:   position (3) -> kick euclid(3,8); chakra (10) -> rim euclid
-//           (10,16), a denser, differently-patterned pulse from the kick so
-//           the two derived numbers read as two distinct rhythmic voices
-//           (same principle 09-01 used, different k/n pairs); digit sum
-//           (12) -> hh*12, and the same 12 sets the lead's delay time
-//           (1/12 of a cycle) so all three numbers actually drive something
-//           audible, not just cycle count.
+//   NO DRUM KIT — corrected 9 Sep 2026 (see MUSIC-QC-LOOP.md's autopilot-
+//   percussion entry). The first draft bolted a TR909 kick/rim/hat stack on
+//   just so the three derived numbers (position, chakra, digit sum) each had
+//   something to drive audibly — but that reasoning is backwards: a real
+//   Carnatic raga exposition over a tambura drone (an alapana) has NO metric
+//   drum kit, and this file's own drone rationale two paragraphs up already
+//   says so ("the classical way to make an unusual raga's color audible is a
+//   steady tonic/fifth drone... so the ear has a fixed reference"). Adding a
+//   909 club pulse under that reasoning was decorative, not structural. The
+//   three numbers still drive real audible parameters, just not a drum
+//   layer: chakra (10) sets the lead filter's sweep period, digit sum (12)
+//   sets the delay time, and position (3) now sets the delay feedback amount
+//   (.3) below instead of a kick's euclid(3,8).
 //
 // MELODY — four phrases (call / climax-response / drop / retrograde
 // variation), anchored on S and P (the two swaras every melakarta shares,
@@ -92,10 +98,11 @@ stack(
   // DRONE — tanpura convention, S + P (tonic/fifth), sine (purest waveform,
   // not a sample — MUSIC-KNOWLEDGE.md §2.5). Slow attack/release so it swells
   // in rather than snapping on, giving the exotic scale a stable bed to be
-  // heard against.
+  // heard against. Gain raised slightly from the first draft (.22 -> .28) now
+  // that there's no drum layer to sit under — the drone carries the low end.
   note("<a2 e3>/4")
     .sound("sine")
-    .gain(.22)
+    .gain(.28)
     .attack(2).release(3)
     .room(4.5),
 
@@ -116,17 +123,8 @@ stack(
     .lpf(sine.range(700, 3400).slow(10)) // chakra (10) -> sweep period
     .distort(.18)
     .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
-    .gain(.4)
+    .gain(.42)
     .delay(.22)
     .delaytime(1/12) // digit sum of 57 (5+7=12) -> a twelfth-note delay
-    .delayfeedback(.4),
-
-  // PERCUSSION — position (3) and chakra (10) drive two differently-shaped
-  // euclidean pulses; digit sum (12) drives the hat subdivision. Three
-  // numbers, three audible roles, none of them decorative.
-  stack(
-    s("bd").euclid(3, 8).bank("RolandTR909").gain(.56),
-    s("rim").euclid(10, 16).bank("RolandTR909").gain(.26),
-    s("hh*12").bank("RolandTR909").gain(.16).degradeBy(.25)
-  )
+    .delayfeedback(.3) // position (3) -> delay feedback amount, no drum kit
 )
