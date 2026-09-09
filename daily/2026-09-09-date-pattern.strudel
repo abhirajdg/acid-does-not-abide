@@ -1,0 +1,112 @@
+// ============================================================================
+// DAILY — 2026-09-09 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-09-09 -- day 09, month 09 (September), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   DAY and MONTH are literally the same number this time -- 09 and 09,
+//   digit for digit. Rather than give each calendar unit its own separate
+//   phrase the way the last two Wednesdays did (2026-08-26: one melody
+//   reading the whole date string; 2026-09-02: three voices at three
+//   independent clock-rates), that exact coincidence drives the whole
+//   arrangement here: ONE melodic line, built only from the shared digits
+//   (0, 9) plus rests, is split note-by-note across two voices in a true
+//   HOCKET (MUSIC-KNOWLEDGE.md §2 -- each voice rests exactly where the
+//   other plays, never overlapping), so the ear hears "one idea, two
+//   tellings" instead of two unrelated tunes. DAY carries every "0" (the
+//   tonic -- day is the fastest, most grounding calendar unit); MONTH
+//   carries every "9" (scale-degree 9 overshoots the 6-note scale below and
+//   lands an octave + a 3rd up -- the same overshoot-not-clip convention
+//   already used for big digits elsewhere in this repo -- so month gets the
+//   wide "reaching" leap, day stays anchored).
+//
+//   Three hand-written shapes (call: front-loaded tonic-leap-tonic; tension:
+//   a back-loaded leap-cluster resolving late; delayed-entrance: sparse,
+//   almost silent) are run through Strudel's real `.palindrome()` (reverses
+//   a pattern on every other absolute cycle) instead of hand-writing
+//   retrograde versions. Three shapes and palindrome's period of 2 share no
+//   common factor, so the two mechanisms interact to produce all 6 real
+//   combinations -- each shape both forward AND reversed -- before the
+//   6-cycle supercycle repeats identically. DAY and MONTH run the exact same
+//   .palindrome() call, so they stay genuinely complementary at every step,
+//   not just similarly shaped.
+//
+//   CYCLES = 18 = day + month (9 + 9) -- and 18 is a clean 3x the 6-cycle
+//   mirror supercycle above, so it completes exactly 3 full passes with no
+//   remainder. setcpm(60) x 18 cycles / 60 = 18s.
+//
+//   YEAR (2026) is the slowest-changing unit of the three, so unlike day and
+//   month it gets no repeating phrase at all -- a single tanpura-style
+//   tonic/fifth pad (§3's "tanpura convention"), held across the entire
+//   clip, moving from tonic to fifth exactly once, at the midpoint (cycle
+//   9) -- "slowest unit" taken all the way to "changes once, ever."
+//
+//   KICK and RIM share the same pulse count (9, echoing day == month) over
+//   the same 16-step grid, but RIM is rotated by 10 -- the year's own digit
+//   sum (2+0+2+6) -- the one number in today's date that ISN'T the shared 9.
+//
+// Scale: D whole-tone (tonaljs "whole tone", written "D:whole:tone" per
+// tonal.md's space-to-colon rule for multi-word scale names -- verified
+// against tonaljs's own scale-type data, same discipline as Bhairav's
+// "gypsy" verification). Chosen on purpose, not habit: whole-tone is the
+// one common scale whose own interval pattern (six whole-steps) reads
+// identically forwards and backwards -- a scale that is itself a musical
+// palindrome, which is exactly the shape of today's date.
+//
+// No hi-hats today -- the hocket needs the gaps to actually read as gaps;
+// filling the top end would bury the "who plays when" effect this whole
+// pattern is built around. Room size scales with each layer's time-unit:
+// DAY (smallest, closest) is driest, MONTH (middle) more spacious, YEAR
+// (largest, the drone) most spacious of all.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 18 // day + month, since day == month == 9 this time (09-09)
+
+stack(
+  // DAY voice -- carries every "0" in the shared day/month digit line (the
+  // tonic anchor). True hocket partner to MONTH below, not an independent
+  // phrase: at every step, at most one of the two plays.
+  n("<[0 ~ 0 ~ ~ 0 ~ ~] [~ ~ ~ 0 0 ~ ~ 0] [~ 0 ~ ~ ~ ~ 0 ~]>")
+    .palindrome()
+    .scale("D:whole:tone")
+    .sound("square")
+    .attack(.008).decay(.1).sustain(0).release(.04)
+    .distort(.15) // acid taste layer, kept light so the hocket stays legible
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.32)
+    .pan(.78)
+    .room(.8), // driest voice -- day is the smallest, closest time unit
+
+  // MONTH voice -- carries every "9" (the wide degree-9 overshoot leap).
+  // Exact same 3-shape/.palindrome() structure as DAY, note for note
+  // complementary rather than merely similar.
+  n("<[~ 9 ~ ~ 9 ~ ~ 9] [9 9 ~ ~ ~ ~ 9 ~] [~ ~ ~ ~ 9 ~ ~ ~]>")
+    .palindrome()
+    .scale("D:whole:tone")
+    .sound("triangle")
+    .attack(.02).release(.5)
+    .lpf(sine.range(400, 2200).slow(10)) // sweep period = year's digit sum
+    .gain(.3)
+    .pan(.22)
+    .room(2.5), // medium -- month is the middle-sized unit
+
+  // YEAR drone -- no repeating phrase, just a held tonic/fifth tanpura pad
+  // that changes exactly once, at the clip's midpoint.
+  note("[d2 a2]/18")
+    .sound("sine")
+    .attack(2).release(3)
+    .gain(.18)
+    .pan(.5)
+    .room(6), // most spacious -- year is the largest unit
+
+  // KICK / RIM: same pulse count (9, echoing day == month) over the same
+  // 16-step grid, RIM rotated by 10 -- the year's own digit sum -- the one
+  // number in today's date that ISN'T the shared 9.
+  s("bd").euclid(9, 16).bank("RolandTR909").gain(.4),
+  s("rim").euclidRot(9, 16, 10).bank("RolandTR909").gain(.18).degradeBy(.2)
+)

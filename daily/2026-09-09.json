@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-09",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "DAY = MONTH = 09",
+  "pattern_file": "daily/2026-09-09-date-pattern.strudel",
+  "cycles": 18,
+  "target_duration_sec": 18,
+  "code_highlight_lines": ["n(\"<[0 ~ 0 ~ ~ 0 ~ ~] [~ ~ ~ 0 0 ~ ~ 0] [~ 0 ~ ~ ~ ~ 0 ~]>\")", "s(\"rim\").euclidRot(9, 16, 10).bank(\"RolandTR909\").gain(.18).degradeBy(.2)"]
+}
