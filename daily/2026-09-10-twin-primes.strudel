@@ -1,0 +1,85 @@
+// ============================================================================
+// DAILY — 2026-09-10 (Thursday): Pure math sequence — twin primes
+// ============================================================================
+//
+// THE SEQUENCE: the first 14 primes, 2 through 43 —
+//   2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43
+// grouped by whether each one has a TWIN (a prime exactly 2 away — 3&5,
+// 5&7, 11&13, 17&19, 29&31, 41&43, six pairs — 5 sits in two pairs at once,
+// the rare "prime triplet" 3-5-7) or is ISOLATED (no twin nearby: 2, 23, 37).
+// Whether infinitely many twin primes exist is the twin prime conjecture —
+// still open, unproven either way, the same kind of genuinely unresolved
+// math as 2026-09-03's Collatz day, just a different open question.
+//
+// THE DERIVATION — closeness on the number line becomes closeness in time.
+// Each cluster gets one cycle; a twin pair's two notes land back-to-back at
+// the start of the bar (an audible echo of "these two numbers sit right next
+// to each other"), while an isolated prime gets one note and nothing else —
+// real silence, not filler. Pitches are each prime mod 7 (scale-degree index
+// into E phrygian): 2→2, 3→3, 5→5, 7→0, 11→4, 13→6, 17→3, 19→5, 23→2, 29→1,
+// 31→3, 37→2, 41→6, 43→1. The three isolated notes (2, 23, 37) also drift
+// later within their bar cycle to cycle — step 1, then step 5, then step 7 —
+// a real fact about primes riding along for free: gaps between primes grow
+// (on average, like ln(p)) as numbers get bigger, so "alone time" stretches
+// out the further you go.
+//
+// ARRANGEMENT — no drum layer. A prime-gap topic has no inherent metric
+// pulse to represent (MUSIC-QC-LOOP.md's 09-08/09-09 note), and here the
+// whole point IS the silence around isolated primes — a euclidean kit would
+// fill exactly the space that's supposed to read as empty, the same mistake
+// already caught once on this project. Two voices only: the lead above, and
+// a companion drone (sine, tonic only) that appears ONLY on the three
+// isolated-prime cycles — quiet company for the lonely notes, silent
+// whenever a twin pair is already talking to itself. 6 (the twin-pair count)
+// drives the lead's filter sweep period, the one number this file needed an
+// audible outlet for.
+//
+// CYCLE COUNT: 8 (one per prime-cluster: 2 | 3-5-7 | 11-13 | 17-19 | 23 |
+// 29-31 | 37 | 41-43). setcpm(24) x 8 cycles / 60 = 20s exactly.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(24)
+let CYCLES = 8 // one cycle per prime-cluster, see header
+
+// LEAD — one group per cluster. Twin/triplet clusters land both (or three)
+// notes back-to-back at the start of the bar (the "these numbers are close"
+// echo); isolated primes are a single hit that drifts later cycle to cycle
+// (2 at step 1, 23 at step 5, 37 at step 7) — primes thin out, so does their
+// company. supersaw for a harmonically dense, plucked character (fast
+// attack/short decay, MUSIC-KNOWLEDGE.md §1's sharp/abrasive row).
+let lead = n(`<
+  [2 ~ ~ ~ ~ ~ ~ ~]
+  [3 5 0 ~ ~ ~ ~ ~]
+  [4 6 ~ ~ ~ ~ ~ ~]
+  [3 5 ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ 2 ~ ~ ~]
+  [1 3 ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ 2 ~]
+  [6 1 ~ ~ ~ ~ ~ ~]
+>`)
+  .scale("E:phrygian")
+  .sound("supersaw")
+  .attack(.01).decay(.15).sustain(.05).release(.12)
+  .lpf(sine.range(500, 3200).slow(6)) // 6 = number of twin-prime pairs
+  .lpq(9)
+  .distort(.15) // acid taste layer, kept light — this isn't a Friday jam
+  .sometimes(x => x.ply(2)) // improv hook: occasional echo-ornament
+  .gain(.44)
+  .pan(.32)
+
+// COMPANION DRONE — silent during every twin/triplet cycle (those clusters
+// already have their own internal dialogue); holds a plain tonic pedal only
+// under the three isolated primes (2, 23, 37), so a lonely note still has
+// quiet company instead of total emptiness. One value per cycle, matching
+// the lead's own 8-cycle structure exactly.
+let companionDrone = note("<e2 ~ ~ ~ e2 ~ e2 ~>")
+  .sound("sine")
+  .attack(1.2).release(2)
+  .gain(.22)
+  .room(5)
+  .pan(.68)
+
+stack(lead, companionDrone)

@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-10",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "TWIN PRIMES",
+  "pattern_file": "daily/2026-09-10-twin-primes.strudel",
+  "cycles": 8,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [".lpf(sine.range(500, 3200).slow(6)) // 6 = number of twin-prime pairs", "note(\"<e2 ~ ~ ~ e2 ~ e2 ~>\")"]
+}
