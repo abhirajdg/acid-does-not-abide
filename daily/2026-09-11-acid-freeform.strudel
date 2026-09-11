@@ -1,0 +1,114 @@
+// ============================================================================
+// DAILY — 2026-09-11 (Friday): Acid / psychedelia free jam
+// ============================================================================
+//
+// Friday's slot is taste-first, not theory-first (CREATIVE-DIRECTION.md) — no
+// raga/math derivation gates today's notes. Checked both prior Fridays before
+// writing this one (MUSIC-KNOWLEDGE.md's "don't template last cycle" rule):
+// 2026-08-28 used D harmonic minor with a near-static Goa-trance bass/lead
+// split and three independently-drifting filter params; 2026-09-04 used E
+// whole tone with a Sound-on-Sound delay drone and a fast wobble-bass LFO.
+// Today picks a different scale AND a different production idea, not just
+// new pitch numbers in the same shape:
+//
+//   SCALE: A locrian (A Bb C D Eb F G) — the one diatonic mode never used in
+//   this project yet, and the darkest: its own tonic triad is diminished
+//   (no stable perfect 5th above the root at all), so nothing in the mode
+//   ever fully "resolves" the way a major/minor tonic does. That instability
+//   IS today's psychedelia, honestly, rather than borrowed from an exotic-
+//   but-still-tonal scale. Degrees: 0=A 1=Bb 2=C 3=D 4=Eb(tritone) 5=F 6=G
+//   7=A'. The sustained pad below deliberately voices b3+b7 (C+G, degrees
+//   2 & 6) instead of a root-position triad — real locrian voicing practice
+//   avoids the diminished tonic triad, using upper structure instead.
+//
+//   ARRANGEMENT, per CREATIVE-DIRECTION's 10 Sep correction (genre structure,
+//   not raga performance form, drives Friday) and MUSIC-KNOWLEDGE.md §10's
+//   fix (real duckorbit sidechain, genre-correct depths, fewer layers each
+//   with one job — not more independently-drifting parameters). First time
+//   either device lands on a Friday specifically:
+//     - REAL sidechain: the kick drives duckorbit on bass/lead/pad at three
+//       different depths/attacks matching §10's genre table — hard/fast on
+//       the bass (attack .01, depth .85, "the pump IS the groove"), light on
+//       the lead (depth .35, stays melodically legible), slow/wide on the
+//       pad (attack .3, depth .5, a breathing bed, not a rhythmic chop).
+//     - Rolling 16th-note psytrance bassline (Goa/psytrance's actual core
+//       device) instead of last week's near-static bass or wobble sub — the
+//       groove and the bass are the same gesture, syncopated against the
+//       kick's four-on-the-floor rather than locked to it.
+//     - ONE automated filter param on the lead (a slow lpf sweep), not three
+//       independently-wandering ones — the §10 correction against
+//       "complicating the code" instead of layering.
+//
+// LEAD PHRASE (per MUSIC-QC-LOOP.md — real leaps + rests + development, not a
+// scale run), anchored on the mode's actual stable-ish tones (b3/b7) with the
+// tritone (degree 4) as a recurring tension note that's never allowed to
+// resolve — the tension→non-release IS the jazz-improv device here, echoing
+// what locrian actually does harmonically:
+//   A (call, leaps up to the tritone):     0 ~ 2 4 ~ 6 4 2
+//   B (response, touches "home" but the    4 2 0 ~ 2 4 ~ 0   -- home itself
+//      root triad is diminished, so it                          is unstable
+//      never really lands):
+//   C (retrograde of A):                   2 4 6 ~ 4 2 ~ 0
+//   D (peak, octave lift on the root —     0 4 2 ~ 7 4 2 0   -- 7 = octave,
+//      Goa-trance "lift" device, §6):                            Goa-trance lift
+//   rotation <A B C D> repeats every 4 cycles across the 16-cycle clip.
+//
+// CYCLES: 16. setcpm(52) -> 16 * 60/52 = 18.5s.
+// ============================================================================
+
+setcpm(52)
+let CYCLES = 16
+
+// kick drives the sidechain — hard/fast on bass (orbit 2), light on lead
+// (orbit 3), slow/wide on pad (orbit 4), per MUSIC-KNOWLEDGE.md §10's genre
+// table rather than one blanket duck depth for everything
+$: s("bd*4").bank("RolandTR909")
+  .duckorbit("2:3:4")
+  .duckattack("0.01:0.05:0.3")
+  .duckdepth("0.85:0.35:0.5")
+  .gain(.46)
+
+// rolling psytrance bassline (orbit 2) — the groove and the bass ARE one
+// gesture: mostly the tonic, lifting to the fifth-equivalent (degree 4 here
+// reads as tension, so the lift note is the 5th scale step F/degree 5
+// instead) every 4th sixteenth for forward motion, short plucky envelope,
+// hard-ducked by the kick above
+$bass: note("[a1 a1 a1 f1]*4")
+  .sound("sawtooth")
+  .attack(.005).decay(.09).sustain(0).release(.03)
+  .lpf(500).lpq(10)
+  .gain(.36)
+  .orbit(2)
+
+// acid lead (orbit 3): four-phrase rotation (see header), square wave, ONE
+// slow automated lpf sweep + high resonance + distort — not three
+// independently-drifting params (§10 correction) — lightly ducked so it
+// stays legible against the bass pump. Long room tail for the psychedelic
+// wash (CREATIVE-DIRECTION's taste-layer effects list), a different device
+// from last week's phaser/delay-drone choices.
+$lead: n("<[0 ~ 2 4 ~ 6 4 2] [4 2 0 ~ 2 4 ~ 0] [2 4 6 ~ 4 2 ~ 0] [0 4 2 ~ 7 4 2 0]>")
+  .scale("A:locrian")
+  .sound("square")
+  .attack(.01).decay(.12).sustain(.1).release(.2)
+  .lpf(sine.range(400, 2600).slow(6))
+  .lpq(14)
+  .distort(.28)
+  .sometimes(x => x.ply(2)) // improv hook: occasional squelchy ornament
+  .room(2)
+  .gain(.3)
+  .orbit(3)
+
+// pad (orbit 4): sustained b3+b7 dyad (C+G), deliberately NOT a root-position
+// triad since locrian's own tonic triad is diminished — this is the mode's
+// only real "stable" bed, wide/slow-ducked to breathe with the kick rather
+// than chop
+$pad: n("[2,6]").scale("A:locrian").sound("triangle")
+  .attack(.4).release(2.5)
+  .lpf(900)
+  .gain(.16)
+  .room(3)
+  .orbit(4)
+
+// off-beat hats, unducked and out of the way — texture only, no melodic or
+// rhythmic-drive job of its own
+$: s("~ hh ~ hh ~ hh ~ hh").gain(.1).degradeBy(.25)

@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-11",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "ACID FREE JAM",
+  "pattern_file": "daily/2026-09-11-acid-freeform.strudel",
+  "cycles": 16,
+  "target_duration_sec": 18,
+  "code_highlight_lines": ["$lead: n(\"<[0 ~ 2 4 ~ 6 4 2] [4 2 0 ~ 2 4 ~ 0] [2 4 6 ~ 4 2 ~ 0] [0 4 2 ~ 7 4 2 0]>\")", "$bass: note(\"[a1 a1 a1 f1]*4\")"]
+}
