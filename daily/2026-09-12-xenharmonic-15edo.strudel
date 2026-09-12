@@ -1,0 +1,119 @@
+// ============================================================================
+// DAILY — 2026-09-12 (Saturday): Xenharmonic tuning experiment — 15edo
+// ============================================================================
+//
+// THE TUNING: 15edo divides the octave into 15 equal steps of 1200/15 = 80c
+// each. Real historical precedent, not a novelty: Easley Blackwood's "Twelve
+// Microtonal Etudes for Electronic Music" (1980) includes an etude written in
+// 15-tone equal temperament, and the system is still called "Blackwood
+// temperament" after him. Checked against all three prior Saturdays before
+// writing a note of this (17edo, 19edo, 31edo) — see ARRANGEMENT below for
+// what's actually fresh this week, not last cycle's template with new
+// numbers.
+//
+// WHY 15edo, SPECIFICALLY (a different character than 17/19/31's "which
+// third is sweeter" story): 15 = 3 x 5, so the octave splits into three
+// EXACTLY EQUAL blocks of 5 steps each — 5 steps = 400c, which is also
+// 12-TET's major third exactly (coincidence of the two systems' math, not an
+// approximation). That means the interval from any note up 5 steps is
+// acoustically identical in structure everywhere in the scale — transposing
+// a phrase by +5 steps doesn't just "sound similar," it reproduces the exact
+// same scale-step relationships, because 5+5+5=15=octave. This is the
+// "Blackwood illusion": a modulation that isn't really a modulation. (The
+// tradeoff: with the octave locked to 3 equal thirds, the fifth can't land
+// justly — 9 steps = 720c, sharp of pure 3:2 (701.96c) by 18c, complemented
+// by a correspondingly flat fourth at 6 steps = 480c. Bright/tense 5ths,
+// perfectly self-similar 3rds — that tension IS the tuning's character.)
+//
+// ARRANGEMENT: per CREATIVE-DIRECTION.md's 10 Sep genre-first correction,
+// structure (rhythm/arrangement/sidechain) is genre-driven project-wide now,
+// not raga-performance-form-driven — so unlike a raga alapana (which
+// MUSIC-QC-LOOP.md correctly argues has no metric pulse), a xenharmonic
+// piece framed as a dance-genre track legitimately carries one. Built as a
+// lean four-on-the-floor techno pulse (kick + off-beat hats only, real
+// duckorbit sidechain into the sub per MUSIC-KNOWLEDGE.md §10's genre-correct
+// techno values — hard/fast, not a decorative extra layer) carrying a CANON
+// on top: the lead phrase plays twice, once straight and once transposed
+// +5 steps and nudged a quarter-cycle late, in a contrasting timbre panned
+// to the opposite side (Pink Floyd stereo-duel device, §7). Because +5 is
+// exactly the self-similar interval above, the second voice isn't a
+// "different" melody chasing the first — it's the identical shape appearing
+// to modulate while actually just restating itself, which is the whole
+// point of this tuning made audible rather than described. Neither the
+// separate-pad drone (17edo), the Sound-on-Sound feedback drone (19edo), nor
+// the sustained stacked-chord voicing (31edo) fit this week's point, so none
+// are reused; synth basics throughout per MUSIC-KNOWLEDGE.md §2.5 (sawtooth/
+// triangle/sine, no gm_* samples).
+//
+// MELODY: structural anchors are the tonic (step 0) and the sharp fifth
+// (step 9), same role vadi/samvadi play on a raga day. Four alternating
+// phrases over the 16-cycle clip:
+//   A (call): 0 ~ 5 9 ~ 14 15 — two clean third-leaps (+5) plus a half-step
+//             (14->15) leading-tone push up to the octave.
+//   B (response): 15 9 ~ 5 ~ 0 — falls back down (fourth, then two thirds),
+//             resolves on the tonic.
+//   C (retrograde of A — the required QC-loop device, literal reversal):
+//             15 14 ~ 9 5 ~ 0
+//   D (peak, tension->release): A's own shape transposed +5 (the
+//             self-similar interval) — 5 ~ 10 14 ~ 19 20 — then a tail
+//             falling back through 14 9 5, deliberately NOT resolving to
+//             tonic; the release only lands when the loop wraps to A's
+//             opening 0.
+// The canon voice runs this same <A B C D> a further +5 up and a quarter
+// cycle late, so by the time both voices are sounding, the piece is quietly
+// demonstrating 0 -> 5 -> 10 -> (15=octave) as one continuous, self-similar
+// staircase.
+//
+// CYCLES: 16. setcpm(48) -> 16 * 60/48 = 20s.
+// ============================================================================
+
+setcpm(48)
+
+let LEAD = "<[0 ~ 5 9 ~ 14 15] [15 9 ~ 5 ~ 0] [15 14 ~ 9 5 ~ 0] [5 ~ 10 14 ~ 19 20 ~ 14 9 5]>"
+
+// call voice: straight, panned left, one slow filter swell across the whole
+// clip (one arc, not several independently-wandering LFOs — MUSIC-KNOWLEDGE
+// §10's "fewer layers/params" lesson applies to automation too)
+$leadA: i(LEAD).xen("15edo")
+  .sound("sawtooth")
+  .attack(.01).decay(.15).sustain(.12).release(.18)
+  .lpf(sine.range(600, 2400).slow(8))
+  .lpq(6)
+  .pan(.25)
+  .gain(.34)
+  .room(1.4)
+
+// canon voice: same phrase, +5 steps (the self-similar interval) and a
+// quarter-cycle late, contrasting timbre so the ear can track both lines
+// independently (MUSIC-KNOWLEDGE §2's contrast-for-legibility), panned right
+$leadB: i(LEAD).add(5).xen("15edo")
+  .late(.25)
+  .sound("triangle")
+  .attack(.02).decay(.2).sustain(.1).release(.22)
+  .lpf(1500)
+  .pan(.75)
+  .gain(.24)
+  .room(1.8)
+
+// sub: parked on the tonic almost the whole time, one visit to the (sharp)
+// fifth per 4 cycles — Goa trance bass convention already established in
+// this project, genuinely fits a lean techno pulse too
+$sub: i("<-15 -15 -15 -6>/4").xen("15edo")
+  .sound("sine")
+  .lpf(500)
+  .attack(.02).release(.4)
+  .gain(.32)
+  .orbit(2)
+
+// kick: the audible pulse AND the sidechain source in one line — real
+// duckorbit sidechain (not the earlier `.duck(0)` no-op mistake), techno
+// values per MUSIC-KNOWLEDGE §10 (hard, fast pump — the low end breathes
+// with the kick)
+$: s("bd*4")
+  .duckorbit(2).duckattack(.01).duckdepth(.85)
+  .gain(.85)
+  .room(.12)
+
+// hats: off-beat, minimal, unducked, out of the way — the one other element
+// four-on-the-floor techno actually calls for, nothing beyond it
+$: s("~ hh ~ hh ~ hh ~ hh").gain(.09).room(.18)

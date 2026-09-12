@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-12",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "15EDO",
+  "pattern_file": "daily/2026-09-12-xenharmonic-15edo.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["$leadB: i(LEAD).add(5).xen(\"15edo\")", "  .duckorbit(2).duckattack(.01).duckdepth(.85)"]
+}
