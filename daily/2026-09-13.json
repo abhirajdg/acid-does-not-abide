@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-13",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "VIVADI CANON",
+  "pattern_file": "daily/2026-09-13-wildcard-vivadi-canon.strudel",
+  "cycles": 20,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "let PHRASE = \"<[0 2 3 ~ 6 5 ~ 0] [0 ~ 5 6 ~ 3 2 0]>\"",
+    "n(PHRASE).add(7).scale(\"A:hungarian:minor\")"
+  ]
+}

@@ -1,0 +1,177 @@
+// ============================================================================
+// DAILY — 2026-09-13 (Sunday): Wildcard — a three-voice canon at the octave,
+// riffing on this week's two most distinctive results: Tuesday's melakarta
+// #57 (Simhendramadhyamam / "Hungarian minor") and its "vivadi" (deliberately
+// dissonant) double augmented-second color, and Saturday's canon device.
+// ============================================================================
+//
+// WHY THIS COMBINATION (the Step 0 check against the last 3 Sundays):
+// 2026-08-23 retuned a single raga melody into one xenharmonic tuning (one
+// voice, alone). 2026-08-30 traded ONE melodic line between two voices in
+// true hocket (never sounding together). 2026-09-06 ran two simultaneous
+// voices in mirrored contrary motion (a duel, opposite directions). None of
+// the three is a real IMITATIVE canon -- one melody entering staggered
+// against itself, so the SAME tune harmonizes with its own later self -- so
+// that's today's device, borrowed from Western classical counterpoint (a
+// round), not yet used anywhere in this project.
+//
+// Saturday's 15edo file already used the word "canon," but that trick relies
+// on 15edo's own arithmetic self-similarity (15 = 3x5, so +5 steps
+// reproduces the exact same scale-step relationships) -- a xenharmonic
+// curiosity specific to that tuning. Melakarta 57's diatonic-style scale has
+// no such self-similar property, so today's canon is the plainer classical
+// device instead: canon AT THE OCTAVE -- three copies of ONE phrase entering
+// staggered in time, each in a different octave, never transposed to a
+// different scale degree. Genuinely different mechanism, same family of idea.
+//
+// THE SCALE: melakarta #57 Simhendramadhyamam, S R2 G2 M2 P D1 N3, already
+// derived and verified against tonaljs on 2026-09-08 as an exact match for
+// "hungarian minor" (0 2 3 6 7 8 11 semitones) -- reused verbatim, not
+// re-derived, tonic A per that file. Its defining feature, reused
+// deliberately here rather than just for pitch color: TWO augmented-second
+// gaps (G2->M2 and D1->N3, degrees 2->3 and 5->6) -- "vivadi," Carnatic
+// theory's own word for a deliberately dissonant interval. A round built
+// from a phrase that HITS both gaps means the dissonance itself is what
+// piles up as more voices enter -- the piece's actual dramatic arc.
+//
+// THE PHRASE (one Strudel cycle, real shape, alternating each cycle with its
+// own literal retrograde -- the required QC-loop device, applied to the
+// round's shared material itself rather than to one voice only, so every
+// voice gets it every other cycle):
+//   A: rises a third into the FIRST aug-2nd (0 2 3), rests, leaps a tritone
+//      into the upper register touching the SECOND aug-2nd from above (6),
+//      retraces it downward (6 5), rests, falls back to close on the tonic:
+//        0 2 3 ~ 6 5 ~ 0
+//   B: literal retrograde of A (read backwards, rests included):
+//        0 ~ 5 6 ~ 3 2 0
+// All three voices play this EXACT alternating pair (a round only works if
+// it's really the same tune) -- differentiation comes from octave register,
+// pan, and entrance time, never from changing the notes.
+//
+// THE ROUND STRUCTURE (20 cycles, entrance order mirrors the octave stack
+// order too):
+//   cycles 0-5   voice1 alone, home octave, pan hard left -- the "lead
+//                singer"
+//   cycles 6-11  voice2 joins, one octave UP, pan center -- the phrase is
+//                now harmonizing against its own earlier self
+//   cycles 12-17 voice3 joins, one octave DOWN, pan hard right -- full
+//                three-octave stack, maximum dissonant density, the piece's
+//                actual climax
+//   cycles 18-19 CODA -- the round drops out entirely and all three voices
+//                sustain ONE held chord: the tonic across the exact three
+//                octaves the round just explored (n("0,7,-7")) -- tension ->
+//                release, a direct payoff of the round's own register spread
+//                rather than an unrelated ending.
+//
+// ARRANGEMENT (genre-first, per CREATIVE-DIRECTION.md's 10 Sep correction --
+// standing project direction now, not just this week's weekday patterns): a
+// lean dub-techno pulse drives the piece, real duckorbit sidechain (not the
+// old `.duck(0)` mistake), and each new percussion layer arrives WITH a new
+// voice instead of being front-loaded -- the layer count is driven by the
+// same "how many voices are stacked right now" number that drives the
+// melodic density, not decorative default orchestration:
+//   kick (cycle 0+) arrives with voice1, drives the sidechain
+//   hats (cycle 6+) arrive with voice2
+//   voice3's entrance gets NO new drum layer -- three drum layers under
+//   three melodic ones would be the exact autopilot-percussion failure
+//   MUSIC-QC-LOOP.md already flags -- instead the shared room/reverb send
+//   widens once more, a textural marker instead of a mechanical one.
+//   Kick and hats both drop out entirely for the coda -- the release is felt
+//   as real silence in the low end, not just a held chord on top of a beat.
+// Sidechain: sub hard/fast-ducked (dub-techno convention, orbit 2), the three
+// round voices lightly ducked (depth .3, orbit 3) so the canon stays legible
+// even at full three-voice density.
+// Synth basics throughout (MUSIC-KNOWLEDGE.md §2.5 -- theory-driven day, no
+// gm_* samples): triangle for all three round voices (same waveform on
+// purpose -- a round's illusion depends on it really being one tune, not
+// three different-sounding instruments), sine for the sub.
+//
+// CYCLES: 20 = 6 solo (0-5) + 6 duo (6-11) + 6 trio (12-17) + 2 coda (18-19).
+// setcpm(60) -> 20 * 60/60 = 20s.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 20 // 6 solo + 6 duo + 6 trio + 2 coda, see ROUND STRUCTURE above
+
+// one cycle, alternating with its own literal retrograde every other cycle --
+// hits both of melakarta 57's aug-2nd gaps either way it's read (see PHRASE above)
+let PHRASE = "<[0 2 3 ~ 6 5 ~ 0] [0 ~ 5 6 ~ 3 2 0]>"
+let sweep = sine.range(500, 2600).slow(8) // one shared filter LFO across all 3
+                                           // voices -- reinforces "this is one
+                                           // voice in canon," not three
+                                           // independently-wandering ones
+                                           // (MUSIC-KNOWLEDGE.md §10)
+
+stack(
+  // VOICE 1 -- the "lead singer," home octave, pan hard left. Present the
+  // whole piece except the coda.
+  n(PHRASE).scale("A:hungarian:minor")
+    .sound("triangle")
+    .attack(.02).decay(.18).sustain(.15).release(.2)
+    .lpf(sweep)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.4)
+    .pan(.15)
+    .room(2)
+    .orbit(3)
+    .mask("<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>"),
+
+  // VOICE 2 -- canon at the octave UP, pan center. Enters cycle 6, with the
+  // first new drum layer (see ARRANGEMENT).
+  n(PHRASE).add(7).scale("A:hungarian:minor")
+    .sound("triangle")
+    .attack(.02).decay(.18).sustain(.15).release(.2)
+    .lpf(sweep)
+    .gain(.32)
+    .pan(.5)
+    .room(3) // wider room from here -- marks the second arrival texturally
+    .orbit(3)
+    .mask("<0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0>"),
+
+  // VOICE 3 -- canon at the octave DOWN, pan hard right. Enters cycle 12 --
+  // full three-octave stack, the piece's actual climax. No new drum layer
+  // arrives with it (see ARRANGEMENT) -- room widens once more instead.
+  n(PHRASE).add(-7).scale("A:hungarian:minor")
+    .sound("triangle")
+    .attack(.03).decay(.2).sustain(.2).release(.25)
+    .lpf(sweep)
+    .gain(.34)
+    .pan(.85)
+    .room(4.5)
+    .orbit(3)
+    .mask("<0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0>"),
+
+  // CODA -- tension -> release. The round drops out, all three voices' exact
+  // octaves (0, +7, -7) sustain together as one held tonic chord.
+  n("0,7,-7").scale("A:hungarian:minor")
+    .sound("triangle")
+    .attack(1.5).release(3)
+    .gain(.3)
+    .pan(.5)
+    .room(6)
+    .mask("<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1>"),
+
+  // SUB -- dub-techno low end, locked to the kick, hard-ducked (orbit 2).
+  note("a1").struct("bd*4")
+    .sound("sine")
+    .release(.15)
+    .gain(.3)
+    .orbit(2)
+    .mask("<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>"),
+
+  // KICK -- arrives with voice1 (cycle 0), drives the sidechain into the sub
+  // (hard) and the round voices (light, so the canon stays legible), drops
+  // out for the coda so the final chord lands in real silence underneath.
+  s("bd*4")
+    .duckorbit("2:3").duckattack("0.01:0.05").duckdepth("0.85:0.3")
+    .gain(.42)
+    .room(.15)
+    .mask("<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>"),
+
+  // HATS -- arrive with voice2 (cycle 6), the second layer's actual audible
+  // marker (see ARRANGEMENT) -- also drop for the coda.
+  s("~ hh ~ hh ~ hh ~ hh")
+    .gain(.1)
+    .degradeBy(.25)
+    .mask("<0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0>")
+)
