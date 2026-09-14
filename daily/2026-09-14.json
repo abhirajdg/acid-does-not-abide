@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-14",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "Raga Bhairav, 22-Shruti Just Intonation",
+  "pattern_file": "daily/2026-09-14-raga-bhairav-22shruti.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "const BHAIRAV_22SHRUTI = [1, 256/243, 5/4, 4/3, 3/2, 128/81, 15/8] // S r G M P d N",
+    "i(\"<[0 1 2 3 ~ 4 5] [5 6 7 ~ 6 5] [5 4 ~ 3 2 1 0] [1 ~ 5 ~ 1 0 ~]>\").xen(BHAIRAV_22SHRUTI)"
+  ]
+}

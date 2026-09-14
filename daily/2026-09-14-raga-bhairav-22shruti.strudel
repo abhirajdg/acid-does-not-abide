@@ -1,0 +1,134 @@
+// ============================================================================
+// DAILY — 2026-09-14 (Monday): Hindustani raga of the day — RAGA BHAIRAV,
+// tuned to the real 22-shruti just-intonation system, not 12-tone equal temp
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: this channel's two strongest-performing categories
+// by its own YouTube Analytics export (reviewed 10 Sep 2026, see
+// performance-reports/) are xenharmonic/EDO tuning days (best of the whole
+// channel: xenharmonic-17edo, 1,416 views/82.6% avg-%-viewed) and raga days
+// — this pattern is the direct combination of both, not a new direction:
+// raga Bhairav (already this project's flagship reference, sets/
+// bhairav-session-v1.strudel), tuned to the actual historical 22-shruti
+// system Indian classical theory itself uses, instead of the usual
+// tonaljs-scale-name shortcut (C:gypsy 12-tet) every prior Bhairav/Bhairavi
+// daily pattern has used.
+//
+// THE TUNING — verified against a real source before writing a note of this
+// (per DAILY-PIPELINE.md's own discipline: verify scale shortcuts, don't
+// guess), not recalled from memory: Prof. P. Sambamurthy's 22-shruti just-
+// intonation table (South Indian Music, Book IV/V), as transcribed by
+// Wolfgang von Schweinitz (plainsound.org/pdfs/srutis.pdf) — itself sourced
+// from the Natya Shastra's original 22-shruti division. Bhairav's 7 swaras,
+// picking the DEEP/more heavily flattened variant of komal Re and komal Dha
+// that gives Bhairav its characteristic severity (CREATIVE-DIRECTION.md
+// already names this as the raga's defining feature):
+//
+//   S  (Shadja)              1/1     =    0.0c
+//   r  (Ati-komal Re)      256/243   =   90.2c   <- the "Pythagorean limma,"
+//                                                    Bhairav's deep komal Re
+//   G  (Antara Ga)            5/4    =  386.3c   <- pure just major third
+//   M  (Suddha Ma)             4/3   =  498.0c   <- pure perfect fourth
+//   P  (Panchama)               3/2  =  702.0c   <- pure perfect fifth
+//   d  (Ekasruti Dha)       128/81   =  792.2c   <- deep komal Dha, mirrors r
+//   N  (Kakali Ni)            15/8   = 1088.3c   <- pure just major seventh
+//   S' (octave)                2/1  = 1200.0c
+//
+// THE "WOW," CITABLE ON CAMERA/IN THE DESCRIPTION: the gap sequence between
+// these seven degrees (90, 296, 112, 204, 90, 296, 112 cents) is a PALINDROME
+// — the interval from r to G (296c) is identical to the interval from d to N
+// (296c), and S-to-r (90c) mirrors P-to-d (90c). Bhairav's lower and upper
+// tetrachords are exact mirror images of each other in real cents, not
+// approximately — a structural symmetry 12-tone equal temperament (where
+// every semitone is forced to the same 100c) can't represent honestly, since
+// it would round both of those different-sized gaps to the same "3 semitones
+// ~ 300c." This piece's arrangement is built around making that mirror
+// audible (see MELODY below), the same way 2026-09-05's 31edo pattern built
+// its arrangement around a near-just 4:5:6:7 chord ringing beatless.
+//
+// ARRANGEMENT — per MUSIC-KNOWLEDGE.md §2.5 (synth basics on theory-driven
+// days, not gm_* acoustic samples): sine for the drone (purest tone, so the
+// just intervals' beating/non-beating is actually audible), sawtooth for the
+// lead (harmonically dense enough to carry a "plucked" attack per §2.5's own
+// suggestion). No `.xen()` scale-name shortcut exists for a real 22-shruti
+// subset, so the 7 ratios above are passed directly as a frequency-ratio
+// array to `.xen([...])` (see knowledge-base/strudel/learn/xen.md — "xen
+// also supports... an array of frequency ratios," assumed to repeat at
+// octave 2/1), base frequency 220Hz (same xen() default this project's prior
+// EDO patterns already rely on, e.g. 2026-09-05's 31edo file) — so degree 0
+// = S = 220Hz, and scale-degree arithmetic (0-6, wrapping/doubling at the
+// octave) works exactly like `.scale()` does elsewhere in this project.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// per the 09-08/09-09 autopilot-percussion lesson): this is a raga
+// EXPOSITION over a drone, the same shape that lesson already flagged as
+// conventionally carrying NO metric pulse (a real alapana has none) — so no
+// drum layer here, same call as 09-08's melakarta piece, made explicitly
+// rather than defaulting to a kit out of daily-pattern habit.
+//
+// EDUCATIONAL A/B MOMENT (new device, ties to the channel's own audience-
+// search data — "music theory for producers" is a real search interest this
+// channel's daily-pattern jargon titles don't currently speak to): the drone
+// briefly sustains the JI Ga (5/4, pure) alongside a 12-tone-equal-tempered
+// Ga (2^(4/12), the nearest fixed-piano equivalent) for the first 4 cycles —
+// audibly beating against each other — then the 12-tet note drops out,
+// leaving the pure 5/4 third ringing clean alone. A real, audible
+// demonstration of "this is what just intonation actually buys you," not
+// just a claim in the description.
+//
+// MELODY — four alternating phrases anchored on Bhairav's own vadi/samvadi
+// (already established in sets/bhairav-session-v1.strudel: vadi = Dha =
+// degree 5, samvadi = Re = degree 1 — reused here, not re-derived, so the
+// two Bhairav files agree):
+//   A (call, rising through the lower tetrachord, tension held on vadi
+//      after a rest):            S r G M ~ P d   ->  0 1 2 3 ~ 4 5
+//   B (climax — leaps through the UPPER tetrachord's mirrored 296c gap,
+//      d->N, the same size as A's r->G gap, then falls back to vadi):
+//                                 d N S' ~ N d    ->  5 6 7 ~ 6 5
+//   C (retrograde of A, literal reverse — the QC-loop device — full descent
+//      back to Sa):               d P ~ M G r S   ->  5 4 ~ 3 2 1 0
+//   D (coda: explicit vadi/samvadi call-and-response, resolving to Sa):
+//                                 r ~ d ~ r S ~    ->  1 ~ 5 ~ 1 0 ~
+//   rotation <A B C D> over the 16-cycle clip.
+//
+// CYCLES: 16. setcpm(48) -> 16 * 60/48 = 20s.
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16
+
+const BHAIRAV_22SHRUTI = [1, 256/243, 5/4, 4/3, 3/2, 128/81, 15/8] // S r G M P d N
+
+stack(
+  // DRONE — tonic + fifth (S, P), true 3/2 just fifth via the same ratio
+  // array (degree 4), not a 12-tet approximation. Slow attack/release, sine
+  // for purest tone (see ARRANGEMENT above).
+  i("<0 4>/4")
+    .xen(BHAIRAV_22SHRUTI)
+    .sound("sine")
+    .gain(.22)
+    .room(5)
+    .attack(2).release(3),
+
+  // A/B DEMONSTRATION — JI Ga (5/4) vs 12-tet Ga (2^(4/12)), sustained
+  // together for the first 4 cycles only, mask drops the 12-tet one after —
+  // see EDUCATIONAL A/B MOMENT above.
+  i("2/4").xen(BHAIRAV_22SHRUTI)
+    .sound("sine").gain(.14).room(5).attack(2).release(3),
+  freq("277.18!4/4") // 220 * 2^(4/12) -- the 12-tet Ga this JI Ga (5/4) beats against
+    .sound("sine").gain(.1).room(5).attack(2).release(3)
+    .mask("<1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0>"),
+
+  // MELODY — four alternating phrases anchored on vadi Dha/samvadi Re, see
+  // THEORY notes above for what each phrase actually is.
+  i("<[0 1 2 3 ~ 4 5] [5 6 7 ~ 6 5] [5 4 ~ 3 2 1 0] [1 ~ 5 ~ 1 0 ~]>")
+    .xen(BHAIRAV_22SHRUTI)
+    .sound("sawtooth")
+    .attack(.01).decay(.18).sustain(.15).release(.15)
+    .lpf(sine.range(600, 2200).slow(8)) // breathes wide/narrow, echoing the
+                                          // scale's own mirrored-gap symmetry
+    .lpq(11)
+    .gain(.4)
+    .room(2)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+)
