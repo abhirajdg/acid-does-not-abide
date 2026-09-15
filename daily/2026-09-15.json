@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-15",
+  "weekday": "Tuesday",
+  "topic": "carnatic-melakarta",
+  "topic_label": "MELAKARTA 29",
+  "pattern_file": "daily/2026-09-15-carnatic-melakarta-29.strudel",
+  "cycles": 29,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [".scale(\"F:major\")", ".delaytime(1/11) // digit sum of 29 (2+9=11) -> an undecuplet delay"]
+}

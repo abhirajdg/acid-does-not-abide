@@ -1,0 +1,121 @@
+// ============================================================================
+// DAILY — 2026-09-15 (Tuesday) — Carnatic melakarta math
+// Melakarta #29: Dheerashankarabharanam ("Shankarabharanam" for short —
+// literally "ornament of Shiva")
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (chakra/position scheme, same combinatorial structure
+// used on 08-25's #22, 09-01's #20, and 09-08's #57 — not katapayadi this
+// time, the brief's own "another real melakarta-numbering scheme"):
+//   chakra   = ceil(N / 6),  position = N - 6*(chakra - 1)
+// For N = 29: chakra = ceil(29/6) = 5 -> Ri-Ga combo #5 of the 6-combo cycle
+//             (1=R1G1 2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) = R2 G3 (chatushruti
+//             Ri, antara Ga)
+//             position = 29 - 6*4 = 5 -> Dha-Ni combo #5 of its own 6-combo
+//             cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) = D2 N3
+//             (chatushruti Dha, kakali Ni)
+//             N <= 36 -> shuddha Ma (M1)
+// A genuine coincidence worth naming, not engineered: chakra AND position
+// both land on combo-slot #5 of their respective 6-combo cycles this time —
+// used below to justify reusing the number 5 for two different things
+// (filter sweep period, melodic run length) instead of forcing them apart.
+//
+// melakarta 29 = S R2 G3 M1 P D2 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3 G3=4
+// M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 2 4 5 7 9 11 — EXACTLY the
+// Western major (Ionian) scale. This is the well-known real identity behind
+// melakarta 29's name and its status as the "sampoorna" reference raga (all
+// 7 notes, no vivadi/dissonant intervals) — confirmed by the semitone math
+// itself, the same discipline used for 09-08's hungarian-minor match, not
+// assumed from the name alone. Tonic F this time: C, D, E, G and A have all
+// carried a daily pattern in the last two weeks (see recent .scale() calls),
+// F has not — a fresh pitch center.
+//   -> .scale("F:major")
+//
+// This is the deliberate opposite number of 09-08's #57: that scale's whole
+// point was its two augmented-second gaps (an exotic, "vivadi" color) —
+// #29 has NONE, it's the most consonant, fully resolved parent scale in the
+// entire 72-melakarta system. The arrangement below leans into THAT contrast
+// rather than reusing 09-08's exotic-scale playbook (sine drone bracing
+// against dissonance, harsh square lead) on a scale that has no dissonance
+// to brace against.
+//
+// ARRANGEMENT — a fresh choice for what's actually different about #29:
+//   drone: supersaw (not sine) — MUSIC-KNOWLEDGE.md §1's "thick/robust
+//          drone reads as weightier/more serious than a pad" point, and a
+//          richer waveform is safe here specifically BECAUSE the scale has
+//          no close dissonant intervals to muddy (unlike #57, where sine's
+//          purity was load-bearing for hearing the augmented seconds
+//          clearly). tonic + fifth (S/P as f2/c3), tanpura convention.
+//   lead:  triangle (pure/soft) — deliberate contrast against the drone's
+//          richer supersaw (§2's blend/contrast point), and a soft waveform
+//          suits this scale's bright, resolved, non-dissonant character —
+//          a harsh square/saw (used the last two Tuesdays) would be fighting
+//          the material instead of matching it.
+//   NO DRUM KIT — same standing call as 09-08 and 09-14 (MUSIC-QC-LOOP.md's
+//   autopilot-percussion lesson): this is a melakarta SCALE exposition
+//   (sarali-varisai/alapana style, not a tala-bound kriti), so no metric
+//   pulse is conventionally implied. The two derived numbers (chakra,
+//   position) still drive real audible things below — one drives the
+//   filter's automation period, the other drives an actual melodic
+//   run-length inside the phrase itself — neither needed a drum layer as
+//   its "audible outlet."
+//
+// MELODY — four phrases (call / climax-leap / drop / retrograde-with-
+// leading-tone), anchored on S and P:
+//   A (call): a FIVE-note ascending run (position = 5, reflected directly
+//     in note count, not just a knob) skipping R and M for real leaps
+//     (thirds), landing the octave:      0 ~ 2 4 5 7 ~ ~
+//   B (climax): from the octave, a genuine leap of a fifth up to P', then
+//     a stepwise fall back down through M' and R':
+//                                         7 ~ 11 ~ 10 8 7 ~
+//   C (the drop): two big descending leaps — P' down to D, then D down to
+//     S — tension released in one motion, the "sampoorna" scale's clean
+//     resolution instead of #57's tritone-based tension:
+//                                         11 ~ 5 ~ 0 ~ ~ ~
+//   D (retrograde variation of A, motif-and-variation device): A's pitches
+//     reversed, but closing through the LEADING TONE (degree -1, N below
+//     the tonic) resolving up to S — the classic "ti->do" pull, which reads
+//     especially strongly in a plain major scale (unlike #57's more exotic
+//     vivadi resolution):                 7 ~ 5 4 ~ 2 -1 0
+//
+// CYCLES = 29 (the melakarta number itself, same convention as 08-25/09-01).
+// setcpm(87) -> 29 * 60/87 = 20.0s exactly.
+// ============================================================================
+
+setcpm(87)
+let CYCLES = 29 // = the melakarta number itself; 29 * 60/87 = 20.0s
+
+stack(
+  // DRONE — tanpura convention, S + P (tonic/fifth). supersaw for a richer,
+  // more "regal" character than this project's usual sine drone — safe here
+  // because #29 has no close dissonant intervals a richer waveform could
+  // muddy (see ARRANGEMENT above).
+  note("<f2 c3>/4")
+    .sound("supersaw")
+    .gain(.22)
+    .attack(2.5).release(3.5)
+    .lpf(1800)
+    .room(5),
+
+  // MELODY — see MELODY note above. Real leaps (thirds, a fifth, big
+  // compound leaps in the drop), rests for breathing room, motif-and-
+  // variation (D) and tension->release (C) as the required jazz-improv
+  // devices.
+  n(`<
+    0 ~ 2 4 5 7 ~ ~
+    7 ~ 11 ~ 10 8 7 ~
+    11 ~ 5 ~ 0 ~ ~ ~
+    7 ~ 5 4 ~ 2 -1 0
+  >`)
+    .scale("F:major")
+    .sound("triangle")
+    .attack(.01).decay(.15).sustain(.2).release(.15)
+    .lpf(sine.range(700, 3200).slow(5)) // chakra (5) -> sweep period
+    .lpq(6)
+    .distort(.08)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.45)
+    .delay(.25)
+    .delaytime(1/11) // digit sum of 29 (2+9=11) -> an undecuplet delay
+    .delayfeedback(.3)
+)
