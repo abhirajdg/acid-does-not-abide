@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-17",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "PASCAL'S TRIANGLE",
+  "pattern_file": "daily/2026-09-17-pascals-triangle.strudel",
+  "cycles": 8,
+  "target_duration_sec": 16,
+  "code_highlight_lines": ["$: s(\"bd\").euclid(3, 8)", "[1 6 7 ~ 4 7 6 1]"]
+}

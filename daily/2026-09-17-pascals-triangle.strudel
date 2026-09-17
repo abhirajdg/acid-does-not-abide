@@ -1,0 +1,80 @@
+// ============================================================================
+// DAILY — 2026-09-17 (Thursday): Pure math sequence — Pascal's triangle
+// ============================================================================
+//
+// THE SEQUENCE: four consecutive rows of Pascal's triangle, n=3..6:
+//   row3: 1 3 3 1        (sum = 8  = 2^3)
+//   row4: 1 4 6 4 1       (sum = 16 = 2^4)
+//   row5: 1 5 10 10 5 1    (sum = 32 = 2^5)
+//   row6: 1 6 15 20 15 6 1  (sum = 64 = 2^6)
+// Two real properties of the triangle drive the piece:
+//   1. Every row is a PALINDROME — read forwards or backwards, same numbers.
+//      That symmetry becomes the melodic shape directly: each phrase below IS
+//      its own retrograde, not a device applied after the fact.
+//   2. Each row SUMS to 2^n — row3 (index 3, sum 8) gives the kick's own
+//      euclid(3,8), so the one percussion pulse in this piece is read
+//      straight off the math, not chosen and then justified.
+// Rows 5 and 6 have coefficients too large to use directly as scale degrees,
+// so they're taken mod 8: row5 -> 1 5 2 2 5 1, row6 -> 1 6 7 4 7 6 1. Where a
+// value repeats back-to-back (row5's "2 2", row3's "3 3"), the repeat is
+// raised an octave instead of restated flat — same grace-note move
+// 2026-09-10's twin-primes file used, here motivated by wanting the repeated
+// coefficient to still read as a real leap rather than a held note.
+//
+// PHRASE DEVELOPMENT: the four rows alternate one per cycle (<...>), so the
+// piece literally builds the triangle outward — 4 notes, then 5, then 6, then
+// 7 — and the rest-density falls as the rows widen (3 rests -> 2 -> 2 -> 1),
+// mirroring the triangle actually filling in. Real leaps throughout (up to a
+// 6th, plus the octave leaps from the embellishments) from each row's own
+// symmetric rise/fall — no scale-exercise stepwise runs.
+//
+// SCALE: D:dorian = Kafi thaat (S R g M P D n — komal Ga, komal Ni).
+//
+// ARRANGEMENT — deliberately different from the last Thursday slot
+// (2026-09-10, twin primes): that file built a full dub-techno kit (kick +
+// hard-ducked sub + hi-hats + supersaw lead + separate pad, three-way
+// duckorbit chain) in E phrygian. Today's math only earns ONE percussion
+// voice (the euclid(3,8) kick straight off row3), so the kit stays that
+// small rather than padding it out with a sub/hats by habit — per
+// MUSIC-QC-LOOP.md, a derived number needing an audible outlet doesn't
+// justify a full drum kit as that outlet. Square wave lead (sharp/abrasive,
+// MUSIC-KNOWLEDGE.md §1) against a triangle pad (pure/soft) for real
+// blend/contrast, swapping out last week's supersaw-vs-sawtooth pairing.
+// One automation layer: the lead's filter opens across the 8-cycle pattern
+// in step with the rows widening, so the triangle's own growth is audible in
+// the timbre, not just the note count. Light duckorbit from the kick onto
+// lead + pad — real sidechain (MUSIC-KNOWLEDGE.md §10), not decorative.
+//
+// CYCLES: 8 (two passes through the 4-row alternation). setcpm(30) x 8 / 60
+// = 16s.
+// ============================================================================
+
+setcpm(30)
+
+$lead: n(`<
+  [1 ~ ~ 3 ~ ~ 10 1]
+  [1 ~ 4 ~ 6 4 ~ 1]
+  [1 5 ~ 2 9 5 ~ 1]
+  [1 6 7 ~ 4 7 6 1]
+>`)
+  .scale("D:dorian")
+  .sound("square")
+  .attack(.01).decay(.12).sustain(.2).release(.25)
+  .lpf(sine.range(1000, 2400).slow(8))
+  .lpq(6)
+  .gain(.34)
+  .room(1)
+  .orbit(2)
+
+$pad: n("[0,4]").scale("D:dorian")
+  .sound("triangle")
+  .attack(.4).release(2)
+  .lpf(900)
+  .gain(.16)
+  .room(3)
+  .orbit(3)
+
+$: s("bd").euclid(3, 8)
+  .duckorbit("2:3").duckattack("0.02:0.08").duckdepth("0.5:0.35")
+  .gain(.4)
+  .room(.3)
