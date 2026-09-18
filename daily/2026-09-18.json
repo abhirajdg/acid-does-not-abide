@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-18",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "ACID FREE JAM",
+  "pattern_file": "daily/2026-09-18-acid-freeform.strudel",
+  "cycles": 16,
+  "target_duration_sec": 19,
+  "code_highlight_lines": ["n(\"<[0 ~ 2 4 ~ 6 4 2] [4 2 0 ~ 1 0 ~ 0] [2 4 6 ~ 4 2 ~ 0] [0 6 4 ~ -7 4 2 0]>\")", ".penv(7).pattack(0).pdecay(.07).pcurve(1)"]
+}

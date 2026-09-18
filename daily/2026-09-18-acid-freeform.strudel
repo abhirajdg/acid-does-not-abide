@@ -1,0 +1,105 @@
+// ============================================================================
+// DAILY — 2026-09-18 (Friday): Acid / psychedelia free jam
+// ============================================================================
+//
+// Friday's slot is taste-first, not theory-first (CREATIVE-DIRECTION.md) — no
+// raga/math derivation gates today's notes. Checked all three prior Fridays
+// before writing this one (MUSIC-KNOWLEDGE.md's "don't template last cycle"
+// rule): 2026-08-28 used D harmonic minor with a Goa-trance bass/lead split
+// and three independently-drifting filter params; 2026-09-04 used E whole
+// tone with a Sound-on-Sound delay drone and a fast wobble-bass LFO;
+// 2026-09-11 used A locrian with a real duckorbit sidechain and a rolling
+// 16th-note psytrance bass. Today uses a different scale and, more to the
+// point, finally cashes in the two acid devices MUSIC-KNOWLEDGE.md §4 named
+// as "worth trying" back on 27 Aug but never actually used:
+//
+//   SCALE: F melodic minor (F G Ab Bb C D E) — natural minor with a raised
+//   6th and 7th, the "jazz minor" sound. Degrees: 0=F 1=G 2=Ab 3=Bb 4=C 5=D
+//   6=E 7=F'. Distinct color from the three scales used on prior Fridays
+//   (no whole-tone symmetry, no locrian instability, no harmonic-minor
+//   augmented 2nd) — its own tension comes from the major-7th-ish pull of
+//   the raised 6/7 against a minor tonic, a genuinely different flavor.
+//
+//   ARRANGEMENT — two per-note ENVELOPES instead of continuous sweeps or a
+//   sidechain (both already used on prior Fridays):
+//     - LEAD: a real per-note lowpass filter envelope (`lpa`/`lpd`/`lpenv`,
+//       verified in knowledge-base/strudel/learn/effects.md) — the actual
+//       303 "quack," each note opening/closing its own filter, rather than
+//       one slow `sine.range()` sweep riding underneath a static filter like
+//       every prior Friday's lead. Envelope decay/depth tighten across the
+//       4-phrase rotation so the filter itself tracks the phrase's own
+//       tension arc instead of drifting independently of it (the §10
+//       correction against parameters that don't relate to the material).
+//     - BASS: a real per-note pitch envelope (`penv`/`pattack`/`pdecay`/
+//       `pcurve`, same doc) — each note "dives" into pitch from a fifth
+//       above over ~70ms, the classic acid pitch-pluck, instead of a
+//       continuous wobble LFO (09-04) or a plain rolling run (09-11).
+//   Per §10's "fewer layers, each with one job" correction, there's no
+//   separate pad/drone this week — today's psychedelic character comes from
+//   the two note-level envelopes breathing/diving, not from a sustained
+//   texture underneath them, so a fifth layer would just dilute the point
+//   rather than add to it. Percussion stays: acid house's own identity is a
+//   four-on-the-floor kick + a 303 bassline (unlike a raga/Carnatic day, this
+//   genre genuinely carries the pulse), kept plain this week since the device
+//   budget went to the envelopes rather than a sidechain.
+//
+// LEAD PHRASE (per MUSIC-QC-LOOP.md — real leaps + rests + development, not a
+// scale run), degrees against F melodic minor:
+//   A (call, leaps up into the raised-6th tension): 0 ~ 2 4 ~ 6 4 2
+//   B (response, answers A, resolves home twice):   4 2 0 ~ 1 0 ~ 0
+//   C (retrograde of A):                             2 4 6 ~ 4 2 ~ 0
+//   D (peak — a DROP, not a lift: leaps to the       0 6 4 ~ -7 4 2 0
+//      raised-6th tension then plunges a 9th to                -7 = tonic,
+//      the tonic an octave down, the inverse of                one octave
+//      the "Goa-trance lift" used the last two Fridays,         below
+//      pairing with the bass's own downward pitch dives):
+//   rotation <A B C D> repeats every 4 cycles across the 16-cycle clip.
+//
+// CYCLES: 16. setcpm(50) -> 16 * 60/50 = 19.2s.
+// ============================================================================
+
+setcpm(50)
+let CYCLES = 16
+
+stack(
+  // four-on-the-floor kick — acid house's actual metric identity, kept plain
+  // (no sidechain this week — that device already had its turn on 09-11)
+  s("bd*4").bank("RolandTR909").gain(.42),
+
+  // ACID BASS — per-note PITCH ENVELOPE dive (MUSIC-KNOWLEDGE.md §4's
+  // still-untried idea, verified against effects.md's penv/pattack/pdecay/
+  // pcurve): each note starts a fifth sharp and slides down into true pitch
+  // over ~70ms, pcurve(1) (exponential, "good for kicks" per the docs, also
+  // punchy here) for a snappy rather than smeary dive. Syncopated 8-step
+  // pattern built on rests, not a straight 16th-note run or a near-static
+  // Goa-trance sub like the prior three Fridays — mostly tonic, one leap to
+  // the 5th (C) for motion.
+  note("f1 ~ f1 ab1 ~ f1 c2 ~")
+    .sound("sawtooth")
+    .attack(.005).decay(.1).sustain(0).release(.04)
+    .penv(7).pattack(0).pdecay(.07).pcurve(1)
+    .lpf(700).lpq(9)
+    .gain(.38),
+
+  // ACID LEAD — per-note lowpass filter ENVELOPE (the real "quack" — each
+  // note opens/closes its own filter) instead of a continuous sine sweep.
+  // lpd/lpenv tighten and deepen across the 4-phrase rotation (<A B C D>),
+  // so phrase D's drop gets the snappiest, deepest quack of the four.
+  n("<[0 ~ 2 4 ~ 6 4 2] [4 2 0 ~ 1 0 ~ 0] [2 4 6 ~ 4 2 ~ 0] [0 6 4 ~ -7 4 2 0]>")
+    .scale("F:melodic:minor")
+    .sound("square")
+    .attack(.01).decay(.1).sustain(.08).release(.15)
+    .lpf(500)
+    .lpa(.01)
+    .lpd("<.16 .12 .09 .05>/4")
+    .lpenv("<3 4 5 6>/4")
+    .lpq(13)
+    .distort(.24)
+    .sometimes(x => x.ply(2)) // improv hook: occasional squelchy ornament
+    .room(1.5)
+    .gain(.28),
+
+  // off-beat open hats — texture only, no melodic/rhythmic-drive job of its
+  // own, out of the way of the bass's syncopation
+  s("~ oh ~ oh ~ oh ~ oh").gain(.09).degradeBy(.3),
+)
