@@ -1,0 +1,123 @@
+// ============================================================================
+// DAILY — 2026-09-19 (Saturday): Xenharmonic tuning experiment — 24edo /
+// Maqam Rast
+// ============================================================================
+//
+// THE TUNING: 24edo divides the octave into 24 equal quarter-tone steps of
+// 50c each. Checked against all four prior Saturdays before writing a note
+// of this (17edo, 19edo, 31edo, 15edo) — none of them are this kind of
+// system. 17/19/31/15edo all RETUNE every interval away from 12-TET (that's
+// the whole point of a meantone-family EDO). 24edo does the opposite: 24 is
+// exactly 12*2, so every 12-TET pitch is still there unchanged, and the new
+// 12 steps just fall exactly halfway BETWEEN the familiar ones. It's a
+// superset, not a retuning — a genuinely different xenharmonic story, and
+// the reason it's real and not a novelty division: 24-TET is the standard
+// fixed-pitch approximation used to teach and notate Arabic maqam theory
+// (the "quarter-tone" system referenced on Arabic keyboards/oud fretting
+// guides), even though live maqam performance actually uses more flexible,
+// non-equal micro-intonation — the same honest caveat this project already
+// applies to tonaljs scale-name shortcuts.
+//
+// THE MAQAM: Rast, built from the "Rast tetrachord" (tone, 3/4-tone,
+// 3/4-tone) stacked on itself a fifth apart — qarar (tonic) and ghammaz
+// (the maqam's structural dominant, functionally the same role vadi/samvadi
+// play in a raga) a full 700c/14-step fifth apart:
+//   Do(qarar)=0  Re=4  Mi-half-flat=7  Fa=10  Sol(ghammaz)=14  La=18
+//   Si-half-flat=21  Do'=24
+// Mi-half-flat (step 7, 350c) is the character note: a "neutral third,"
+// audibly neither major (400c) nor minor (300c) — exactly halfway between,
+// which is the entire reason 24edo (adds a note AT that halfway point)
+// tells this story better than any meantone EDO could.
+//
+// THE "WOW," MADE AUDIBLE (cycles 1-4 only, then drops out): three sine
+// tones sustained together — the real neutral third (220 * 2^(7/24) ≈
+// 269.29Hz) alongside a plain 12-TET minor third (220 * 2^(3/12) =
+// 261.6256Hz) and major third (220 * 2^(4/12) = 277.1826Hz) — so the
+// neutral third is heard sitting audibly, evenly between its two 12-TET
+// neighbors, not just described. Deliberately a different demonstration
+// than 2026-09-14's 22-shruti file (which sustained one JI pitch against
+// one 12-TET pitch for the whole piece, in the drone register): here it's
+// three tones bracketing the note from both sides, self-contained, and it
+// fully exits after making its point rather than continuing in the drone —
+// the neutral third is then only heard doing real melodic work in the lead.
+//
+// ARRANGEMENT: per CREATIVE-DIRECTION.md's genre-first correction, this is
+// framed as a Goa-trance-adjacent psy piece drawing on Indian/Middle-
+// Eastern-flavored harmonic tension (MUSIC-KNOWLEDGE.md §6 already names
+// this overlap) rather than a raga alap. Percussion check (MUSIC-QC-LOOP.md,
+// asked explicitly rather than defaulted): does this topic conventionally
+// carry a metric pulse? Yes, genuinely — unlike a raga alapana, Arabic
+// maqam compositions run on real named iqa'at (rhythmic modes), so real
+// percussion is honestly earned here, the same way Khamaj's keherwa theka
+// earned percussion on 2026-09-07. Used maqsum, one of the most common
+// iqa'at (Dum Tek - Tek Dum - Tek -, 8 pulses), hand-written, not a
+// euclidean default — and nothing beyond it (no extra hi-hat layer) once
+// the named iqa itself covers the pulse. Sub-bass follows this project's
+// established Goa-trance convention (parked on qarar, occasional visit to
+// ghammaz) since that convention genuinely fits a psy-genre piece; real
+// duckorbit sidechain from the maqsum kick into the sub (MUSIC-KNOWLEDGE.md
+// §10's genre-correct hard/fast values). Synth basics throughout per §2.5
+// (sawtooth lead, sine bass/demo-tones) — no gm_* samples.
+//
+// MELODY — four alternating phrases anchored on the qarar/ghammaz fifth
+// (0/14), the same structural role as raga vadi/samvadi:
+//   A (call): 0 ~ 14 10 7 4 ~   — leaps a full 5th up (qarar->ghammaz),
+//             then descends stepwise filling in the tetrachord, ending
+//             suspended on Re, unresolved.
+//   B (response): 4 ~ 7 10 14 ~ 0 — mirrors A's shape ascending, then
+//             leaps the same 5th back DOWN to resolve on qarar.
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//             ~ 4 7 10 14 ~ 0
+//   D (peak, tension->release): from ghammaz, leaps a neutral-third-sized
+//             interval up into the upper tetrachord's neutral 7th, steps to
+//             the octave, then falls back — 14 21 ~ 24 21 ~ 18 — ending
+//             suspended on La, not the tonic; release only lands when the
+//             loop wraps back to A's opening qarar.
+//
+// CYCLES: 16. setcpm(48) -> 16 * 60/48 = 20s.
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16
+
+let LEAD = "<[0 ~ 14 10 7 4 ~] [4 ~ 7 10 14 ~ 0] [~ 4 7 10 14 ~ 0] [14 21 ~ 24 21 ~ 18]>"
+
+// lead: maqam Rast melody, sawtooth for a harmonically dense "plucked"
+// attack (MUSIC-KNOWLEDGE.md §2.5) — one slow filter arc across the whole
+// clip, not several independently-wandering LFOs (§10's "one job" lesson)
+$lead: i(LEAD).xen("24edo")
+  .sound("sawtooth")
+  .attack(.01).decay(.16).sustain(.14).release(.16)
+  .lpf(sine.range(500, 2000).slow(8))
+  .lpq(9)
+  .gain(.38)
+  .room(1.6)
+  .sometimes(x => x.ply(2)) // improv hook: occasional ornament on a note
+
+// neutral-third demo: real 24edo Mi-half-flat vs plain 12-TET minor/major
+// thirds, sustained together for cycles 1-4 only then dropped entirely —
+// see THE "WOW" above
+$demo: stack(
+  i("7").xen("24edo").sound("sine"),
+  freq("261.6256").sound("sine"),
+  freq("277.1826").sound("sine"),
+).gain(.1).attack(1.5).release(2).room(3)
+  .mask("<1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0>")
+
+// sub: Goa-trance rolling bass convention (parked on qarar, occasional
+// ghammaz) — one octave down, out of the lead's way
+$sub: i("<-24 -24 -24 -10>/4").xen("24edo")
+  .sound("sine")
+  .lpf(450)
+  .attack(.02).release(.4)
+  .gain(.3)
+  .orbit(2)
+
+// maqsum iqa (Dum Tek - Tek Dum - Tek -): the real, named rhythmic mode
+// this topic actually calls for, not a default euclidean kit — also the
+// sidechain source, real duckorbit into the sub, genre-correct hard/fast
+// pump (MUSIC-KNOWLEDGE.md §10)
+$: s("bd rim ~ rim bd ~ rim ~")
+  .duckorbit(2).duckattack(.01).duckdepth(.8)
+  .gain(.55)
+  .room(.2)

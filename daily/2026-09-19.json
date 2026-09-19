@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-19",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "24EDO MAQAM RAST",
+  "pattern_file": "daily/2026-09-19-xenharmonic-24edo.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let LEAD = \"<[0 ~ 14 10 7 4 ~] [4 ~ 7 10 14 ~ 0] [~ 4 7 10 14 ~ 0] [14 21 ~ 24 21 ~ 18]>\"", "$: s(\"bd rim ~ rim bd ~ rim ~\")"]
+}
