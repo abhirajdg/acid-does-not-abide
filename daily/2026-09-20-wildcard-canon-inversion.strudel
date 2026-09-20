@@ -1,0 +1,137 @@
+// ============================================================================
+// DAILY — 2026-09-20 (Sunday): Wildcard — canon by inversion, on this week's
+// most consonant scale (Tuesday's melakarta 29 = F major)
+// ============================================================================
+//
+// WHY THIS (the Step 0 check against last Sunday's file): 2026-09-13's
+// wildcard was already a canon -- but canon AT THE OCTAVE: three copies of
+// ONE phrase, identical pitches, entering staggered in time, differentiated
+// only by register/pan. Doing another octave-canon today would be reuse-by-
+// default. Real classical counterpoint has a genuinely different canon
+// species: CANON BY INVERSION (a "mirror canon" -- Bach's Musical Offering
+// has one by this exact name). There the second voice doesn't repeat the
+// first voice's pitches in a new register; it plays the mathematical MIRROR
+// of the first voice's contour -- every interval that goes up in voice 1
+// goes down by the same number of scale-steps in voice 2, around a shared
+// axis pitch. That's the device used here, and it's mechanically distinct
+// from both 09-13 (same pitches, different octave) and 09-06 (two ALREADY-
+// different voices moving in contrary motion via reversed chord-tone order,
+// not true interval inversion of one shared tune).
+//
+// THE SCALE, reused from this week: melakarta 29 (Tuesday, daily/
+// 2026-09-15) = S R2 G3 M1 P D2 N3 = the plain Western major scale, F tonic,
+// the "sampoorna" (all 7 notes, zero vivadi/dissonant gaps) reference scale
+// of the whole 72-melakarta system. That's WHY it's the right scale for this
+// device: an exotic scale with augmented-second gaps (like 09-13's melakarta
+// 57) would obscure a mirror -- its own asymmetry fights the inversion. F
+// major's total consonance is what lets the mirror read cleanly. Tuesday's
+// own derived numbers are reused verbatim below, not re-derived: chakra =
+// position = 5 (a genuine coincidence Tuesday's file names), digit sum
+// 2+9 = 11.
+//
+// THE MIRROR -- diatonic inversion around the tonic (scale-degree n -> -n,
+// not a fixed semitone reflection, so it stays inside F major throughout):
+//   A (prime, the call):  rising leaps into an octave peak, then a step back
+//                          0 ~ 2 4 ~ 7 ~ 5
+//   A' (mirror of A):     the same shape upside down
+//                          0 ~ -2 -4 ~ -7 ~ -5
+//   B (response, falling resolve):      5 ~ 4 2 ~ 0 ~ ~
+//   B' (mirror of B):                  -5 ~ -4 -2 ~ 0 ~ ~
+//   C (climax, compressed leaps, upper register): 7 ~ 11 ~ 9 ~ 7 ~
+//   C' (mirror of C):                             -7 ~ -11 ~ -9 ~ -7 ~
+//   D (retrograde of A -- the QC-loop's literal-reverse device, applied to
+//      the prime before it's even mirrored): 5 ~ 7 ~ 4 2 ~ 0
+//   D' (mirror of D) is therefore RETROGRADE-INVERSION of A for free -- two
+//      of the four classic twelve-tone-style transformations (prime,
+//      inversion, retrograde, retrograde-inversion) falling out of one
+//      raga-diatonic phrase, not four independently-invented ones.
+//
+// THE CANON -- a real time-delayed entry, not just simultaneous mirroring:
+// voice 1 (the prime) starts alone at cycle 0, cycling A B C D A B C D A B.
+// Voice 2 (the mirror) enters two cycles later playing A' B' C' D' A' B' C'
+// D', achieved with Strudel's own `.late(2)` time-shift (not a hand-rolled
+// index trick) -- textbook canon mechanics, just with an inverted subject.
+// Both voices are masked silent before their own entrance so nothing of the
+// underlying cyclic pattern leaks through early.
+//
+// THE CODA (cycles 10-11): both voices land on degree 0 together. Because
+// the mirror axis IS the tonic, inverting 0 gives 0 back -- prime and mirror
+// don't just harmonize here, they become the same note. That convergence
+// (two independent lines resolving into one) is the piece's actual tension-
+// >release, not a separate ending tacked on.
+//
+// ARRANGEMENT -- theory-driven day (built on melakarta math), so §2.5's
+// synth-basics rule applies: sawtooth (sharp/abrasive, plucked, §1-2) for
+// the prime voice, triangle (pure/soft) for the mirror -- deliberate
+// CONTRAST so two simultaneous, closely-related lines stay legible as two
+// voices, not one blurred one (the same instinct 09-06's sawtooth/triangle
+// pairing used, reused here because it's the correct tool again, not out of
+// habit). Sine tanpura drone, tonic + fifth (F2/C3). Voice 1's filter sweep
+// period is 5 (chakra/position, Tuesday's own number); voice 2's delay time
+// is 1/11 (Tuesday's digit sum) -- this week's math genuinely driving two
+// different automation parameters, not decoration.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question): this piece IS a
+// melakarta-scale exposition, same as Tuesday's own file, which already
+// reasoned no metric pulse is implied by a scale exposition (sarali-varisai/
+// alapana style). A drum layer here would additionally compete with the
+// exact thing today's device is about -- hearing two voices mirror each
+// other clearly -- so, deliberately, none.
+//
+// CYCLES: 12 (10 prime + coda entry overlap, 8 mirror offset by 2, 2-cycle
+// coda). setcpm(36) -> 12 * 60/36 = 20.0s exactly.
+// ============================================================================
+
+setcpm(36)
+let CYCLES = 12
+
+stack(
+  // DRONE — tanpura convention, F/C (tonic + fifth), sine for purity.
+  note("<f2 c3>/4")
+    .sound("sine")
+    .attack(2).release(3)
+    .gain(.2)
+    .room(5),
+
+  // VOICE 1 — the prime. Sawtooth, plucked. Rotation <A B C D> read by
+  // absolute cycle number gives exactly 0:A 1:B 2:C 3:D 4:A 5:B 6:C 7:D 8:A
+  // 9:B — masked off before the coda.
+  n("<[0 ~ 2 4 ~ 7 ~ 5] [5 ~ 4 2 ~ 0 ~ ~] [7 ~ 11 ~ 9 ~ 7 ~] [5 ~ 7 ~ 4 2 ~ 0]>")
+    .scale("F:major")
+    .sound("sawtooth")
+    .attack(.01).decay(.15).sustain(.15).release(.15)
+    .lpf(sine.range(700, 3000).slow(5)) // chakra = position = 5, Tuesday's number, reused
+    .lpq(6)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.38)
+    .pan(.3)
+    .room(2)
+    .mask("<1 1 1 1 1 1 1 1 1 1 0 0>"),
+
+  // VOICE 2 — the mirror. Same rotation, degrees negated (diatonic inversion
+  // around the tonic), delayed two real cycles with .late(2) — the actual
+  // canon entry, not a re-indexed copy.
+  n("<[0 ~ -2 -4 ~ -7 ~ -5] [-5 ~ -4 -2 ~ 0 ~ ~] [-7 ~ -11 ~ -9 ~ -7 ~] [-5 ~ -7 ~ -4 -2 ~ 0]>")
+    .scale("F:major")
+    .late(2)
+    .sound("triangle")
+    .attack(.02).decay(.2).sustain(.2).release(.25)
+    .delay(.22).delaytime(1/11).delayfeedback(.28) // digit sum 2+9=11, Tuesday's number, reused
+    .rarely(x => x.rev()) // improv hook: occasional reversal
+    .gain(.34)
+    .pan(.75)
+    .room(2.5)
+    .mask("<0 0 1 1 1 1 1 1 1 1 0 0>"),
+
+  // CODA — the mirror axis is the tonic, so prime and mirror land on the
+  // exact same note here: tension -> release as two lines become one.
+  // Supersaw for a fuller, "regal" resolution timbre (per Tuesday's own
+  // drone choice), pan centered between the two voices' L/R spread.
+  n("0").scale("F:major")
+    .sound("supersaw")
+    .attack(1.5).release(3)
+    .gain(.32)
+    .pan(.5)
+    .room(4)
+    .mask("<0 0 0 0 0 0 0 0 0 0 1 1>")
+)

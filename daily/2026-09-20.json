@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-20",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "CANON BY INVERSION",
+  "pattern_file": "daily/2026-09-20-wildcard-canon-inversion.strudel",
+  "cycles": 12,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "n(\"<[0 ~ 2 4 ~ 7 ~ 5] [5 ~ 4 2 ~ 0 ~ ~] [7 ~ 11 ~ 9 ~ 7 ~] [5 ~ 7 ~ 4 2 ~ 0]>\")",
+    ".late(2)"
+  ]
+}
