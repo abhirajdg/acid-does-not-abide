@@ -1,0 +1,97 @@
+// ============================================================================
+// DAILY — 2026-09-21 (Monday): Hindustani raga of the day — RAGA KAFI
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: the last four Mondays covered Kalyan (lydian),
+// Bhairavi (phrygian), Khamaj (mixolydian), and Bhairav (double-harmonic,
+// via a 22-shruti JI retuning) — Kafi thaat hasn't been touched yet. Kafi:
+// S R g M P D n — komal Ga and komal Ni only, all else shuddh. Verified
+// Western-mode match: this is exactly the DORIAN scale (Strudel/tonaljs
+// "dorian" is a real, verified scale name — no guessing needed, unlike
+// Poorvi/Marwa/Todi which would need explicit note mini-notation instead).
+// Traditionally a late-evening raga, the parent of the light-classical
+// thumri/tappa register — plaintive rather than severe (contrast with
+// Bhairav's morning gravity two Mondays ago).
+//
+// VADI/SAMVADI: Pa (degree 4, the fifth) / Sa (degree 0, the tonic) —
+// commonly cited pairing for raga Kafi in Bhatkhande-system references.
+// Every phrase below is built to keep returning to one or both of these,
+// the same anchoring discipline used on 2026-09-14's Bhairav file.
+//
+// ARRANGEMENT — a genuinely different set of choices from 09-14's Bhairav
+// file, not the same template with new pitches:
+//   - 09-14 used a JI-vs-12-tet A/B pitch demonstration as its "wow" moment
+//     and a continuous sine-LFO filter sweep on the lead. This file instead
+//     ties its automation directly to the phrase structure itself: the
+//     lead's filter cutoff is a 4-value STEP pattern keyed to the same
+//     <A B C D> phrase rotation (narrow on the call, brightest on the
+//     climax, mid on the answering variation, narrowest on the coda) —
+//     automation that tracks the tension arc of the melody, not a generic
+//     LFO running independently of it.
+//   - Stereo panning marks the call/response shape explicitly (per
+//     MUSIC-KNOWLEDGE.md §7's "panning as a duel" device, not yet used on
+//     a raga day): phrase A (call) sits left, phrase B (climax/response)
+//     sits right, C pulls back toward center, D resolves dead center.
+//   - Per MUSIC-KNOWLEDGE.md §2.5: sine for the drone (purest tone for a
+//     tanpura stand-in), SQUARE for the lead (not sawtooth, which 09-14
+//     already used) — square's hollower, reedier harmonic content suits
+//     Kafi's plaintive minor-ish color better than the brighter saw.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// every time): this is a short alap-style exposition over a drone, the same
+// shape the 09-08/09-09 lesson already flagged as conventionally carrying
+// NO metric pulse. Kafi does have a real light-classical tabla theka
+// tradition (like Khamaj's keherwa on 09-07), but that belongs to a fuller
+// thumri arrangement, not a 19-second daily alap clip — so no drum layer
+// here, decided explicitly rather than defaulted.
+//
+// MELODY — four alternating phrases (degrees 0-7 = S R g M P D n S'):
+//   A (call — motif of skip-then-step, stated twice from different scale
+//      degrees, landing on vadi Pa after a rest):
+//        S g M ~ R g P   ->  0 2 3 ~ 1 2 4
+//   B (climax — leap up a fifth from vadi to the octave, then a stepwise
+//      fall back down to vadi; tension -> release):
+//        S' ~ n D ~ P    ->  7 ~ 6 5 ~ 4
+//   C (answering variation — the SAME skip-then-step motif as A, inverted
+//      to descend, closing on samvadi Sa instead of vadi Pa):
+//        P g M ~ D M S   ->  4 2 3 ~ 5 3 0
+//   D (coda — vadi/samvadi call-and-response, capped with the octave
+//      bookend from B, resolving down to Sa):
+//        P ~ S ~ P S' S  ->  4 ~ 0 ~ 4 7 0
+//   rotation <A B C D> over 16 cycles (4 full statements of the rotation).
+//
+// CYCLES: 16. setcpm(50) -> 16 * 60/50 = 19.2s.
+// ============================================================================
+
+setcpm(50)
+let CYCLES = 16
+
+stack(
+  // DRONE — tanpura convention: tonic + fifth (S, P), which also happens to
+  // double as vadi (P) + samvadi (S) for this raga specifically. Sine for
+  // purest tone, slow attack/release so it sits still under the phrases.
+  n("<0 4>/4")
+    .scale("A3:dorian")
+    .sound("sine")
+    .gain(.24)
+    .room(4)
+    .attack(2).release(3),
+
+  // MELODY — four alternating phrases, see THEORY notes above.
+  n("<[0 2 3 ~ 1 2 4] [7 ~ 6 5 ~ 4] [4 2 3 ~ 5 3 0] [4 ~ 0 ~ 4 7 0]>")
+    .scale("A3:dorian")
+    .sound("square")
+    .attack(.01).decay(.16).sustain(.2).release(.18)
+    .lpf("<800 2200 1300 700>") // steps WITH the phrase rotation, not a
+                                 // free-running LFO -- narrow call, bright
+                                 // climax, mid variation, narrow coda
+    .lpq(6)
+    .gain(.38)
+    .room(1.6)
+    .pan("<0.25 0.75 0.4 0.5>") // call left, climax/response right,
+                                 // variation pulls back center, coda dead
+                                 // center -- the "duel" device from
+                                 // MUSIC-KNOWLEDGE.md §7, applied to this
+                                 // raga's actual call/response phrases
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+)
