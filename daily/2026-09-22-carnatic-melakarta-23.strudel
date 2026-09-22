@@ -1,0 +1,123 @@
+// ============================================================================
+// DAILY — 2026-09-22 (Tuesday) — Carnatic melakarta math
+// Melakarta #23: Gaurimanohari
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (chakra/position scheme, same real combinatorial
+// structure used the last four Tuesdays — 08-25's #22, 09-01's #20, 09-08's
+// #57, 09-15's #29):
+//   chakra   = ceil(N / 6),  position = N - 6*(chakra - 1)
+// For N = 23: chakra = ceil(23/6) = 4 -> Ri-Ga combo #4 of the 6-combo cycle
+//             (1=R1G1 2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) = R2 G2 (chatushruti
+//             Ri, sadharana Ga)
+//             position = 23 - 6*3 = 5 -> Dha-Ni combo #5 of its own 6-combo
+//             cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) = D2 N3
+//             (chatushruti Dha, kakali Ni)
+//             N <= 36 -> shuddha Ma (M1)
+// melakarta 23 = S R2 G2 M1 P D2 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 2 3 5 7 9 11 —
+// checked, not assumed: this is EXACTLY the Western melodic minor (jazz
+// minor) scale — minor 3rd, but a NATURAL 6th and 7th, unlike the plain
+// natural minor used on 09-01's #20. This identity is also independently
+// documented for Gaurimanohari itself, not just derived from the semitone
+// math here. Not yet used anywhere in this project (grepped daily/ for
+// "melodic:minor" before writing — no hits), and a genuinely different
+// color from the last four Tuesdays' scales (dorian, aeolian, hungarian
+// minor, major): melodic minor is the quintessential JAZZ scale — worth
+// leaning on directly, given Abhiraj's own Berklee jazz-improv background
+// (MUSIC-QC-LOOP.md's checklist explicitly calls this out).
+// Tonic B this time: C/D/E/F/G/A have all carried a daily pattern in the
+// last three weeks (grepped every .scale() call in daily/) — B has not
+// appeared once in this project's history. A genuinely fresh pitch center.
+//   -> .scale("B:melodic:minor")
+//
+// ARRANGEMENT — a fresh choice for what's actually different about #23:
+// melodic minor's own character is neither the total consonance of #29
+// (major) nor the exotic vivadi color of #57 (hungarian minor) — it's
+// AMBIGUOUS, minor at the bottom (b3) but bright at the top (nat. 6, nat.
+// 7), the scale jazz players reach for specifically because it resolves
+// tension differently depending which direction you approach it from. That
+// ambiguity is the thing to make audible, not a decorative knob.
+//   drone: sine (purest waveform, MUSIC-KNOWLEDGE.md §2.5) — tonic + fifth
+//          (S/P as b2/f#3), tanpura convention. Plain and stable underneath,
+//          so the lead's own major/minor ambiguity reads clearly against a
+//          fixed reference rather than getting muddied by a busier drone.
+//   lead:  sawtooth (not supersaw/square/triangle — the last three Tuesdays
+//          in a row) with a per-note filter ENVELOPE (lpenv, not just a
+//          slow LFO sweep) so each note gets its own attack-driven "quack" —
+//          MUSIC-KNOWLEDGE.md §4's per-note filter envelope, used on 09-01's
+//          taste-layer day but not yet on a straight melakarta exposition.
+//          A brighter, slightly harder edge than a soft pad suits this
+//          scale's own harder-edged (jazz-blues, not classical-Indian)
+//          character.
+//   NO DRUM KIT — same standing call as every recent melakarta exposition
+//   (MUSIC-QC-LOOP.md's autopilot-percussion lesson): this is a scale study
+//   over a drone (alapana-style), not a tala-bound kriti, so no metric pulse
+//   is implied. The two derived numbers still drive real audible things:
+//   chakra sets the lead filter LFO's sweep period, position sets the
+//   delay time — neither needed a drum layer as its "audible outlet."
+//
+// MELODY — four phrases (call / climax-response / drop / retrograde-with-
+// leading-tone), anchored on S and P, degrees run past the octave (up to 9)
+// and below the tonic (-1) for real compound leaps, not just a one-octave
+// box:
+//   A (call): a fourth-leap from the tonic, then stepwise up through the
+//     climb to the octave — establishes S, real interval variety early:
+//                                          0 ~ 3 ~ 5 7 ~ ~
+//   B (climax/response, call-and-response device): from the octave, a
+//     THIRD-leap up to a genuine climax above the octave (9), then a
+//     stepwise fall back down — the "response" answers the "call" from a
+//     higher register instead of just repeating it:
+//                                          7 ~ 9 ~ 7 5 3 ~
+//   C (the drop, tension->release device): a big compound leap from the
+//     climax note down to P, then straight down to S — tension built in B
+//     released in one motion, landing the two structural tones:
+//                                          9 ~ 4 ~ 0 ~ ~ ~
+//   D (retrograde-flavored variation of B, motif-and-variation device):
+//     starts from the same climax leap-down shape as C but resolves through
+//     the LEADING TONE (degree -1, N3 below the tonic) up into S — melodic
+//     minor's leading tone is a natural major 7th, so this "ti->do" pull
+//     reads especially strongly here, closing the whole phrase on the
+//     tonic after four different melodic strategies:
+//                                          9 ~ 5 3 ~ 2 -1 0
+//
+// CYCLES = 23 (the melakarta number itself, same convention as the last
+// four Tuesdays). setcpm(69) -> 23 * 60/69 = 20.0s exactly.
+// ============================================================================
+
+setcpm(69)
+let CYCLES = 23 // = the melakarta number itself; 23 * 60/69 = 20.0s
+
+stack(
+  // DRONE — tanpura convention, S + P (tonic/fifth). Plain sine, slow
+  // attack/release so it swells rather than snaps on, giving the lead's
+  // major/minor ambiguity a fixed, stable reference to be heard against.
+  note("<b2 f#3>/4")
+    .sound("sine")
+    .gain(.26)
+    .attack(2).release(3)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (fourths, thirds, a compound
+  // leap past the octave, a leading-tone half-step), rests for breathing
+  // room, call-and-response (A/B) and tension->release (C) and motif-and-
+  // variation (D) as the required jazz-improv devices.
+  n(`<
+    0 ~ 3 ~ 5 7 ~ ~
+    7 ~ 9 ~ 7 5 3 ~
+    9 ~ 4 ~ 0 ~ ~ ~
+    9 ~ 5 3 ~ 2 -1 0
+  >`)
+    .scale("B:melodic:minor")
+    .sound("sawtooth")
+    .attack(.005).decay(.1).sustain(.15).release(.08)
+    .lpf(sine.range(600, 3000).slow(4)) // chakra (4) -> sweep period
+    .lpq(7)
+    .lpenv(5).lpattack(.01).lpdecay(.08).lpsustain(.2).lprelease(.05) // per-note quack, MUSIC-KNOWLEDGE.md §4
+    .distort(.1)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.44)
+    .delay(.22)
+    .delaytime(1/5) // position (5) -> a fifth-note delay
+    .delayfeedback(.28)
+)

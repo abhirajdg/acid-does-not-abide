@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-22",
+  "weekday": "Tuesday",
+  "topic": "carnatic-melakarta",
+  "topic_label": "MELAKARTA 23",
+  "pattern_file": "daily/2026-09-22-carnatic-melakarta-23.strudel",
+  "cycles": 23,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [".scale(\"B:melodic:minor\")", ".lpf(sine.range(600, 3000).slow(4)) // chakra (4) -> sweep period"]
+}
