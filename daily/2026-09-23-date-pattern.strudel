@@ -1,0 +1,89 @@
+// ============================================================================
+// DAILY — 2026-09-23 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-09-23 -- day 23, month 09 (September), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   The last four Wednesdays each split the date into separate DAY/MONTH/YEAR
+//   VOICES (08-26: one melody reading digits in sequence; 09-02: three clock
+//   rates; 09-09: a hocket, since day==month that week; 09-16: a 16-vs-9
+//   polymeter, since day and month were both usable as grid lengths). Today
+//   day (23) and month (9) don't share that kind of structural symmetry: 23
+//   is PRIME (no divisors to build a grid from), 9 is a perfect square (3x3,
+//   all divisors). So instead of another multi-voice split, this is a single
+//   continuous LEAD line where individual scale-degree tokens carry their OWN
+//   inline Euclidean sub-rhythm `note(pulses,steps)` (mini-notation.md's
+//   "Euclidian rhythms" section), with the (pulses,steps) pairs drawn
+//   directly from today's digits -- the date generates the rhythm's
+//   internals, not just a grid length or a clock rate.
+//   - day's own digits (2, 3) each drive a light euclid flutter: (2,3) and
+//     (3,9) [day's second digit + month].
+//   - month (9) full euclid(9,23) on one note near the phrase's peak: day's
+//     complete two-digit number as the euclid `steps`, producing a dense,
+//     near-continuous grace-flurry inside a single beat -- the same "raw
+//     date number as something startling" idea 09-16 realized as a pitch
+//     leap, realized here as a rhythmic-density burst instead, since this
+//     week the day number itself (23, prime) has no clean pitch home to
+//     overshoot into.
+//   Four hand-written phrases (call / response / tension / resolution) cycle
+//   through in raw order -- no `.palindrome()` this time (already the go-to
+//   device on 09-09 and 09-16); the call-and-response pairing of phrase 1+2,
+//   plus the tension->release arc of phrase 3->4, is this week's jazz-improv
+//   device, anchored on tonic (0) and the day's-units-digit degree (3) as
+//   the two structural tones.
+//
+//   CYCLES = 24 = day-digit-sum (2+3=5) + month (9) + year-digit-sum
+//   (2+0+2+6=10). setcpm(60) x 24 cycles / 60 = 24s.
+//
+// Scale: A minor -- a fresh choice (last two Wednesdays used D major and D
+// whole-tone); the numbers are the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: the per-token Euclidean
+// flutters ARE this piece's audible pulse, generated straight from the
+// date's own digits -- a metric kit underneath would just restate a pulse
+// that's already there, the same reflexive-percussion failure
+// MUSIC-QC-LOOP.md already flags.
+//
+// Only two layers, each with one job (MUSIC-KNOWLEDGE.md §10): the lead
+// carries the Euclidean date-melody, a single sine pedal tone carries the
+// low end, alternating tonic/day's-anchor-degree on a 9-cycle period (the
+// month's own value) so month still drives something audible without a
+// second competing melodic voice.
+//
+// Instrumentation: synth basics throughout (supersaw / sine), per
+// MUSIC-KNOWLEDGE.md §2.5 -- no acoustic-instrument sample names.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 24 // day-digit-sum (5) + month (9) + year-digit-sum (10)
+
+stack(
+  // LEAD -- four alternating phrases (call / response / tension /
+  // resolution), several tokens carrying their own inline Euclidean
+  // sub-rhythm built from today's digits. Anchored on tonic (0) and the
+  // day's-units-digit degree (3) as the two structural tones throughout.
+  n("<[0 ~ 2(2,3) 3 ~ 9(3,9) ~ ~] [9 ~ 3 ~ 2 ~ 0(2,3) ~] [~ ~ 2 3 ~ 9 3(9,23) ~] [0 ~ ~ 9 ~ ~ 3 0]>")
+    .scale("A:minor")
+    .sound("supersaw")
+    .attack(.008).decay(.12).sustain(0).release(.05)
+    .distort(.15) // acid taste layer, kept light so the Euclidean detail stays legible
+    .lpf(sine.range(400, 2400).slow(10)) // sweep period = year's digit sum (10)
+    .gain(.34)
+    .pan(.62)
+    .room(1.4),
+
+  // BASS pedal -- tonic (0) and day's-units-digit anchor (3), switching
+  // once every 9 cycles (month's own value) rather than every cycle, so
+  // month still drives something audible without a second melodic voice.
+  n("<0 3>/9")
+    .scale("A:minor")
+    .sound("sine")
+    .attack(1.2).release(1.8)
+    .gain(.26)
+    .pan(.38)
+    .room(3)
+)
