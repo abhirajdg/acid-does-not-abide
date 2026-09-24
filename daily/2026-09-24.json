@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-24",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "THUE-MORSE",
+  "pattern_file": "daily/2026-09-24-thue-morse.strudel",
+  "cycles": 8,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["[0 ~ ~ 2 4 ~ 7 4]", "[0 ~ ~ -2 -4 ~ -7 -4]"]
+}

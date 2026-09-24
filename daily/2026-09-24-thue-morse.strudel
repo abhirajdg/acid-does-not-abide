@@ -1,0 +1,98 @@
+// ============================================================================
+// DAILY — 2026-09-24 (Thursday): Pure math sequence — the Thue-Morse sequence
+// ============================================================================
+//
+// THE SEQUENCE: t(n) = parity of the number of 1-bits in n's binary form
+// (equivalently: start from "0", repeatedly substitute 0->"01", 1->"10").
+// Generation 3 (8 symbols) drives this piece:
+//   gen0: 0
+//   gen1: 01                       (gen1 = gen0 + NOT(gen0))
+//   gen2: 0110                     (gen2 = gen1 + NOT(gen1))
+//   gen3: 01101001                 (gen3 = gen2 + NOT(gen2))
+// Two real, provable facts about gen3 drive the arrangement:
+//   1. BALANCE — exactly four 0s and four 1s (true of every generation past
+//      the first: each substitution step contributes one 0 and one 1 per
+//      parent symbol, so the counts stay equal forever).
+//   2. SELF-SIMILARITY — gen3's second half (positions 4-7: "1001") is the
+//      exact bit-complement of its first half (positions 0-3: "0110"), by
+//      the substitution rule itself (gen(n+1) = gen(n) + NOT(gen(n))).
+//
+// THE MUSICAL MAPPING: each of the 8 bits picks which of two phrases plays
+// that cycle. Bit 0 -> M (rising call, two 3rds then a 4th: A C E -> A(oct)):
+//   n("[0 ~ ~ 2 4 ~ 7 4]")   in A:minor
+// Bit 1 -> M' (the exact PITCH INVERSION of M — every degree negated,
+// mirrored below the tonic, identical rhythm grid, identical leap sizes
+// in contrary motion):
+//   n("[0 ~ ~ -2 -4 ~ -7 -4]")
+// "Bit flip" in the sequence's own definition (0 -> NOT 0 = 1) becomes
+// "melodic inversion" in the phrase (degree d -> -d) — the musical device
+// is a direct translation of the math operation, not a decorative pairing.
+// Because of fact 2 above, cycles 4-7 use exactly the M/M' assignment of
+// cycles 0-3 with every phrase swapped for its opposite — the piece's own
+// call-and-mirrored-answer macro-structure over its full 8 cycles performs
+// the sequence's defining recursive rule, not just its digits.
+// Fact 1 (four 0s, four 1s) means M and M' each get exactly 4 of the 8
+// cycles — real balance, not a coincidence of the notes chosen.
+// gen3 also has no three consecutive equal bits anywhere (Thue-Morse is
+// famously "cube-free" — no run of length 3): audible here as the two
+// back-to-back repeats (cycles 1-2 both M', cycles 5-6 both M) but never a
+// third repeat in a row.
+// The final cycle (bit 1, would be another M') is a cadence variant: two
+// ascending 3rds (-4 -> -2 -> 0, a 5th overall) resolving home to the
+// tonic instead of M's usual big low approach and retreat — marking the
+// end of the generation rather than restating M' flatly a fourth time.
+//
+// SCALE: A:minor (aeolian) — not used on a Thursday yet (Fibonacci used C
+// minor pentatonic, Collatz D harmonic minor, twin primes E phrygian,
+// Pascal's triangle D dorian).
+//
+// ARRANGEMENT — deliberately different from the last Thursday slot
+// (2026-09-17, Pascal's triangle: square lead + triangle pad + one
+// euclid(3,8) kick tied to a row-sum). Today's defining fact is BINARY —
+// two symbols, two mirror-image phrase-shapes — so the arrangement leans
+// into "two" rather than reaching for percussion: the drone is a plain
+// DYAD (scale degrees 0 and 4, tonic + 5th — exactly two notes, echoing
+// the sequence's two-symbol alphabet), and there is no drum layer at all.
+// Checked deliberately per MUSIC-QC-LOOP.md before deciding this: the
+// piece's own rhythm already lives in the 8-step call/inversion grid and
+// its rests, and the only numbers this topic actually needs an audible
+// outlet for (gen3's length 8, its four 1-bits) are already spent below on
+// the filter-sweep period and resonance — a kick/hat layer would be
+// decorative on top of an already-complete binary structure, not something
+// this specific topic calls for.
+// Lead: sawtooth (rich/sharp, MUSIC-KNOWLEDGE.md §1) for real contrast
+// against the pure/soft sine drone. Filter opens across one full 8-cycle
+// sweep (period = gen3's own length) so the "generation" itself is audible
+// as one slow timbral arc underneath the faster call/inversion alternation;
+// resonance set to 4, gen3's own count of 1-bits.
+//
+// CYCLES: 8 (one per bit of gen3). setcpm(24) x 8 / 60 = 20s.
+// ============================================================================
+
+setcpm(24)
+
+$lead: n(`<
+  [0 ~ ~ 2 4 ~ 7 4]
+  [0 ~ ~ -2 -4 ~ -7 -4]
+  [0 ~ ~ -2 -4 ~ -7 -4]
+  [0 ~ ~ 2 4 ~ 7 4]
+  [0 ~ ~ -2 -4 ~ -7 -4]
+  [0 ~ ~ 2 4 ~ 7 4]
+  [0 ~ ~ 2 4 ~ 7 4]
+  [0 ~ ~ -2 -4 ~ -2 0]
+>`)
+  .scale("A:minor")
+  .sound("sawtooth")
+  .attack(.02).decay(.15).sustain(.2).release(.3)
+  .lpf(sine.range(500, 2800).slow(8))
+  .lpq(4)
+  .sometimes(x => x.ply(2))
+  .gain(.4)
+  .room(1.2)
+
+$drone: n("[0,4]").scale("A:minor")
+  .sound("sine")
+  .attack(1).release(2)
+  .lpf(700)
+  .gain(.22)
+  .room(3)
