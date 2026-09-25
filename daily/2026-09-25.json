@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-25",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "DUB-ACID FREE JAM",
+  "pattern_file": "daily/2026-09-25-acid-freeform.strudel",
+  "cycles": 12,
+  "target_duration_sec": 21,
+  "code_highlight_lines": [
+    "s(\"bd ~ ~ ~ ~ ~ ~ ~\").bank(\"RolandTR909\").gain(.62),",
+    ".delay(.45).delaytime(.4).delayfeedback(.62)"
+  ]
+}

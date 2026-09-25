@@ -1,0 +1,110 @@
+// ============================================================================
+// DAILY — 2026-09-25 (Friday): Acid / psychedelia free jam — half-time dub-acid
+// ============================================================================
+//
+// Checked both prior Fridays before writing (MUSIC-KNOWLEDGE.md's "don't
+// template last cycle" rule): 2026-09-11 used A locrian, a rolling 16th-note
+// psytrance bass, a real multi-orbit duckorbit sidechain (three depths), a
+// square lead, and a separate triangle pad. 2026-09-18 used F natural minor,
+// straight four-on-the-floor, and a single sawtooth 303 voice with one light
+// duckorbit carve. Today changes both the scale AND the production idea:
+//
+//   SCALE: E phrygian dominant (E F G# A B C D) — the 5th mode of harmonic
+//   minor, tonaljs name "phrygian dominant" (aliases "spanish"/"phrygian
+//   major"), verified against tonal.js's own scale-type data.ts before use
+//   (same discipline as verifying "gypsy" for Bhairav) rather than assumed —
+//   not yet used anywhere in this project. Its identity is the augmented
+//   2nd between the b2 and 3 (scale steps 1->2, F->G#, a 3-semitone gap
+//   between adjacent scale degrees): that's the exotic color MUSIC-KNOWLEDGE
+//   §6 cites for Goa trance's harmonic tension, used honestly here rather
+//   than decoratively. Degrees: 0=E 1=F 2=G# 3=A 4=B 5=C 6=D 7=E'.
+//
+//   PRODUCTION: half-time dub/dubstep feel (MUSIC-KNOWLEDGE §9) instead of
+//   straight four-on-the-floor or a rolling psytrance groove — kick on beat
+//   1, snare on beat 3 of an 8-step bar, busy 16th hats underneath to keep
+//   the top end alive while the low end feels stretched out. The wobble sub
+//   is kick-locked (only sounds on the kick/snare hits, like the Carnatic
+//   09-01 wobble bass) with a FAST lpf LFO for the wobble character, rather
+//   than a rolling bassline or a blanket sidechain — no separate duckorbit
+//   chain this time, a deliberate omission (the kick-lock + wobble already
+//   gives the bass its own rhythmic identity without stacking a duck on top,
+//   per §10's "fewer layers/params, not more").
+//
+//   The lead has no separate pad under it. Instead it uses David Gilmour's
+//   "Sound on Sound" idea (MUSIC-KNOWLEDGE §7, first time on a Friday): a
+//   long, high-feedback delay on the LEAD'S OWN voice, so past notes keep
+//   ringing and stack into a self-built chordal wash beneath whatever's
+//   playing now — the drone is made FROM the lead's instrument, not a
+//   second patch.
+//
+// LEAD PHRASE (MUSIC-QC-LOOP.md devices — real leaps, rests, development,
+// modeled on an improvised line, not a scale run), rotating <A B C D> every
+// cycle across all 12 cycles (3 full rounds):
+//   A (call/motif):        0 ~ 2 1 ~ 4 ~ 0   -- leaps of a 3rd, then the
+//                                                aug-2nd color (2->1) resolving
+//                                                down to a leap up a 5th (1->4),
+//                                                lands back on the tonic
+//   B (variation/tension): 0 ~ 2 1 ~ 4 6 ~   -- same opening, but climbs past
+//                                                B to the b7 (D) and stops there,
+//                                                unresolved
+//   C (peak, retrograde):  7 ~ 6 4 ~ 2 1 0   -- octave leap up, then B's climb
+//                                                played backwards, descending a
+//                                                full octave to the tonic
+//   D (release, sparse):   0 ~ ~ -1 ~ 0 ~ ~  -- tonic, a leap BELOW the tonic
+//                                                (the 7th degree below, D3),
+//                                                back to the tonic — breathing
+//                                                room after C's peak
+//
+// TEMPO: kick is "bd ~ ~ ~ ~ ~ ~ ~", one hit per 4-beat bar/cycle, but the
+// bar itself still runs at cpm*4 BPM (MUSIC-QC-LOOP.md's lesson — half-time
+// is a hit-pattern choice, not a slower cycle). setcpm(35) -> 140 BPM, real
+// dubstep/half-time territory. CYCLES: 12. 12 * 60/35 = 20.6s.
+// ============================================================================
+
+setcpm(35)
+let CYCLES = 12
+
+// DRUMS — half-time: kick on beat 1, snare on beat 3 (not four-on-the-floor),
+// fast 16th hats doubling underneath so the top end stays busy while the low
+// end feels stretched out (MUSIC-KNOWLEDGE §9).
+let drums = stack(
+  s("bd ~ ~ ~ ~ ~ ~ ~").bank("RolandTR909").gain(.62),
+  s("~ ~ ~ ~ sd ~ ~ ~").bank("RolandTR909").gain(.4).room(.15),
+  s("hh*16").bank("RolandTR909").gain(.14).degradeBy(.25),
+)
+
+// WOBBLE SUB — kick-locked (only sounds on the kick/snare hits, tonic then
+// the 5th-equivalent B), FAST lpf LFO for the wobble itself. No duckorbit
+// chain on top — the kick-lock + fast wobble already give it one clear job.
+let bass = note("<e1 ~ ~ ~ b1 ~ ~ ~>")
+  .sound("sine")
+  .attack(0).decay(.1).sustain(.05).release(.04)
+  .lpf(sine.range(120, 900).fast(8))
+  .lpq(6)
+  .distort(.2)
+  .gain(.5)
+
+// LEAD — the phrase above, sawtooth, short plucky envelope, one slow filter
+// sweep + moderate-high resonance (deliberately acidic, per MUSIC-QC-LOOP's
+// "lpq above ~8 reads as whine unless it's meant to be acidic" caveat) and a
+// long high-feedback delay: this delay IS the drone (Sound on Sound, §7) —
+// there is no separate pad layer.
+let melody = n(`<
+  0 ~ 2 1 ~ 4 ~ 0
+  0 ~ 2 1 ~ 4 6 ~
+  7 ~ 6 4 ~ 2 1 0
+  0 ~ ~ -1 ~ 0 ~ ~
+>`).scale("E:phrygian:dominant")
+
+let lead = melody
+  .sound("sawtooth")
+  .attack(.005).decay(.12).sustain(.12).release(.15)
+  .lpf(sine.range(500, 2400).slow(7))
+  .lpq(10)
+  .distort(.22)
+  .delay(.45).delaytime(.4).delayfeedback(.62)
+  .room(.6)
+  .gain(.32)
+  .orbit(2)
+
+stack(drums, bass, lead)
