@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-26",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "22EDO PORCUPINE",
+  "pattern_file": "daily/2026-09-26-xenharmonic-22edo.strudel",
+  "cycles": 10,
+  "target_duration_sec": 19,
+  "code_highlight_lines": ["i(`<[0 ~ 13 ~ 0 ~ 7 ~] [0 ~ 13 ~ 9 6 3 ~] ...>`).xen(\"22edo\")", "s(\"bd*4\").bank(\"RolandTR909\").duckorbit(2).duckattack(.05).duckdepth(.5)"]
+}

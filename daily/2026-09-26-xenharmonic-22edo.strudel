@@ -1,0 +1,125 @@
+// ============================================================================
+// DAILY — 2026-09-26 (Saturday): Xenharmonic tuning experiment — 22edo, as
+// an acid house track
+// ============================================================================
+//
+// THE TUNING: 22edo divides the octave into 22 equal steps of 1200/22 ≈
+// 54.55 cents each. Real, documented xenharmonic ground, not a novelty:
+// checked against all five prior Saturdays (17edo, 19edo, 31edo, 15edo,
+// 24edo) before writing a note of this — see ARRANGEMENT below for what's
+// actually fresh this week, not last cycle's genre template with new pitch
+// numbers.
+//
+// WHY 22edo, SPECIFICALLY — a genuine paradox this tuning has that none of
+// the prior five do: its perfect fifth and its major third pull in OPPOSITE
+// directions relative to just intonation, at the same time.
+//   fifth (13 steps) = 709.09c, vs pure 3:2 = 701.96c  → SHARP by ~7c
+//                       (wider/brighter than even 12-TET's already-flat 700c
+//                       fifth — this is the "superpythagorean" flavor)
+//   third (7 steps)  = 381.82c, vs pure 5:4 = 386.31c  → flat by only ~4.5c
+//                       (12-TET's third is +13.7c sharp of just, so 22edo's
+//                       third is ~3x closer to pure than 12-TET's — a
+//                       noticeably SWEETER major third, despite the fifth
+//                       above it being wider/tenser than usual)
+// So a bare major triad in 22edo sits in genuine tension with itself: a
+// warm, near-just third under a restless, wide fifth. Neither prior "sweet
+// third" week (19edo, 31edo) had a fifth doing the opposite thing at once.
+//
+// THE SCALE: 22edo's smallest step that tiles into a nearly-equal 7-note
+// scale is 3 steps (163.6c, between a 12-TET whole tone and a true neutral
+// second). Stacking it six times (18 steps) and closing with one 4-step gap
+// (22-18=4, 218.2c) gives step sizes 3-3-3-3-3-3-4 — a 7-note MOS scale
+// known in xenharmonic theory as porcupine[7]: much more evenly-spaced than
+// a 12-TET diatonic scale's mix of tones and semitones, so a run through it
+// reads as a smooth, gliding staircase rather than a familiar major/minor
+// shape. Degrees used here: 0, 3, 6, 9, 12, 15, 18 (then 22 = octave).
+//
+// ARRANGEMENT: per CREATIVE-DIRECTION.md's genre-first correction, a
+// xenharmonic day legitimately carries a dance-genre structure. 15edo did
+// techno (a canon), 24edo did psytrance (a drop) — today is ACID HOUSE
+// instead, and built as ONE acid voice doing both bass and lead duty
+// (the 09-18/09-19 QC-loop fix: "the 303 line IS the lead, so there should
+// be one," not a separate bass fighting a separate lead in the same
+// register). The porcupine-scale run IS the acid line. Underneath it, a
+// sustained root+third+fifth drone (sine, spread across the stereo field,
+// held the whole clip, same "let the interval actually ring" idea as
+// 31edo's stacked chord, but here demonstrating the sweet-third/wide-fifth
+// paradox above instead of near-just-seventh-chord tuning) — this is the
+// one deliberate reuse of a prior technique, because it's still the
+// clearest way to let a static interval be heard sustaining, and nothing
+// else in this week's point calls for retiring it. Synth basics throughout
+// per MUSIC-KNOWLEDGE.md §2.5 — sine (drone) and sawtooth (acid line), no
+// gm_* samples.
+//
+// MELODY — anchored on the tonic (0) and the sharp fifth (13), same
+// structural role a raga's vadi/samvadi play. Demo block, then four
+// alternating phrases over the 10-cycle clip:
+//   demo (bare, no kit): the paradox itself —      0 ~ 13 ~ 0 ~ 7 ~
+//                         tonic, sharp 5th, tonic, sweet 3rd.
+//   A (call): leap to the 5th, descend the porcupine run:
+//                                                   0 ~ 13 ~ 9 6 3 ~
+//   B (response): climbs the run back up to the 5th, resolves home:
+//                                                   3 6 9 ~ 13 ~ 9 0
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//                                                   ~ 3 6 9 ~ 13 ~ 0
+//   D (peak & release): up through the run to the octave, then a fifth
+//     back down to the tonic:                       13 ~ 18 22 ~ 18 13 0
+// Order: demo, A B C D, A B C D, D — ends on the release, same convention
+// 24edo used to land the clip cleanly rather than cutting mid-phrase.
+//
+// CYCLES: 10, setcpm(31), 4 beats/cycle = 124 BPM (real acid house tempo,
+// the specific mistake corrected on 09-18/09-19's tempo-math check).
+// 10 * 60/31 = 19.35s.
+// ============================================================================
+
+setcpm(31)
+let CYCLES = 10
+
+stack(
+  // DRONE — root/third/fifth held for the whole clip, spread across the
+  // stereo field, so the sweet-third-vs-wide-fifth paradox rings under the
+  // acid line the whole time, not just in the bare demo block
+  stack(
+    i("-22").xen("22edo").sound("sine").pan(0.2),  // tonic, one octave down
+    i("-15").xen("22edo").sound("sine").pan(0.5),  // sweet third (7-22)
+    i("-9").xen("22edo").sound("sine").pan(0.8),   // wide fifth (13-22)
+  ).slow(CYCLES).attack(2).release(3).gain(.2).room(2.5).orbit(2),
+
+  // ACID LINE — the porcupine-scale run doing both bass and lead duty (one
+  // voice, per the 09-18/09-19 QC-loop fix), sawtooth with a per-note filter
+  // envelope plus a slow overall sweep whose 7-cycle period nods to the
+  // fifth's +7-cent sharpness, real resonance and post-filter distortion
+  // (MUSIC-KNOWLEDGE.md §4's acid vocabulary)
+  i(`<
+    [0 ~ 13 ~ 0 ~ 7 ~]
+    [0 ~ 13 ~ 9 6 3 ~]
+    [3 6 9 ~ 13 ~ 9 0]
+    [~ 3 6 9 ~ 13 ~ 0]
+    [13 ~ 18 22 ~ 18 13 0]
+    [0 ~ 13 ~ 9 6 3 ~]
+    [3 6 9 ~ 13 ~ 9 0]
+    [~ 3 6 9 ~ 13 ~ 0]
+    [13 ~ 18 22 ~ 18 13 0]
+    [13 ~ 18 22 ~ 18 13 0]
+  >`).xen("22edo")
+    .sound("sawtooth")
+    .attack(.005).decay(.14).sustain(.08).release(.12)
+    .lpf(sine.range(400, 2200).slow(7))
+    .lpq(11)
+    .distort(.22)
+    .gain(.4),
+
+  // KICK — four on the floor, silent for the bare demo cycle, real
+  // duckorbit sidechain into the drone's orbit (moderate "pad" duck values
+  // per MUSIC-KNOWLEDGE.md §10 — slower attack, mid depth, a breathing pump
+  // rather than a hard techno chop, since the acid line stays unducked)
+  s("bd*4").bank("RolandTR909")
+    .duckorbit(2).duckattack(.05).duckdepth(.5)
+    .mask("<0 1 1 1 1 1 1 1 1 1>")
+    .gain(.72),
+
+  // HATS — off-beat, minimal texture, silent during the bare demo cycle
+  s("~ hh ~ hh ~ hh ~ hh").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1>")
+    .gain(.1).degradeBy(.3),
+)
