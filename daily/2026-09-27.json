@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-27",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "THUE-MORSE HOCKET",
+  "pattern_file": "daily/2026-09-27-wildcard-thue-morse-hocket.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "n(\"[0 ~ ~ 7 ~ 6 4 ~]\")",
+    ".mask(\"<0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1>\")"
+  ]
+}

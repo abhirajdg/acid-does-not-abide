@@ -1,0 +1,132 @@
+// ============================================================================
+// DAILY — 2026-09-27 (Sunday): Wildcard — a Thue-Morse hocket, on this week's
+// jazziest scale (Tuesday's melakarta 23 = B melodic minor)
+// ============================================================================
+//
+// WHY THIS (the Step 0 check against the last two Sundays): 2026-09-13 was a
+// canon at the octave (one phrase, staggered entries, same pitches). 09-20
+// was canon by inversion (one phrase, staggered entries, mirrored pitches).
+// Both are the SAME family of device — one tune entering against its own
+// later self. Doing a third canon would be reuse-by-default. This week's
+// most interesting result wasn't a scale at all — it was Thursday's
+// Thue-Morse sequence (daily/2026-09-24-thue-morse.strudel), which used the
+// sequence's bit-complement self-similarity to mirror PITCH (degree -> -degree)
+// within one voice. Today reuses the same math object for a genuinely
+// different mechanism: HOCKET (MUSIC-KNOWLEDGE.md §2 — two voices trading one
+// melodic line, each resting exactly where the other plays), with the
+// sequence's own bits deciding, note-by-note, which voice speaks — and the
+// complement fact deciding which voice speaks SECOND time through.
+//
+// THE SEQUENCE: gen3 of Thue-Morse (t(n) = parity of n's popcount), reused
+// verbatim from Thursday: 0 1 1 0 1 0 0 1. Bit 0 -> voice A speaks (voice B
+// rests); bit 1 -> voice B speaks (voice A rests) — a direct, mechanical
+// reading of the bits as a HOCKET assignment, not a melodic-inversion trigger
+// this time.
+//
+// THE PHRASE — one 8-note line in B melodic minor, real leaps, anchored on
+// tonic (0) and fifth (4), rising to a compound-leap climax then falling back
+// (rise -> peak -> fall, the same shape Tuesday's own file used):
+//   degrees:  0   2   4   7   9   6   4   0
+//   interval:  +3rd +3rd +4th +3rd  -3rd -2nd -5th
+// Split across the two voices by gen3's bits (0 1 1 0 1 0 0 1):
+//   Voice A (bit=0): 0 ~ ~ 7 ~ 6 4 ~
+//   Voice B (bit=1): ~ 2 4 ~ 9 ~ ~ 0
+// Every position has exactly one voice sounding and the other resting — real
+// interleaved hocket, not simultaneous harmony.
+//
+// THE SWAP (cycles 8-15) — Thue-Morse's defining rule is gen(n+1) =
+// gen(n) + NOT(gen(n)): the second half is the exact bit-complement of the
+// first. Complementing the bits here doesn't re-derive a new phrase — it
+// swaps which voice gets which half of the SAME phrase. Voice A's cycles
+// 8-15 are literally Voice B's cycles 0-7 pattern (and vice versa): the two
+// instruments trade parts wholesale, same treatment (filter/delay) on each,
+// only the notes moving — the self-similarity fact made audible as "the
+// two-hander swaps hands," not as a pitch mirror (that was Thursday's device
+// already, on this exact sequence — today had to be a different one).
+//
+// ARRANGEMENT — theory-driven day (built on melakarta math + a math
+// sequence), so MUSIC-KNOWLEDGE.md §2.5 applies: synth basics throughout.
+// Voice A = square (hollow/reedy), voice B = supersaw (dense/bright) — a
+// contrast pair not yet used together this week (Monday's square and
+// Wednesday's supersaw were each solo leads on their own days), so the two
+// hocket voices stay clearly distinct even after they swap material. Fixed
+// panning (A left .25, B right .75) that does NOT move when the parts swap —
+// the ear tracks "left hand, right hand" positionally, and hearing the
+// SAME two positions suddenly carrying each other's old material is the
+// actual payoff. Tanpura drone (sine, tonic+fifth, B/F#3) underneath, same
+// tonic as Tuesday's own file this week. Automation reuses melakarta 23's own
+// derived numbers (chakra=4, position=5) verbatim from Tuesday rather than
+// re-deriving new ones — genuinely this week's math driving two different
+// parameters (voice A's filter-sweep period, voice B's delay time), not
+// decoration.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question): this piece's own
+// 8-step hocket grid, plus its rests, IS its rhythm — the whole point is
+// hearing the gaps as real gaps (09-09's lesson: don't fill a hocket's gaps
+// with drums, from above OR below). No drum layer, deliberately.
+//
+// CYCLES: 16 (two passes of gen3 — original assignment, then the swap).
+// setcpm(48) -> 16 * 60/48 = 20.0s exactly.
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16 // 8 (original hocket) + 8 (bit-complement swap)
+
+stack(
+  // DRONE — tanpura convention, B/F#3 (tonic + fifth), same tonic as
+  // Tuesday's melakarta 23 this week.
+  note("<b2 f#3>/4")
+    .sound("sine")
+    .attack(2).release(3)
+    .gain(.22)
+    .room(4),
+
+  // VOICE A, cycles 0-7 — speaks on gen3's 0-bits (positions 0,3,5,6).
+  n("[0 ~ ~ 7 ~ 6 4 ~]")
+    .scale("B:melodic:minor")
+    .sound("square")
+    .attack(.01).decay(.14).sustain(.12).release(.15)
+    .lpf(sine.range(500, 2600).slow(4)) // chakra=4, Tuesday's number, reused
+    .lpq(6)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.36)
+    .pan(.25)
+    .room(1.8)
+    .mask("<1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0>"),
+
+  // VOICE A, cycles 8-15 — the swap: now plays voice B's original material
+  // (bit-complement), same instrument/treatment, same pan position.
+  n("[~ 2 4 ~ 9 ~ ~ 0]")
+    .scale("B:melodic:minor")
+    .sound("square")
+    .attack(.01).decay(.14).sustain(.12).release(.15)
+    .lpf(sine.range(500, 2600).slow(4))
+    .lpq(6)
+    .sometimes(x => x.ply(2))
+    .gain(.36)
+    .pan(.25)
+    .room(1.8)
+    .mask("<0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1>"),
+
+  // VOICE B, cycles 0-7 — speaks on gen3's 1-bits (positions 1,2,4,7).
+  n("[~ 2 4 ~ 9 ~ ~ 0]")
+    .scale("B:melodic:minor")
+    .sound("supersaw")
+    .attack(.015).decay(.18).sustain(.15).release(.2)
+    .delay(.2).delaytime(1/5).delayfeedback(.25) // position=5, Tuesday's number, reused
+    .gain(.34)
+    .pan(.75)
+    .room(2.2)
+    .mask("<1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0>"),
+
+  // VOICE B, cycles 8-15 — the swap: now plays voice A's original material.
+  n("[0 ~ ~ 7 ~ 6 4 ~]")
+    .scale("B:melodic:minor")
+    .sound("supersaw")
+    .attack(.015).decay(.18).sustain(.15).release(.2)
+    .delay(.2).delaytime(1/5).delayfeedback(.25)
+    .gain(.34)
+    .pan(.75)
+    .room(2.2)
+    .mask("<0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1>")
+)
