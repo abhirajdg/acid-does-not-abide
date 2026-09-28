@@ -1,0 +1,125 @@
+// ============================================================================
+// DAILY — 2026-09-28 (Monday): Hindustani raga of the day — RAGA TODI
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: the last five Mondays covered Kalyan (lydian),
+// Bhairavi (phrygian), Khamaj (mixolydian), Bhairav (double-harmonic, then
+// its own 22-shruti JI retuning), and Kafi (dorian) — Todi thaat hasn't been
+// touched. Todi is also one of the three thaats DAILY-PIPELINE.md's own
+// instructions flag as having no obvious verified Western-mode name (Poorvi,
+// Marwa, and "to a lesser extent" Todi) — worth doing the actual verification
+// work rather than defaulting to an easier, already-confirmed mode again.
+//
+// THEORY NOTES:
+// Todi's swaras: S r g M# P d N  (komal Re, komal Ga, tivra Ma, komal Dha;
+//   Pa and Ni shuddh)
+//   -> semitone offsets from tonic: 0, 1, 3, 6, 7, 8, 11
+//   -> VERIFIED, not guessed: fetched tonaljs's own scale-type source
+//      (github.com/tonaljs/tonal, packages/scale-type/data.ts) directly and
+//      checked its raga-named entries against real Hindustani interval sets,
+//      the same discipline sets/bhairav-session-v1.strudel used for "gypsy":
+//        - "todi raga": "1P 2m 3m 4A 5P 6m 7M" -> 0,1,3,6,7,8,11 exactly
+//          matches Todi thaat above. Genuine match, not a coincidence of
+//          note count — used below as .scale("...:todi:raga").
+//        - "purvi raga" in the SAME source: "1P 2m 3M 4P 4A 5P 6m 7M" — that's
+//          8 degrees (both a perfect 4th AND an augmented 4th), not the real
+//          7-note Poorvi thaat (S r G M# P d N has only tivra Ma, no shuddh
+//          Ma) — does NOT verify. Noted here so a future Poorvi Monday
+//          doesn't waste time re-checking or, worse, trust the name on sight.
+//        - no "marwa" entry exists in tonaljs at all — confirmed absent, not
+//          just unfound. Both Poorvi and Marwa still need the explicit
+//          note-letter mini-notation fallback DAILY-PIPELINE.md describes,
+//          whenever they come up.
+//   -> tonic set to C — Kalyan/Bhairavi/Khamaj/Kafi already used D/E/G/A3;
+//      C is unused for a Monday raga so far (sets/bhairav-session-v1.strudel
+//      also uses C, but that's a different lane/file).
+//   -> scale degree numbers used in n() below map like this in "C3:todi:raga":
+//        0=S(C)  1=r(Db)  2=g(Eb)  3=M#(F#)  4=P(G)  5=d(Ab)  6=N(B)  7=S'(C5)
+//   -> vadi (dominant) = Dha = degree 5, samvadi (sub-dominant) = Re = degree
+//      1 — the commonly cited pairing for Todi in Bhatkhande-system
+//      references (same hedge Kafi's file used: sources aren't unanimous on
+//      Hindustani vadi/samvadi attributions, this is the one most repeated).
+//
+// ARRANGEMENT — a genuinely different set of choices from the last five
+// Monday files, not the same template with new pitches:
+//   - Lead timbre: TRIANGLE — not yet used for a raga lead this project
+//     (sawtooth x2, square x1, supersaw x1 so far). Triangle's odd-harmonics-
+//     only spectrum is softer/rounder than the others, closer to a bowed
+//     sarangi than a plucked sitar — a better fit for Todi's reputation as
+//     classical music's most introspective, "difficult to hold" raga than
+//     a bright plucked timbre would be. Per MUSIC-KNOWLEDGE.md §2.5: synth
+//     basics, not gm_sitar/etc.
+//   - Automation target: DELAY, not filter cutoff. The last two raga days
+//     already automated .lpf() (a continuous sweep on 09-14, a per-phrase
+//     step pattern on 09-21) — repeating that would be reaching for the same
+//     lever with new numbers. Instead, delay time/feedback are stepped WITH
+//     the phrase rotation: dry on the call, widest/most-fed-back on the
+//     climax (letting the tivra Ma/komal Dha color tones ring and stack —
+//     a partial version of MUSIC-KNOWLEDGE.md §7's "Sound on Sound" idea,
+//     applied to the lead's own line rather than a separate drone voice),
+//     tightening through the retrograde, settling to a short trailing echo
+//     on the coda.
+//   - Panning: a SLOW CONTINUOUS drift (sine, an 11-cycle period, not synced
+//     to the 4-cycle phrase rotation) rather than Kafi's discrete per-phrase
+//     "duel" panning. Todi is traditionally described as a raga that avoids
+//     resting cleanly on Sa or Pa — deliberately not letting the melody
+//     settle on the strong tones. A pan position that never lines up with
+//     the phrase boundaries is the spatial equivalent of that same elusive
+//     quality, not just a different LFO for its own sake.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// every time): this is a short alap-style exposition over a drone, same
+// shape as 09-14's Bhairav and 09-21's Kafi files, both of which correctly
+// carried no metric pulse. Todi has no light-classical tala tradition the
+// way Khamaj's keherwa or Kafi's thumri register do — it's a serious,
+// contemplative morning-to-late-morning raga performed slow and unmetered.
+// No drum layer here, decided explicitly rather than defaulted.
+//
+// MELODY — four alternating phrases (degrees 0-7 = S r g M# P d N S'):
+//   A (call — a small oscillating motif around samvadi Re, then a real leap
+//      up to tivra Ma, held across a rest):
+//        S r g r M# ~   ->  0 1 2 1 3 ~
+//   B (climax — a dramatic leap straight from tivra Ma to the octave,
+//      skipping over Pa and Dha entirely, held, then falls back through Ni
+//      to land on vadi Dha; tension -> release):
+//        M# ~ S' ~ N d  ->  3 ~ 7 ~ 6 5
+//   C (retrograde of A, the QC-loop device — literal reverse, closing on Sa
+//      instead of the tivra-Ma leap):
+//        ~ M# r g r S   ->  ~ 3 1 2 1 0
+//   D (coda — tonic/vadi/samvadi call-and-response, resolving to Sa):
+//        S ~ d ~ r ~ S  ->  0 ~ 5 ~ 1 ~ 0
+//   rotation <A B C D> over 16 cycles (4 full statements of the rotation).
+//
+// CYCLES: 16. setcpm(46) -> 16 * 60/46 ≈ 20.9s.
+// ============================================================================
+
+setcpm(46)
+let CYCLES = 16
+
+stack(
+  // DRONE — tanpura convention: tonic + fifth (S, P). Sine for purest tone,
+  // slow attack/release so it sits still under the phrases.
+  n("<0 4>/4")
+    .scale("C3:todi:raga")
+    .sound("sine")
+    .gain(.24)
+    .room(4.5)
+    .attack(2).release(3),
+
+  // MELODY — four alternating phrases, see THEORY/MELODY notes above.
+  n("<[0 1 2 1 3 ~] [3 ~ 7 ~ 6 5] [~ 3 1 2 1 0] [0 ~ 5 ~ 1 ~ 0]>")
+    .scale("C3:todi:raga")
+    .sound("triangle")
+    .attack(.02).decay(.22).sustain(.25).release(.3)
+    .lpf(950)
+    .lpq(5)
+    .delay("<0.15 0.4 0.2 0.1>")          // dry call -> spacious climax ->
+    .delayfeedback("<0.2 0.45 0.25 0.15>") // tightening retrograde -> short
+                                            // trailing echo on the coda
+    .gain(.4)
+    .pan(sine.range(0.3, 0.7).slow(11)) // slow drift, deliberately NOT
+                                          // synced to the 4-cycle phrase
+                                          // rotation -- Todi's own elusive,
+                                          // never-quite-resting character
+    .sometimes(x => x.ply(2)) // improv hook: occasional murki-style ornament
+)
