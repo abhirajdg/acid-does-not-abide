@@ -1,0 +1,128 @@
+// ============================================================================
+// DAILY — 2026-09-29 (Tuesday) — Carnatic melakarta math
+// Melakarta #21: Keeravani
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (chakra/position scheme, the same real combinatorial
+// structure used every Tuesday this project has run — 08-25's #22, 09-01's
+// #20, 09-08's #57, 09-15's #29, 09-22's #23):
+//   chakra   = ceil(N / 6),  position = N - 6*(chakra - 1)
+// For N = 21: chakra = ceil(21/6) = 4 -> Ri-Ga combo #4 of the 6-combo cycle
+//             (1=R1G1 2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) = R2 G2 (chatushruti
+//             Ri, sadharana Ga)
+//             position = 21 - 6*3 = 3 -> Dha-Ni combo #3 of its own 6-combo
+//             cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) = D1 N3
+//             (shuddha Dha, kakali Ni)
+//             N <= 36 -> shuddha Ma (M1)
+// melakarta 21 = S R2 G2 M1 P D1 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 2 3 5 7 8 11 — checked,
+// not assumed: this is EXACTLY the Western harmonic minor scale (minor 3rd
+// and minor 6th, but a natural/raised 7th), the same real identity Keeravani
+// is independently documented under — this is why the raga is the standard
+// go-to when Indian film/light-classical writing wants "the harmonic minor
+// sound." A genuinely different color from the last five Tuesdays: #20 was
+// plain aeolian (no raised leading tone), #57 had TWO augmented-second gaps
+// (hungarian minor), #29 had none (major), #23 was melodic minor's major/
+// minor ambiguity — #21 has exactly ONE augmented-second gap, between D1(8)
+// and N3(11), which is the thing to make audible below, not decoration.
+// Tonic G this time: F, D, A, B and E have all carried a daily pattern in
+// the last two weeks (grepped every .scale() call in daily/) — G has not
+// appeared in that window, a fresh pitch center.
+//   -> .scale("G:harmonic:minor")
+//
+// ARRANGEMENT — a fresh choice for what's actually different about #21:
+// the augmented second is a HARD PULL, not an ambiguity to sit with (#23) or
+// an absence to enjoy (#29) — it wants to be heard as tension resolving into
+// the tonic, so both drone and melody are built to keep that one gap legible.
+//   drone: sine (purest waveform, MUSIC-KNOWLEDGE.md §2.5) — tonic + fifth
+//          (S/P as g2/d3), tanpura convention, same reasoning as 09-22's
+//          drone (a plain, stable reference lets the melody's own harder
+//          interval read clearly instead of getting muddied by a busier
+//          drone) — but NOT a static copy: a very slow, shallow `.vib()`
+//          wobble (rate .12Hz, depth .06 semitones — barely perceptible,
+//          not a wide vibrato) gives the sustained tonic/fifth a faint
+//          tremble, underlining the raga's dramatic pull without turning
+//          the drone into a second melodic voice.
+//   lead:  supersaw (harmonically dense, MUSIC-KNOWLEDGE.md §2.5's "plucked/
+//          struck lead" guidance) — used as a DRONE on 09-15 but not yet as
+//          a lead on a Tuesday (57 = harsh square, 29 = triangle, 23 =
+//          sawtooth, 20 = sawtooth); a fresh timbre for this slot, and its
+//          rich overtone stack gives the augmented-second leaps more bite
+//          than a plainer wave would.
+//   NO DRUM KIT — same standing call as every recent melakarta exposition
+//   (MUSIC-QC-LOOP.md's autopilot-percussion lesson): this is a scale study
+//   over a drone (alapana-style), not a tala-bound kriti, so no metric pulse
+//   is implied. The two derived numbers still drive real audible things:
+//   chakra (4) sets the lead filter LFO's sweep period, position (3) sets
+//   the delay time (a triplet subdivision) — neither needed a drum layer as
+//   its "audible outlet."
+//
+// MELODY — four phrases (call / climax-response / drop / retrograde-with-
+// leading-tone), all built to keep the D1->N3 augmented second (scale
+// degrees 5->6) audible in both directions, ascending AND descending, not
+// just at the final cadence:
+//   A (call): a fifth-leap from the tonic to P, then the augmented second
+//     itself (D to N), held with a rest for suspense before resolving:
+//                                          0 ~ 4 ~ 5 6 ~ ~
+//   B (climax/response, call-and-response device): from the octave, a leap
+//     up to a genuine climax above it (a third past the octave), then a
+//     stepwise fall back down through the SAME augmented second in reverse
+//     (N down to D) — the "response" answers the "call" from a higher
+//     register and re-traverses the raga's signature gap on the way down:
+//                                          7 ~ 9 ~ 7 6 5 ~
+//   C (the drop, tension->release device): a big leap from the climax down
+//     to the leading tone, the augmented second again (N to D), then two
+//     more falling leaps down through P to the tonic — tension built in B
+//     released across three motions, landing the structural tone:
+//                                          9 ~ 6 5 ~ 4 ~ 0
+//   D (retrograde-flavored variation of A, motif-and-variation device):
+//     descends stepwise from N through P and G, leaps down to R, then
+//     resolves through the LEADING TONE (degree -1, N below the tonic) up
+//     into S — harmonic minor's leading tone is a natural major 7th, so
+//     this "ti->do" pull closes the phrase with the same interval that
+//     opened it, just approached from below instead of above:
+//                                          6 ~ 4 2 ~ 1 -1 0
+//
+// CYCLES = 21 (the melakarta number itself, same convention as the last
+// five Tuesdays). setcpm(63) -> 21 * 60/63 = 20.0s exactly.
+// ============================================================================
+
+setcpm(63)
+let CYCLES = 21 // = the melakarta number itself; 21 * 60/63 = 20.0s
+
+stack(
+  // DRONE — tanpura convention, S + P (tonic/fifth). Plain sine, slow
+  // attack/release so it swells rather than snaps on. A very slow, shallow
+  // vibrato (see ARRANGEMENT above) gives it a faint tremble instead of
+  // sitting perfectly static, without competing with the lead.
+  note("<g2 d3>/4")
+    .sound("sine")
+    .gain(.26)
+    .attack(2.2).release(3.2)
+    .vib(.12).vibmod(.06)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (a fifth, a third past the
+  // octave, big compound leaps in the drop), rests for breathing room,
+  // call-and-response (A/B), tension->release (C), and motif-and-variation
+  // (D) as the required jazz-improv devices — all built around keeping the
+  // raga's one augmented-second gap (D1->N3) legible in both directions.
+  n(`<
+    0 ~ 4 ~ 5 6 ~ ~
+    7 ~ 9 ~ 7 6 5 ~
+    9 ~ 6 5 ~ 4 ~ 0
+    6 ~ 4 2 ~ 1 -1 0
+  >`)
+    .scale("G:harmonic:minor")
+    .sound("supersaw")
+    .attack(.008).decay(.12).sustain(.18).release(.1)
+    .lpf(sine.range(600, 3200).slow(4)) // chakra (4) -> sweep period
+    .lpq(9)
+    .lpenv(5).lpattack(.01).lpdecay(.08).lpsustain(.2).lprelease(.05) // per-note quack, MUSIC-KNOWLEDGE.md §4
+    .distort(.12)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.42)
+    .delay(.2)
+    .delaytime(1/3) // position (3) -> a triplet delay
+    .delayfeedback(.3)
+)
