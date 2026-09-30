@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-30",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "30 . 09 . 2026",
+  "pattern_file": "daily/2026-09-30-date-pattern.strudel",
+  "cycles": 22,
+  "target_duration_sec": 22,
+  "code_highlight_lines": [
+    "let CYCLES = 22 // day-digit-sum (3) + month (9) + year-digit-sum (10)",
+    "n(\"<[0 ~ 2] [2 ~ 0] [~ 2 0] [0 2 ~]>\")"
+  ]
+}

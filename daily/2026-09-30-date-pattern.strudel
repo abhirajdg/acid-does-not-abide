@@ -1,0 +1,101 @@
+// ============================================================================
+// DAILY — 2026-09-30 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-09-30 -- day 30, month 09 (September), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Prior Wednesdays each tried a different relationship between day and
+//   month: reading digits in sequence (08-26), three independent clock rates
+//   (09-02), a true hocket when day==month (09-09), day/month used directly
+//   as two coprime-feeling grid lengths -- 16 vs 9 (09-16), and a single line
+//   with per-token inline Euclidean flutters when day was prime (09-23).
+//   Today day (30) and month (9) are neither equal nor coprime -- they share
+//   a real common factor: GCD(30, 9) = 3. Reducing the fraction 30/9 by that
+//   GCD gives 10/3 in lowest terms, and THAT reduced ratio -- not the raw
+//   30 and 9 -- is what drives the piece: a DAY voice built on a 10-step
+//   grid against a MONTH voice built on a 3-step grid, both tiling the same
+//   one-cycle span. This is a genuine 10-against-3 polyrhythm (unlike
+//   09-16's 16-vs-9, which shares no common factor and so never lines up
+//   inside a cycle), derived from today's actual date through real fraction
+//   reduction, not an arbitrary polyrhythm pick.
+//
+//   DAY voice (10-step grid) anchors on day's own two digits: tonic (0, the
+//   digit "0") and scale degree 3 (the digit "3") -- the digit "3" doubles
+//   here as both a pitch anchor and, not coincidentally, the very GCD that
+//   generated the grid split. Four hand-written phrases (call / response /
+//   tension / resolution) alternate per cycle: a rising arch to an octave
+//   leap and back (call), a falling answer landing back on the day-anchor
+//   degree (response), a denser push with quicker leaps (tension), and a
+//   widely-spaced return to tonic (resolution) -- real intervallic variety
+//   (4ths, 3rds, a full octave) plus rests, not a scale run.
+//
+//   MONTH voice (3-step grid) anchors on tonic (0) and degree 2 -- September
+//   9 mod 7 = 2, the same mapping 2026-09-09 and 2026-09-16 already
+//   established for this exact digit (honest reuse: the digit hasn't
+//   changed). Deliberately sparse -- three short call/response fragments in
+//   dialogue with DAY's busier line, the "3" side of the reduced 10:3 ratio.
+//
+//   CYCLES = 22 = day-digit-sum (3+0=3) + month (9) + year-digit-sum
+//   (2+0+2+6=10). setcpm(60) x 22 cycles / 60 = 22s.
+//
+// Scale: E minor -- fresh for this slot (last two Wednesdays used A minor
+// and D major); the ratio is the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: the 10-against-3 grid split
+// IS the piece's audible pulse, generated straight from today's date via
+// real fraction reduction -- a metric kit underneath would just restate a
+// polyrhythm that's already there, the same reflexive-percussion failure
+// MUSIC-QC-LOOP.md flags.
+//
+// Instrumentation: synth basics throughout (sawtooth / triangle / sine), per
+// MUSIC-KNOWLEDGE.md §2.5 -- no acoustic-instrument sample names. DAY (busy,
+// 10-grid) gets the sharp/abrasive sawtooth + light acid distortion; MONTH
+// (sparse, 3-grid) gets the pure/soft triangle with no distortion -- genuine
+// timbre contrast (MUSIC-KNOWLEDGE.md §1-2) matching each voice's density,
+// not the same patch twice with different notes.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 22 // day-digit-sum (3) + month (9) + year-digit-sum (10)
+
+stack(
+  // DAY -- 30 / GCD(30,9)=3 gives numerator 10: a 10-step grid, the busier
+  // voice. Anchors: tonic (day's digit 0) and scale degree 3 (day's digit
+  // 3, also literally today's GCD).
+  n("<[0 ~ 3 ~ 5 ~ 7 ~ 3 0] [7 ~ 5 ~ 3 ~ 0 ~ ~ 3] [5 7 ~ 3 0 ~ 5 3 ~ 0] [0 ~ ~ 3 ~ ~ 5 ~ ~ 0]>")
+    .scale("E:minor")
+    .sound("sawtooth")
+    .attack(.006).decay(.1).sustain(0).release(.05)
+    .distort(.18) // acid taste layer, kept light so the 10-grid stays legible
+    .lpf(sine.range(400, 2200).slow(9)) // sweep period = month's value (9)
+    .gain(.34)
+    .pan(.72)
+    .room(.9), // driest voice -- the busier 10-grid reads as the closer one
+
+  // MONTH -- 9 / GCD(30,9)=3 gives denominator 3: a 3-step grid, sparse
+  // voice, true 10-against-3 polyrhythm against DAY above. Anchors: tonic
+  // (0) and degree 2 (September's own established 9 mod 7 = 2 mapping).
+  n("<[0 ~ 2] [2 ~ 0] [~ 2 0] [0 2 ~]>")
+    .scale("E:minor")
+    .sound("triangle")
+    .attack(.05).decay(.3).sustain(.2).release(1)
+    .gain(.28)
+    .pan(.28)
+    .room(2.6), // more spacious -- the sparser 3-grid reads as the wider one
+
+  // DRONE -- tonic/fifth tanpura convention, sustaining underneath both
+  // voices for the full piece (/22) rather than retriggering each cycle.
+  // Pan breathes on a 10-cycle period -- but this 10 is the YEAR's digit
+  // sum (2+0+2+6=10), a coincidence with DAY's grid-length 10 worth noting,
+  // not the same derivation reused twice.
+  note("[e2,b2]/22")
+    .sound("sine")
+    .attack(1.5).release(2.2)
+    .pan(sine.range(.35, .65).slow(10))
+    .gain(.24)
+    .room(3.5)
+)
