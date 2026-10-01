@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-01",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "RECAMAN'S WALK",
+  "pattern_file": "daily/2026-10-01-recaman-sequence.strudel",
+  "cycles": 8,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["setcpm(24)", ".scale(\"E:mixolydian\")"]
+}
