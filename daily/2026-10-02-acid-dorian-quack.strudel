@@ -1,0 +1,95 @@
+// ============================================================================
+// DAILY — 2026-10-02 (Friday): Acid house — the 303's own filter envelope
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction: genre structure drives Friday, not raga performance form). Read
+// every prior Friday before writing this one (MUSIC-KNOWLEDGE.md's "don't
+// template last cycle" rule): 08-28 = D harmonic minor, Goa-trance bass/lead
+// split, three slow-drifting filter params. 09-04 = E whole tone, Sound-on-
+// Sound delay drone, fast wobble-LFO sub, phaser. 09-11 = A locrian, real
+// 3-depth duckorbit sidechain, rolling psytrance bass + separate square lead
+// + pad dyad. 09-18 = F natural minor, one 303 voice, duckorbit, a single
+// slow lpf sweep. 09-25 = E phrygian dominant, half-time dub, kick-locked
+// wobble sub, Sound-on-Sound built from the lead's own delay. Today changes
+// both the scale AND the production idea:
+//
+//   SCALE: G Dorian (G A Bb C D E F) — not yet used on a Friday. Dorian's
+//   identity against the natural-minor/locrian darkness already used twice
+//   (09-18, 09-11) is its RAISED 6th (E natural, degree 5) sitting over an
+//   otherwise minor scale — a brighter, "cool jazz" color note inside a minor
+//   frame, not available in harmonic minor or whole tone either. Degrees:
+//   0=G 1=A 2=Bb 3=C 4=D 5=E(the Dorian 6th) 6=F 7=G'.
+//
+//   PRODUCTION: one 303 voice doing both bass and lead duty, same basic acid-
+//   house move as 09-18 — but the actually new device this time is the real
+//   per-note FILTER ENVELOPE (`lpenv`/`lpattack`/`lpdecay`/`lpsustain`), the
+//   mechanism MUSIC-KNOWLEDGE.md §4 names as the real source of a 303's
+//   "quack" ("the classic quack comes from each note opening/closing the
+//   filter... not yet given individual notes their own filter envelope" —
+//   true through 09-25, every daily 303 line so far has used only a slow
+//   external `.lpf(sine.range(...).slow(n))` sweep). Today stacks BOTH
+//   timescales deliberately: the slow sweep still moves the filter's center
+//   across the whole 22.5s clip, while `lpenv` snaps each individual note's
+//   cutoff open-then-closed on top of it — two independent rates of filter
+//   motion, not one knob doing both jobs. Sidechain stays real duckorbit
+//   (not `duck(0)`, per §10's corrected mechanism) at the light depth §10's
+//   genre table gives an acid LEAD specifically (not a hard techno pump,
+//   since this voice is melodic as well as low-end).
+//
+//   DRUMS: four-on-the-floor kick + clap on 2 & 4 + off-beat hats — acid
+//   house's own pulse, not autopilot percussion (the genre IS this pattern,
+//   same as 09-18/09-11's precedent for this exact weekday).
+//
+// THE 303 LINE — 16 steps/cycle (16th notes), rotating <A B C D> every cycle
+// across 12 cycles (3 full rounds):
+//   A (call/motif):   root leaps up a 3rd, a 4th, then the Dorian 6th (E) —
+//                      the bright color tone — then descends back to tonic.
+//   B (variation,     same opening, but climbs PAST the Dorian 6th to the b7
+//      unresolved):    (F) and stops there on a rest — unresolved tension.
+//   C (peak, partial   octave leap, then a note-for-note descending mirror of
+//      retrograde):    B's ascending 2-3-5-6 climb (6-5-3-2), twice, down to
+//                      tonic — literal retrograde of the tension gesture.
+//   D (release,        mostly rests; one leap BELOW the tonic (the b7 below,
+//      sparse):        F2) and back — breathing room after C's peak.
+//
+// TEMPO: setcpm(32) with a bd*4 kick -> BPM = cpm * beats/cycle = 128, real
+// acid-house territory (120-130). CYCLES: 12. 12 * 60/32 = 22.5s.
+// ============================================================================
+
+setcpm(32)
+let CYCLES = 12
+
+// drums — four-on-the-floor kick (drives the sidechain), clap on 2 & 4,
+// off-beat hats. Genre-conventional for acid house, not default orchestration.
+let drums = stack(
+  s("bd*4").bank("RolandTR909")
+    .duckorbit(2).duckattack(.03).duckdepth(.35)
+    .gain(.56),
+  s("~ cp ~ cp").bank("RolandTR909").gain(.3).room(.15),
+  s("~ hh ~ hh ~ hh ~ hh").bank("RolandTR909").gain(.12).degradeBy(.2),
+)
+
+let melody = n(`<
+  [0 ~ 0 2 ~ 0 3 ~ 0 ~ 5 3 ~ 2 0 ~]
+  [0 ~ 0 2 ~ 0 3 ~ 5 ~ 6 ~ 5 3 ~ ~]
+  [7 ~ 6 5 ~ 3 2 0 ~ 7 6 5 ~ 3 2 0]
+  [0 ~ ~ ~ -2 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~]
+>`).scale("G2:dorian")
+
+// one 303 voice, bass+lead duty. lpf's slow range sweep moves the filter's
+// CENTER across the whole clip; lpenv/lpattack/lpdecay/lpsustain give each
+// NOTE its own fast open-close envelope on top — the two-timescale quack
+// MUSIC-KNOWLEDGE §4 flagged as unused so far. Lightly ducked by the kick
+// (orbit 2) so the voice stays legible, not chopped.
+let lead = melody
+  .sound("sawtooth")
+  .attack(.005).decay(.08).sustain(.05).release(.03)
+  .lpf(sine.range(400, 2200).slow(9))
+  .lpq(10)
+  .lpattack(.01).lpdecay(.09).lpsustain(.1).lprelease(.04).lpenv(5)
+  .distort(.2)
+  .gain(.34)
+  .orbit(2)
+
+stack(drums, lead)

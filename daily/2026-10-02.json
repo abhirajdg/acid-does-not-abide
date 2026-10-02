@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-02",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "G DORIAN QUACK",
+  "pattern_file": "daily/2026-10-02-acid-dorian-quack.strudel",
+  "cycles": 12,
+  "target_duration_sec": 22,
+  "code_highlight_lines": [
+    ".lpattack(.01).lpdecay(.09).lpsustain(.1).lprelease(.04).lpenv(5)",
+    "s(\"bd*4\").bank(\"RolandTR909\")"
+  ]
+}
