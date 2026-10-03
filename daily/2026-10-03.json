@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-03",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "13EDO DUBSTEP",
+  "pattern_file": "daily/2026-10-03-xenharmonic-13edo.strudel",
+  "cycles": 12,
+  "target_duration_sec": 21,
+  "code_highlight_lines": ["s(\"bd ~ ~ ~ cp ~ ~ ~\").bank(\"RolandTR909\")", ".lpf(sine.range(120, 950).fast(4))"]
+}

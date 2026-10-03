@@ -1,0 +1,128 @@
+// ============================================================================
+// DAILY — 2026-10-03 (Saturday): Xenharmonic tuning experiment — 13edo, as
+// a dubstep half-time track
+// ============================================================================
+//
+// THE TUNING: 13edo divides the octave into 13 equal steps of 1200/13 ≈
+// 92.31 cents each. Checked against all six prior Saturdays (17edo, 19edo,
+// 31edo, 15edo, 24edo, 22edo — last week's 22edo had a sharp fifth paired
+// with a near-just third) before writing a note of this: 13edo is a
+// genuinely different case from all of them, because it has no comparably
+// *decent* fifth at all — its best approximation (8 steps = 738.46c) is
+// 36.5c sharp of a pure 3:2 (701.955c), a worse error than every EDO used
+// this project so far.
+//
+// WHY 13edo'S SCALE IS BUILT THIS WAY — verified, not assumed: stacking
+// that 8-step "fifth" generator and checking, at each size n, whether the
+// resulting n-note scale reduces to just two step sizes (the definition of
+// a moment-of-symmetry/MOS scale — the same test that makes 12edo's
+// 7-note diatonic scale special) gives MOS scales at n = 2, 3, 5, then
+// jumps straight to 8. There is NO 7-note MOS in 13edo from this
+// generator — unlike 12edo, whose fifth generator (7 steps of 12) gives a
+// proper MOS at n=7 (the familiar major/minor diatonic scale). 13edo
+// simply has no "diatonic" analog; the natural stopping point before the
+// full 13-note chromatic is the 5-note (pentatonic-sized) MOS. That's what
+// this pattern uses — not a novelty substitution, the actual structure
+// this tuning offers.
+//
+// THE SCALE: stack the generator (8 steps) four times mod 13:
+// {0, 8, 16mod13=3, 24mod13=11, 32mod13=6} → sorted {0, 3, 6, 8, 11}.
+// Step pattern: 3-3-2-3-2 (13edo steps), i.e. 276.9-276.9-184.6-276.9-
+// 184.6 cents — a genuine two-size MOS, the 13edo counterpart to 12edo's
+// minor pentatonic (3-2-2-3-2 in semitones). Degree 8 is the sharp
+// "fifth" above, playing the vadi/samvadi-equivalent structural-anchor
+// role alongside the tonic (0), same convention raga anchoring uses.
+//
+// ARRANGEMENT: a genre never yet used on this slot (17edo/19edo/31edo
+// predate the genre-first direction; 15edo = techno, 24edo = psytrance,
+// 22edo = acid house) — DUBSTEP, half-time (MUSIC-KNOWLEDGE.md §9):
+// kick+clap land on beats 1 and 3 of an 8-step bar instead of every
+// quarter, hats doubled underneath, so the track reads as half the speed
+// of its real 140 BPM. The wobble bass (§9: sine sub, fast per-beat lpf
+// LFO, not acid's slow multi-cycle sweep) carries the modulation load
+// instead of a second drone layer — deliberately TWO voices in the drone
+// (tonic + sharp-fifth only, no forced third: 13edo doesn't have a good
+// one, and pretending otherwise would misrepresent the tuning), per §10's
+// "fewer layers, each with one job." Synth basics throughout (sine drone,
+// sine sub, sawtooth lead) per MUSIC-KNOWLEDGE.md §2.5 — no gm_* samples.
+// Percussion here is a deliberate genre choice (dubstep's half-time
+// identity IS its rhythm), not autopilot orchestration.
+//
+// MELODY — anchored on the tonic (0) and the sharp "fifth" (8). Demo
+// block (each scale tone played singly, never sustained together — per
+// the 09-18/09-19 QC-loop fix), then four alternating phrases, each one
+// 8-step cycle (matching the dubstep bar):
+//   demo (bare, no kit):              0 ~ 8 ~ 0 ~ 3 ~
+//   A (call — leap to the "5th", descend the MOS run):
+//                                     0 ~ 8 ~ 6 3 ~ ~
+//   B (response — climb back up, resolve home):
+//                                     3 6 8 ~ 11 ~ 8 0
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//                                     ~ ~ 3 6 ~ 8 ~ 0
+//   D (peak & release — up to the octave-up tonic, then back down):
+//                                     8 ~ 13 16 ~ 13 8 0
+// Order: demo, A B C D, A B C D, A B D — 12 phrases across 12 cycles,
+// ending on the release (D), same convention 22edo/24edo used to land
+// the clip cleanly rather than cutting mid-phrase.
+//
+// CYCLES: 12, setcpm(35), 4 beats/cycle = 140 BPM (real dubstep tempo —
+// the half-time FEEL comes from the drum placement below, not a slower
+// tempo; checked per the 09-18/09-19 tempo-math fix).
+// 12 * 60/35 = 20.57s.
+// ============================================================================
+
+setcpm(35)
+let CYCLES = 12
+
+stack(
+  // DRONE — tonic + sharp "fifth" only, held the whole clip. No third:
+  // 13edo doesn't have a good one, so two bare, slightly-too-wide-to-be-
+  // comfortable voices IS the honest sound of this tuning, not a
+  // simplification.
+  stack(
+    i("-13").xen("13edo").sound("sine").pan(0.3),  // tonic, one octave down
+    i("-5").xen("13edo").sound("sine").pan(0.7),   // sharp "fifth" (8-13)
+  ).slow(CYCLES).attack(2).release(3).gain(.22).room(2).orbit(2),
+
+  // WOBBLE BASS — sine sub on the tonic, fast per-beat lpf LFO
+  // (MUSIC-KNOWLEDGE.md §9's wobble device — .fast(4) = one full sweep
+  // per beat at this tempo), doing the modulation work this arrangement
+  // needs instead of a second drone layer
+  i("0").xen("13edo").sound("sine")
+    .lpf(sine.range(120, 950).fast(4))
+    .lpq(6)
+    .gain(.4).orbit(2),
+
+  // LEAD — the 13edo pentatonic-MOS run, sawtooth, plucked (fast attack,
+  // short decay) rather than acid-sustained since there's no acid
+  // sweep/distortion voice competing with the wobble bass this time
+  i(`<
+    [0 ~ 8 ~ 0 ~ 3 ~]
+    [0 ~ 8 ~ 6 3 ~ ~]
+    [3 6 8 ~ 11 ~ 8 0]
+    [~ ~ 3 6 ~ 8 ~ 0]
+    [8 ~ 13 16 ~ 13 8 0]
+    [0 ~ 8 ~ 6 3 ~ ~]
+    [3 6 8 ~ 11 ~ 8 0]
+    [~ ~ 3 6 ~ 8 ~ 0]
+    [8 ~ 13 16 ~ 13 8 0]
+    [0 ~ 8 ~ 6 3 ~ ~]
+    [3 6 8 ~ 11 ~ 8 0]
+    [8 ~ 13 16 ~ 13 8 0]
+  >`).xen("13edo")
+    .sound("sawtooth")
+    .attack(.005).decay(.1).sustain(.1).release(.1)
+    .lpf(1800).lpq(4)
+    .gain(.35),
+
+  // DRUMS — half-time dubstep groove: kick+clap on beats 1 and 3 of the
+  // 8-step bar (not every quarter), hats doubled underneath. Silent for
+  // the bare demo cycle.
+  s("bd ~ ~ ~ cp ~ ~ ~").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.75),
+
+  s("hh*16").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.12).degradeBy(.25),
+)
