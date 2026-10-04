@@ -1,0 +1,138 @@
+// ============================================================================
+// DAILY — 2026-10-04 (Sunday): Wildcard — rhythmic augmentation & diminution
+// on Monday's Todi call phrase
+// ============================================================================
+//
+// WHY THIS (Step 0 check against this week + the last three Sundays): 09-13
+// was a pitch-canon (one tune, time-staggered, same pitches). 09-20 was
+// canon BY INVERSION (one tune, time-staggered, mirrored pitches). 09-27 was
+// a Thue-Morse HOCKET (two voices alternating note-by-note). All three are
+// built from either TIME-OFFSET or PITCH-TRANSFORM of a single idea. Today
+// uses neither — it's a RATE transform: the same phrase played at 1x
+// (statement), 2x (diminution), 0.5x (augmentation), then 1x and 2x
+// simultaneously (a diminution stretto, the climax) — real contrapuntal
+// devices with their own names (augmentation/diminution), never used on this
+// project before, mechanically distinct from canon and hocket alike.
+//
+// THE MATERIAL: rather than inventing a new melody, this riffs on the raga
+// theme this project already has — Monday's Todi call phrase (daily/
+// 2026-09-28-hindustani-todi.strudel), reused because Todi's own character
+// ("difficult to hold," never resting cleanly) is the most interesting
+// thing this week produced, not out of convenience. Call phrase A and a new
+// descending-by-thirds response B (resolving home to Sa, call-and-response,
+// the required jazz-improv device):
+//   A (call):     S ~ r M# ~ S' ~ d   ->  0 ~ 1 3 ~ 7 ~ 5
+//   B (response): d ~ N P ~ g ~ S     ->  5 ~ 6 4 ~ 2 ~ 0
+// A leaps up through the raga's color tones (tivra Ma, then an octave-ish
+// leap to S') before B answers with a cascading descent-by-thirds back to
+// the tonic — real leaps, rests, and a resolved call-and-response shape,
+// not a scale run. Same tonic (C) and scale name as Monday — a deliberate
+// callback, not an accidental copy: this piece is explicitly a structural
+// riff on that file's own material, verified against tonaljs's "todi raga"
+// entry there already.
+//
+// THE DEVICE, IN STRUCTURE (12 cycles):
+//   cycles 0-1   STATEMENT    <A B> at 1x — the phrase, plain.
+//   cycles 2-3   DIMINUTION   <A B>.fast(2) — same phrase at 2x: A and B
+//                each compressed to half a cycle, so A-B-A-B fits in 2
+//                cycles where the statement took 2 cycles for just A-B once.
+//   cycles 4-7   AUGMENTATION <A B>.slow(2) — same phrase at 0.5x: A alone
+//                now fills 2 full cycles, B the next 2 — one AB statement
+//                stretched across the whole 4-cycle window.
+//   cycles 8-11  CLIMAX       the 1x voice and the 2x voice reappear and
+//                play TOGETHER (same two identities established earlier,
+//                not a new layer — MUSIC-KNOWLEDGE.md §10's "fewer layers,
+//                each with one job" satisfied by reuse, not addition): the
+//                phrase chasing its own faster self, a real diminution
+//                stretto, landing the clip's only moment of rhythmic
+//                density.
+//
+// ARRANGEMENT — three timbres, one per rate-identity, kept constant
+// wherever that identity appears (so the climax reads as "the two voices
+// we already know, now overlapping" rather than new material):
+//   1x  (statement + climax): square — hollow/reedy (MUSIC-KNOWLEDGE.md
+//       §1), matches Todi's austere reputation.
+//   2x  (diminution + climax): supersaw — dense/bright, the busier,
+//       faster identity; deliberately CONTRASTING timbre from the square
+//       (§2) so the two stay legible once they overlap at the climax.
+//   0.5x (augmentation only): triangle — pure/soft, long attack/release,
+//       the spacious, stretched identity; never recurs, so it doesn't need
+//       to contrast against anything but its own moment.
+// Filter cutoff and delay time both scale directly with each voice's own
+// rate multiplier (cutoff = 1300Hz x rate; delaytime = 0.25 cycles / rate)
+// — the device's own math driving the sound design, not decoration: faster
+// material reads brighter and tighter, slower material reads darker and
+// more spacious, in direct proportion to how fast it's actually playing.
+// Drone: sine, tonic + fifth (S/P), tanpura convention, same C3 tonic as
+// Monday's file, held the full 12 cycles underneath all three identities.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question): the whole piece
+// IS a rhythmic-ratio device — its audible pulse is the 1x/2x/0.5x
+// relationship itself, not a missing metric layer waiting to be filled.
+// A drum kit under this would compete with the exact thing the piece is
+// about (hearing one phrase at three speeds), the same failure mode
+// already caught on 09-08/09-09. No percussion, decided deliberately.
+//
+// CYCLES: 12. setcpm(40) -> 12 * 60/40 = 18.0s.
+// ============================================================================
+
+setcpm(40)
+let CYCLES = 12
+
+let phrase = "<[0 ~ 1 3 ~ 7 ~ 5] [5 ~ 6 4 ~ 2 ~ 0]>" // A (call), B (response)
+
+stack(
+  // DRONE — tanpura convention, S + P, same C3 Todi tonic as Monday's file.
+  n("<0 4>/4")
+    .scale("C3:todi:raga")
+    .sound("sine")
+    .attack(2).release(3)
+    .gain(.22)
+    .room(4.5),
+
+  // 1x — STATEMENT (cycles 0-1) + CLIMAX (cycles 8-11, together with 2x).
+  n(phrase)
+    .scale("C3:todi:raga")
+    .sound("square")
+    .attack(.01).decay(.12).sustain(.1).release(.12)
+    .lpf(1300) // cutoff = 1300 x rate(1)
+    .lpq(5)
+    .delay(.2)
+    .delaytime(.25) // 0.25 cycles / rate(1)
+    .delayfeedback(.22)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.4)
+    .pan(.35)
+    .room(2)
+    .mask("<1 1 0 0 0 0 0 0 1 1 1 1>"),
+
+  // 2x — DIMINUTION (cycles 2-3) + CLIMAX (cycles 8-11, against the 1x voice).
+  n(phrase).fast(2)
+    .scale("C3:todi:raga")
+    .sound("supersaw")
+    .attack(.006).decay(.08).sustain(.06).release(.08)
+    .lpf(2600) // cutoff = 1300 x rate(2)
+    .lpq(6)
+    .delay(.15)
+    .delaytime(.125) // 0.25 cycles / rate(2)
+    .delayfeedback(.18)
+    .gain(.3)
+    .pan(.68)
+    .room(1.5)
+    .mask("<0 0 1 1 0 0 0 0 1 1 1 1>"),
+
+  // 0.5x — AUGMENTATION (cycles 4-7 only, never recurs).
+  n(phrase).slow(2)
+    .scale("C3:todi:raga")
+    .sound("triangle")
+    .attack(.05).decay(.3).sustain(.3).release(.5)
+    .lpf(650) // cutoff = 1300 x rate(0.5)
+    .lpq(4)
+    .delay(.35)
+    .delaytime(.5) // 0.25 cycles / rate(0.5)
+    .delayfeedback(.35)
+    .gain(.36)
+    .pan(.5)
+    .room(3)
+    .mask("<0 0 0 0 1 1 1 1 0 0 0 0>")
+)

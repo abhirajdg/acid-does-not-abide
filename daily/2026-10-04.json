@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-04",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "TODI: AUG & DIMIN",
+  "pattern_file": "daily/2026-10-04-wildcard-todi-augmentation-diminution.strudel",
+  "cycles": 12,
+  "target_duration_sec": 18,
+  "code_highlight_lines": [
+    "let phrase = \"<[0 ~ 1 3 ~ 7 ~ 5] [5 ~ 6 4 ~ 2 ~ 0]>\" // A (call), B (response)",
+    "  n(phrase).fast(2)"
+  ]
+}
