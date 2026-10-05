@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-05",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "RAGA MARWA",
+  "pattern_file": "daily/2026-10-05-hindustani-marwa.strudel",
+  "cycles": 16,
+  "target_duration_sec": 21,
+  "code_highlight_lines": [
+    "note(\"<[[f4 gb4] a4 b4 ~ gb4] [gb4 ~ f5 ~ e5 d5] [b4 a4 gb4 ~ gb4 ~] [gb4 ~ d5 ~ gb4 ~]>\")",
+    ".lpf(saw.slow(CYCLES).range(2400, 650))"
+  ]
+}

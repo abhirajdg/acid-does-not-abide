@@ -1,0 +1,128 @@
+// ============================================================================
+// DAILY — 2026-10-05 (Monday): Hindustani raga of the day — RAGA MARWA
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: Mondays so far have covered Kalyan (lydian),
+// Bhairavi (phrygian), Khamaj (mixolydian), Bhairav (double-harmonic / its
+// own 22-shruti JI retuning), Kafi (dorian), and Todi (explicit note-letter
+// fallback, verified against tonaljs). Of the 10 thaats, Bilawal, Asavari,
+// Poorvi, and Marwa remain untouched. Bilawal/Asavari are plain Western
+// major/aeolian — not much left to verify or discover there. Marwa is the
+// more interesting pick: DAILY-PIPELINE.md's own instructions flag it
+// (alongside Poorvi) as having NO verified tonaljs scale name, and the
+// 09-28 Todi file's research already confirmed that directly — "no 'marwa'
+// entry exists in tonaljs at all — confirmed absent, not just unfound."
+// Reusing that finding rather than re-deriving it, per that file's own note.
+// So this is written as an explicit note-letter mini-notation pattern, the
+// fallback DAILY-PIPELINE.md describes, not a guessed "close enough" scale
+// name.
+//
+// THEORY NOTES:
+// Marwa's swaras (from the thaat table): S r G M# P D N — komal Re, tivra
+// Ma, everything else (Ga, Pa, Dha, Ni) shuddh.
+//   -> semitone offsets from tonic: 0, 1, 4, 6, 7, 9, 11
+//   -> tonic set to F — fresh for a Monday (Kalyan=D, Bhairavi=E, Khamaj=G,
+//      Bhairav=A/220Hz base, Kafi=A3, Todi=C; F is unused so far).
+//   -> note names at tonic F, melody octave 4/5:
+//        S=f4(0)  r=gb4(1)  G=a4(4)  M#=b4(6)  P=c5(7)  D=d5(9)  N=e5(11)
+//        S'=f5(12)
+//
+// MARWA'S DEFINING FEATURE, and why it drives the WHOLE arrangement below,
+// not just the pitch list: Pa (the fifth) is famously weak-to-absent in
+// real performance of this raga — along with a de-emphasized Sa, this is
+// what gives Marwa its characteristic "floating," ground-less quality
+// (it's a sandhi-prakash — twilight — raga, traditionally performed at
+// sunset, the exact musical moment between day and night having no fixed
+// "home"). This daily clip omits Pa (c5) from the melody entirely — the
+// strict, orthodox treatment, not a simplification for convenience — and
+// treats Sa as a passing/grace tone, never a resting point. Vadi (dominant)
+// = komal Re, samvadi (sub-dominant) = Dha — the commonly cited pair for
+// Marwa, and notably NOT Sa/Pa, which is itself the theoretical point: this
+// raga's tonal center of gravity sits a half-step off the tonic, not on it.
+//
+// ARRANGEMENT — driven by the Pa-is-weak/absent fact above, not a template
+// with new pitches:
+//   - DRONE: tonic + komal Re (f2/gb3), NOT the usual tanpura tonic+fifth
+//     every prior Monday file has used. This is a real, documented
+//     alternate tanpura tuning used specifically for ragas where Pa is
+//     weak or absent (Marwa, Puriya, Sohni) — the jod (second) string is
+//     retuned to Re (or sometimes Ni) instead of Pa, because droning a
+//     fifth that the raga itself avoids would contradict the raga's own
+//     character. Sine, for the purest tone, per MUSIC-KNOWLEDGE.md §2.5.
+//   - LEAD: `pulse` — not yet used on a raga day (sawtooth x2, square x1,
+//     triangle x1, supersaw x1 so far). Hollower and more ambiguous than
+//     a saw or square, which suits a raga whose whole character is
+//     ambiguous/unresolved rather than bright or plaintive.
+//   - AUTOMATION: a single, ONE-DIRECTIONAL lowpass sweep across the full
+//     16 cycles (`saw.slow(CYCLES)`, not a repeating per-cycle LFO like
+//     Bhairav's continuous sine sweep or a looping step pattern like
+//     Kafi's/Todi's) — bright at the start, dark by the end. This is the
+//     literal sonic shape of sandhi prakash: daylight closing into dusk
+//     exactly once over the clip's duration, not an oscillation. A device
+//     none of the prior five raga days used (they all repeat per cycle or
+//     per phrase; this one doesn't repeat at all).
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// every time): this is a short alap-style exposition over a drone, same
+// shape as 09-14/09-21/09-28's raga days, all correctly carrying no metric
+// pulse. Marwa is a serious, contemplative twilight raga with no light-
+// classical dance-tala register the way Khamaj's keherwa has — no drum
+// layer here, decided explicitly rather than defaulted.
+//
+// MELODY — four alternating phrases (note names, not scale degrees, per
+// the explicit-notation fallback above):
+//   A (call — Sa touched only as a fast grace note leading into vadi Re,
+//      then a stepwise rise to tivra Ma held across a rest before falling
+//      back to vadi — Sa given almost no duration, never rested on):
+//        [S r] G M# ~ r   ->  [f4 gb4] a4 b4 ~ gb4
+//   B (climax — a near-octave leap straight from vadi Re to the octave
+//      Sa', skipping clean over the gap where Pa would sit (Pa isn't
+//      skipped as a melodic choice here, it's skipped because it isn't in
+//      the raga's vocabulary at all), held, then a stepwise fall through
+//      Ni to land on samvadi Dha; tension -> release):
+//        r ~ S' ~ N D     ->  gb4 ~ f5 ~ e5 d5
+//   C (retrograde of A's pitch material — the QC-loop device — descending
+//      from tivra Ma through Ga back to vadi Re, deliberately trailing off
+//      on rests instead of landing on Sa the way a literal retrograde
+//      would: resting on Sa would contradict the entire premise above):
+//        M# G r ~ r ~     ->  b4 a4 gb4 ~ gb4 ~
+//   D (coda — vadi/samvadi call-and-response, resolving to VADI RE, not
+//      Sa, unlike every earlier Monday file's coda — because resolving to
+//      Sa is exactly the thing this raga avoids; the different ending is
+//      itself the theory point, not an oversight):
+//        r ~ D ~ r ~      ->  gb4 ~ d5 ~ gb4 ~
+//   rotation <A B C D> over 16 cycles (4 full statements of the rotation).
+//
+// CYCLES: 16. setcpm(45) -> 16 * 60/45 ≈ 21.3s.
+// ============================================================================
+
+setcpm(45)
+let CYCLES = 16
+
+stack(
+  // DRONE — tonic + komal Re (NOT the usual tonic+fifth tanpura), per the
+  // real alternate tuning used for Pa-weak/absent ragas (see ARRANGEMENT
+  // above). Sine for purest tone, slow attack/release so it sits still.
+  note("<f2 gb3>/4")
+    .sound("sine")
+    .gain(.24)
+    .room(4.5)
+    .attack(2).release(3),
+
+  // MELODY — four alternating phrases, see MELODY notes above. Pa (c5) is
+  // never written here — not a gap in an otherwise-complete scale, the
+  // scale itself has no Pa in strict performance.
+  note("<[[f4 gb4] a4 b4 ~ gb4] [gb4 ~ f5 ~ e5 d5] [b4 a4 gb4 ~ gb4 ~] [gb4 ~ d5 ~ gb4 ~]>")
+    .sound("pulse")
+    .attack(.015).decay(.2).sustain(.2).release(.25)
+    .lpf(saw.slow(CYCLES).range(2400, 650)) // ONE sweep, bright->dark, across
+                                              // the whole clip -- dusk, not a
+                                              // repeating LFO (see AUTOMATION
+                                              // note above)
+    .lpq(5)
+    .delay(.15)
+    .delayfeedback(.25)
+    .gain(.4)
+    .room(2.2)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+)
