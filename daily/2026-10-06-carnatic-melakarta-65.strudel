@@ -1,0 +1,130 @@
+// ============================================================================
+// DAILY — 2026-10-06 (Tuesday) — Carnatic melakarta math
+// Melakarta #65: Mechakalyani (Kalyani)
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (chakra/position scheme, same real combinatorial
+// structure used every Tuesday this project has run — 08-25's #22, 09-01's
+// #20, 09-08's #57, 09-15's #29, 09-22's #23, 09-29's #21):
+//   chakra   = ceil(N / 6),  position = N - 6*(chakra - 1)
+// For N = 65: chakra = ceil(65/6) = 11 -> chakras 7-12 mirror chakras 1-6's
+//             Ri-Ga combo pattern (N > 36 means prati Ma), base index =
+//             11 - 6 = 5 -> Ri-Ga combo #5 of the 6-combo cycle (1=R1G1
+//             2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) = R2 G3 (chatushruti Ri,
+//             antara Ga)
+//             position = 65 - 6*10 = 5 -> Dha-Ni combo #5 of its own 6-combo
+//             cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) = D2 N3
+//             (chatushruti Dha, kakali Ni)
+//             N > 36 -> prati Ma (M2), not shuddha
+// melakarta 65 = S R2 G3 M2 P D2 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 2 4 6 7 9 11 — checked,
+// not assumed: this is EXACTLY tonaljs's "lydian" mode. That's genuinely
+// interesting, not just a coincidence of naming: it's the SAME interval set
+// as Hindustani Kalyan thaat (daily/2026-08-24-hindustani-kalyan.strudel,
+// also D:lydian) — two independent systems (Hindustani parent-scale theory,
+// Carnatic melakarta combinatorics) landing on the identical scale, and even
+// the names echo each other (Kalyan / Kalyani, both from "auspicious"). Tonic
+// kept at D specifically to make that convergence audible, not just
+// theoretical — the same pitch center as 08-24, deliberately, not a repeat.
+//   -> .scale("D:lydian")
+//
+// THE DEFINING FEATURE: the raised 4th (M2, prati Madhyama, degree 3) is a
+// tritone above the tonic — the only such interval in melakarta's natural
+// scale degrees, and the source of Lydian's characteristic open, floating,
+// unresolved brightness. Every other Tuesday so far has been a minor-family
+// or major-with-no-tension color (20 aeolian, 21 harmonic minor, 23 melodic
+// minor, 29 plain major, 57 double-augmented-second hungarian minor) — #65
+// is the first BRIGHT, lydian-colored Tuesday, and the thing to keep audible
+// is that tritone, not just the major-ish surface.
+//
+// ARRANGEMENT — built around making the S->M# tritone a continuous presence,
+// not just a melodic passing event:
+//   drone: sine (purest waveform, MUSIC-KNOWLEDGE.md §2.5), but tonic + the
+//          RAISED 4TH (d2/g#2) instead of the usual tanpura tonic+fifth every
+//          prior Tuesday has used — the fifth is generic to nearly every
+//          scale and wouldn't say anything about THIS melakarta specifically;
+//          droning the tritone itself keeps the raga's one defining tension
+//          sounding underneath the whole pattern, the way 10-05's Marwa drone
+//          retuned its second string to Re instead of Pa for the same reason
+//          (voice the interval that actually makes the raga the raga).
+//   lead:  supersaw (harmonically dense, MUSIC-KNOWLEDGE.md §2.5's "plucked"
+//          guidance) — reached for again after 09-29, but for a different
+//          reason this time: there, it gave an augmented second more bite;
+//          here, the dense overtone stack makes the tritone against the
+//          drone shimmer rather than clash, which is the Lydian-specific
+//          effect wanted (brightness, not edge). Fast attack/short decay for
+//          a plucked attack, generous room for the "floating" quality.
+//   NO DRUM KIT — same standing call as every melakarta exposition so far
+//   (MUSIC-QC-LOOP.md's autopilot-percussion lesson): this is a scale study
+//   over a drone (alapana-style), not a tala-bound kriti, so no metric pulse
+//   is implied. The two derived numbers still drive real audible things:
+//   chakra (11) sets the lead filter LFO's sweep period, position (5) sets
+//   the delay time (a quintuplet subdivision) — neither needed a drum layer
+//   as its "audible outlet."
+//
+// MELODY — four phrases (call / climax-response / drop / retrograde-flavored
+// variation), anchored on S and P (the two swaras every melakarta shares),
+// all built to keep the S->M# tritone (scale degrees 0->3) audible from
+// multiple directions, not just once at a cadence:
+//   A (call): a leap straight from the tonic into the tritone, held through
+//     a rest (the "floating," ungrounded quality — not resolving yet), then
+//     a further climb to the fifth before cutting off:
+//                                          0 ~ 3 ~ ~ 4 ~ ~
+//   B (climax/response, call-and-response device): from above the octave, a
+//     leap down through the octave itself into the SAME tritone approached
+//     from the other side (octave to raised-4th is also a tritone — the
+//     interval is symmetric around the octave), then a stepwise fall to the
+//     second degree — the "response" retraces the tritone descending:
+//                                          9 ~ 7 ~ 3 2 1 ~
+//   C (the drop, tension->release device): a big leap from the octave down
+//     through the tritone again, then resolves through the leading tone
+//     approached from BELOW (degree -1) up into the tonic — tension built
+//     across A and B finally released onto S:
+//                                          7 ~ 3 ~ 1 ~ -1 0
+//   D (motif-and-variation of A — same tritone emphasis, inverted contour:
+//     a stepwise descent from the fifth through the tritone this time
+//     approached from above, down to the tonic, closing with a grace-leap up
+//     to the second before settling):
+//                                          4 3 ~ 2 1 ~ 0 ~
+//
+// CYCLES = 24 (65 itself is far too many cycles for a 15-25s clip — same
+// adjustment 09-08's #57 made). setcpm(72) -> 24 * 60/72 = 20.0s exactly, six
+// clean passes of the 4-phrase rotation.
+// ============================================================================
+
+setcpm(72)
+let CYCLES = 24 // 24 * 60/72 = 20.0s; six clean passes of the 4-phrase melody
+
+stack(
+  // DRONE — tonic + RAISED 4TH (not the usual tonic+fifth, see ARRANGEMENT
+  // above), so the raga's one defining tension sounds continuously, not just
+  // in the melody. Plain sine, slow attack/release so it swells rather than
+  // snaps on.
+  note("<d2 g#2>/4")
+    .sound("sine")
+    .gain(.26)
+    .attack(2.2).release(3.2)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (a tritone from multiple
+  // directions, thirds, a leap from below the tonic), rests for breathing
+  // room, call-and-response (A/B), tension->release (C), and motif-and-
+  // variation (D) as the required jazz-improv devices.
+  n(`<
+    0 ~ 3 ~ ~ 4 ~ ~
+    9 ~ 7 ~ 3 2 1 ~
+    7 ~ 3 ~ 1 ~ -1 0
+    4 3 ~ 2 1 ~ 0 ~
+  >`)
+    .scale("D:lydian")
+    .sound("supersaw")
+    .attack(.008).decay(.12).sustain(.18).release(.15)
+    .lpf(sine.range(700, 3400).slow(11)) // chakra (11) -> sweep period
+    .lpq(7)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.42)
+    .room(2.6)
+    .delay(.22)
+    .delaytime(1/5) // position (5) -> a quintuplet delay
+    .delayfeedback(.3)
+)
