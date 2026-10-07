@@ -1,0 +1,111 @@
+// ============================================================================
+// DAILY — 2026-10-07 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-10-07 -- day 7, month 10 (October), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Recent Wednesdays each found a different relationship between day and
+//   month: a digit-sequence melody (08-26), three clock rates (09-02), a
+//   true hocket when day==month (09-09), day/month used directly as two
+//   independent grid-lengths for a dual-voice polymeter -- 16 vs 9 (09-16),
+//   a single lead with per-token inline Euclidean flutters (09-23), and a
+//   GCD fraction-reduction into a 10-against-3 polyrhythm when day/month
+//   shared a factor (09-30). Today day (7) and month (10) share NO factor
+//   (GCD(7,10)=1, same coprime relationship as 09-16's 16/9) -- but rather
+//   than repeating 09-16's device (two separate grids running side by side),
+//   this time the date's own two numbers become the two arguments of the
+//   Euclidean rhythm algorithm ITSELF: `.euclid(7, 10)` -- Toussaint's
+//   algorithm distributing day's 7 onsets as evenly as possible across
+//   month's 10 steps. One voice, one mask, generated directly from the date,
+//   rather than two grids or a handful of per-token ornaments.
+//
+//   The LEAD is written as a full 10-token phrase per bar (one token per
+//   month-step) with real melodic shape -- the Euclidean mask then silences
+//   3 of those 10 tokens each cycle, turning the date's own math into the
+//   phrase's rests, rather than placing rests by hand.
+//
+//   Two structural tones anchor every phrase: tonic (scale degree 0) and
+//   degree 3 (month's reach: 10 mod 7 = 3, overshooting one octave to land
+//   on the scale's 4th). Day's own digit, played as the raw degree number 7,
+//   also overshoots exactly one octave above tonic (7 mod 7 = 0) -- the two
+//   date numbers, played as literal scale degrees, both fold back onto
+//   structural tones, which is why they're used as the phrase's two peak
+//   notes (CALL/TENSION below).
+//
+//   Four hand-written phrases cycle through: CALL (rises to the day/month
+//   overshoot peak, ends open on degree 3), RESPONSE (answers downward,
+//   dipping below tonic via negative degrees, resolves to tonic), TENSION
+//   (same two overshoot peaks in reversed order, all leaps, ends open),
+//   RESOLUTION (the exact retrograde of CALL, note-for-note reversed --
+//   a real retrograde device, not just "a calmer phrase").
+//
+//   CYCLES = 27 = day-digit-sum (0+7=7) + month (10) + year-digit-sum
+//   (2+0+2+6=10). setcpm(72) x 27 cycles / 60 = 22.5s.
+//
+// Scale: G minor -- fresh for this slot (last three Wednesdays used D major,
+// A minor, E minor); the numbers are the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: the Euclidean(7,10) mask IS
+// this piece's audible pulse, generated straight from the date's own two
+// numbers -- a metric kit underneath would just restate a pulse that's
+// already there, the same reflexive-percussion failure MUSIC-QC-LOOP.md
+// already flags.
+//
+// Arrangement, deliberately different from the last three Wednesdays: those
+// each put a slow pan-breathing automation on the drone (year-digit-sum
+// period). This week the drone stays completely still (pure tanpura
+// convention, tonic+5th, no automation at all) -- the one piece of filter
+// automation this week lives on the LEAD instead, its sweep period tied to
+// DAY's own prime value (7), so the automation budget doesn't default to
+// the same formula on the same layer every week.
+//
+// Instrumentation: synth basics throughout (supersaw / sine), per
+// MUSIC-KNOWLEDGE.md §2.5 -- no acoustic-instrument sample names.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(72)
+let CYCLES = 27 // day-digit-sum (7) + month (10) + year-digit-sum (10)
+
+stack(
+  // LEAD -- four alternating 10-token phrases (one token per month-step),
+  // filtered through Euclid(7,10): the date's own two numbers (day=7
+  // pulses, month=10 steps) decide which 7 of the 10 written notes actually
+  // sound each cycle -- the date generates the rests, not a hand placement.
+  // CALL rises to the day(7)/month(10) overshoot peak and ends open (3);
+  // RESPONSE answers downward through tonic; TENSION revisits both peaks
+  // in reversed order; RESOLUTION is CALL's exact retrograde.
+  n("<[0 3 5 7 10 7 5 3 0 3] [3 0 -2 0 3 5 3 0 -4 0] [5 10 3 7 0 10 5 3 7 3] [3 0 3 5 7 10 7 5 3 0]>")
+    .euclid(7, 10)
+    .scale("G:minor")
+    .sound("supersaw")
+    .attack(.008).decay(.12).sustain(0).release(.05)
+    .distort(.15) // acid taste layer, kept light so the Euclidean mask stays legible
+    .lpf(sine.range(400, 2200).slow(7)) // sweep period = day's own prime value (7)
+    .gain(.34)
+    .pan(.65)
+    .room(1.2),
+
+  // BASS pedal -- the two structural tones (tonic 0, month's reach-degree
+  // 3), switching every 7 cycles: day's own value, unaffected by month.
+  n("<0 3>/7")
+    .scale("G:minor")
+    .sound("sine")
+    .attack(1.1).release(1.6)
+    .gain(.26)
+    .pan(.3)
+    .room(2.4),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full piece with
+  // NO automation this week (deliberate contrast to recent Wednesdays'
+  // pan-breathing drone -- see header note above).
+  note("[g2,d3]/27")
+    .sound("sine")
+    .attack(1.5).release(2.2)
+    .gain(.22)
+    .pan(.5)
+    .room(3.2)
+)

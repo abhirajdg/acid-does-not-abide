@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-07",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "07 . 10 . 2026",
+  "pattern_file": "daily/2026-10-07-date-pattern.strudel",
+  "cycles": 27,
+  "target_duration_sec": 23,
+  "code_highlight_lines": [
+    ".euclid(7, 10)",
+    "n(\"<0 3>/7\")"
+  ]
+}
