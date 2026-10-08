@@ -1,0 +1,114 @@
+// ============================================================================
+// DAILY — 2026-10-08 (Thursday): Pure math sequence — the Padovan sequence
+// ============================================================================
+//
+// THE SEQUENCE (OEIS A000931): P(0)=P(1)=P(2)=1; P(n) = P(n-2) + P(n-3) for
+// n>2 — each term built from the term two steps back AND the term three
+// steps back (a 3-term recurrence, unlike Fibonacci's 2-term one). Named
+// after Richard Padovan, who used it to describe the "plastic number"
+// ρ ≈ 1.3247 (the real root of x^3 = x + 1) that Dutch architect-monk Hans
+// van der Laan built an entire proportion system for monastery design
+// around — the same way the golden ratio underlies Fibonacci. First 14
+// terms (P0..P13), the ones this piece uses:
+//   1 1 1 2 2 3 4 5 7 9 12 16 21 28
+//
+// SELF-SIMILAR STRUCTURE: rather than bolt an unrelated rhythm device onto
+// the melody, the PHRASE GROUPING itself literally follows the sequence's
+// own growth — P(1) through P(6) (1,1,2,2,3,4) are used directly as GROUP
+// SIZES, so the melody's own phrase lengths grow exactly the way the
+// numbers that generated its pitches grow:
+//   group0 (size 1) | group1 (size 1) | group2 (size 2) | group3 (size 2)
+//   | group4 (size 3) | group5 (size 4)   — 1+1+2+2+3+4 = 13 notes total.
+//
+// PITCHES: terms P(1)..P(13) = 1,1,2,2,3,4,5,7,9,12,16,21,28, taken mod 7
+// (one octave of a 7-note scale) for scale degrees:
+//   1 1 2 2 3 4 5 0 2 5 2 0 0
+// Immediate repeats (the structural "two equal supports" pairs — P0=P1=1,
+// and the two trailing 0s from P12/P13) are bumped an octave on the repeat
+// (+7) rather than restated flat, continuing 2026-09-17's and 2026-10-01's
+// grace-note convention for repeated degrees:
+//   1 8 2 9 3 4 5 0 2 5 2 0 7
+// mapped onto the 6 growing groups:
+//   [1] [8] [2 9] [3 4] [5 0 2] [5 2 0 7]
+//
+// STRUCTURE (10 cycles, ~21s): cycles 1-6 play the 6 groups forward, each
+// placed in a sparse 8-step grid with its own breathing room (a lone
+// "pillar" note for the size-1 groups, growing to four evenly-spaced hits
+// by the size-4 group — the rhythmic density itself is the audible outlet
+// for the sequence's growth, no separate rhythm layer needed for that).
+// Cycles 7-10 are the RETROGRADE (jazz-improv device #1) of the four
+// size>1 groups (group2-5, reversed note order), in the SAME rhythmic grid
+// as their forward counterpart — "looking back", which is literally what
+// Padovan's own recurrence does (every term looks back at n-2 AND n-3).
+// Group4's tonic hit (the "0" mid-phrase, both forward and in retrograde)
+// is a real anchor on the scale's structural tone (device #2).
+//
+// FILTER AUTOMATION ties directly to the plastic number itself rather than
+// an arbitrary multiplier: forward cycles 3-6 (the four groups that get a
+// retrograde pass) open the lead's cutoff with group size (900/900/1300/
+// 1800 Hz); their retrograde pass (cycles 7-10) multiplies that SAME value
+// by ρ (1.3247) — 1192/1192/1722/2384 Hz — so the "brighter on the
+// look-back" move (precedented 2026-10-01) is this time the sequence's own
+// defining constant, not a generic number.
+//
+// SCALE: G:lydian — fresh tonic and mode for this slot (prior Thursdays:
+// Fibonacci C minor pentatonic, Collatz D harmonic minor, twin primes E
+// phrygian, Pascal's triangle D dorian, Thue-Morse A aeolian, Recamán E
+// mixolydian). Lydian's raised 4th gives the "building upward" brightness
+// that suits a proportion/growth theme.
+//
+// ARRANGEMENT — deliberately different from the last two Thursdays, not a
+// template with new numbers swapped in. Thue-Morse (09-24) used a sawtooth
+// lead + dyad sine drone, no percussion. Recamán (10-01) used a triangle
+// lead + single-tonic sine drone, no percussion. Today's defining idea
+// isn't a two-symbol alphabet or a single-anchor walk, it's TWO-TERM
+// support (P(n) depends on BOTH n-2 and n-3) — so the drone here is a
+// sustained DYAD of tonic + the degree a fourth above (two notes, standing
+// in for the two prior terms that hold up each new one), voiced on
+// lowpassed sawtooth (thick/robust, MUSIC-KNOWLEDGE.md §1 — reads as a
+// foundation, distinct from both prior Thursdays' sine-based drones) rather
+// than a separate pad patch doubling the lead's own waveform family. The
+// lead is supersaw (harmonically dense, "building" character, not yet used
+// on a recent Thursday) with a short plucked envelope, clearly contrasting
+// the drone's slow attack/release (MUSIC-KNOWLEDGE.md §2 blend/contrast).
+// NO percussion layer: an architectural proportion system has no inherent
+// metric pulse, and — per MUSIC-QC-LOOP.md — the growth numbers already
+// have two real outlets already in the arrangement (the lead's own
+// increasing rhythmic density, and the plastic-ratio filter automation),
+// so a drum kit would be a decorative third outlet for numbers that are
+// already audible, not a necessary one.
+//
+// TEMPO: setcpm(28), 4 quarter-note beats/cycle = 112 BPM. Math-sequence
+// day carries no genre-specific tempo mandate (acid/techno slots do).
+// CYCLES: 10. setcpm(28) x 10 / 60 = 21.4s.
+// ============================================================================
+
+setcpm(28)
+
+$lead: n(`<
+  [1 ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ 8 ~ ~ ~ ~ ~]
+  [2 ~ ~ ~ 9 ~ ~ ~]
+  [~ 3 ~ ~ ~ 4 ~ ~]
+  [5 ~ ~ 0 ~ ~ 2 ~]
+  [5 ~ 2 ~ 0 ~ 7 ~]
+  [9 ~ ~ ~ 2 ~ ~ ~]
+  [~ 4 ~ ~ ~ 3 ~ ~]
+  [2 ~ ~ 0 ~ ~ 5 ~]
+  [7 ~ 2 ~ 0 ~ 5 ~]
+>`)
+  .scale("G:lydian")
+  .sound("supersaw")
+  .attack(.005).decay(.1).sustain(.1).release(.15)
+  .lpf(`<600 600 900 900 1300 1800 1192 1192 1722 2384>`)
+  .lpq(4)
+  .gain(.4)
+  .room(1.1)
+
+$drone: n("0 4").scale("G:lydian")
+  .sound("sawtooth")
+  .attack(1.5).release(2.5)
+  .lpf(380)
+  .lpq(2)
+  .gain(.18)
+  .room(2.2)

@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-08",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "PADOVAN SEQUENCE",
+  "pattern_file": "daily/2026-10-08-padovan-sequence.strudel",
+  "cycles": 10,
+  "target_duration_sec": 21,
+  "code_highlight_lines": ["$drone: n(\"0 4\").scale(\"G:lydian\")", ".lpf(`<600 600 900 900 1300 1800 1192 1192 1722 2384>`)"]
+}
