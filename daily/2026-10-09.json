@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-09",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "303 PITCH GLIDE",
+  "pattern_file": "daily/2026-10-09-acid-pitch-glide.strudel",
+  "cycles": 12,
+  "target_duration_sec": 23,
+  "code_highlight_lines": [".pattack(0).pdecay(.05).pcurve(0).panchor(1).penv(5)", ".scale(\"A:minor:pentatonic\")"]
+}

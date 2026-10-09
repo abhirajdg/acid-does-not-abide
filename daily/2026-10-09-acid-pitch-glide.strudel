@@ -1,0 +1,120 @@
+// ============================================================================
+// DAILY — 2026-10-09 (Friday): Acid / psychedelia free jam — the pitch envelope
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction: genre structure drives Friday, not raga performance form).
+// Checked every prior Friday before writing this one (MUSIC-KNOWLEDGE.md's
+// "don't template last cycle" rule): 08-28 = D harmonic minor, Goa-trance
+// bass/lead split, three slow-drifting filter params. 09-04 = E whole tone,
+// Sound-on-Sound delay drone, fast wobble-LFO sub, phaser. 09-11 = A locrian,
+// real 3-depth duckorbit sidechain, rolling psytrance bass + square lead +
+// pad dyad. 09-18 = F natural minor, one 303 voice, duckorbit, a single slow
+// lpf sweep. 09-25 = E phrygian dominant, half-time dub, kick-locked wobble
+// sub, Sound-on-Sound built from the lead's own delay. 10-02 = G dorian, one
+// 303 voice with a per-note FILTER envelope (lpenv) stacked under a slow lpf
+// sweep, four-on-the-floor + clap. Today changes the scale, the drum kit, and
+// the "second timescale" device:
+//
+//   SCALE: A minor pentatonic (A C D E G) — deliberately the plainest, most
+//   functional scale used on a Friday yet, after six straight weeks of
+//   reaching for exotic modal color (harmonic minor, whole tone, locrian,
+//   phrygian dominant, dorian). "Less concerned with raga/math correctness,
+//   more with production taste" (CREATIVE-DIRECTION.md) cuts both ways — a
+//   plain pentatonic lets the GLIDE below carry the psychedelia instead of
+//   the scale itself, which is itself a real acid-house convention (most
+//   classic 303 lines sit on minor pentatonic/blues shapes, not exotic
+//   modes). Degrees: 0=A 1=C 2=D 3=E 4=G 5=A' 6=C' 7=D'' (per-octave offset
+//   of 5 degrees).
+//
+//   PRODUCTION — the new device is a real PITCH envelope, not a filter one.
+//   MUSIC-KNOWLEDGE.md §4 flagged "glide/portamento currently unused... try
+//   .legato()" — checked against the actual docs before using it, and that
+//   lead was wrong: Strudel's `legato`/`clip` only multiplies NOTE DURATION,
+//   it doesn't bend pitch, and `.slide()` is a ZZFX-only param that doesn't
+//   apply to the plain sawtooth oscillator here. The real mechanism for a
+//   per-note pitch glide on a basic synth is the PITCH ENVELOPE
+//   (`penv`/`pattack`/`pdecay`/`pcurve`/`panchor`, `knowledge-base/strudel/
+//   learn/effects.md` "## penv" etc.) — verified there before use, the same
+//   discipline this project applies to scale names. `panchor(1)` + `penv(5)`
+//   anchors the range at [note-5, note], so each note starts a 4th BELOW
+//   true pitch and snaps up into tune over `pdecay(.05)` — the classic
+//   303 "slide" character, applied as a genuinely new per-note device rather
+//   than the per-note FILTER envelope 10-02 already used. Stacked on top of
+//   one slow `lpf` sweep (established device, kept as the only other
+//   automated param per §10's "fewer independently-drifting knobs" rule) —
+//   two different timescales of motion (fast pitch snap per note, slow
+//   filter drift across the whole clip), same two-timescale idea as 10-02
+//   but through pitch instead of the filter this time.
+//
+//   DRUMS: sparser than every prior Friday — just kick (drives the sidechain)
+//   and a classic acid-house hat pattern (closed/open alternating 16ths,
+//   `[hh oh]*8` with `cut(1)` so the open hat chokes the closed one, a real
+//   hi-hat choke-group behavior, `knowledge-base/strudel/learn/samples.md`
+//   line 805 precedent). No clap/snare this time (08-28/10-02 both had one,
+//   09-04/09-25 both had a half-time snare) — two layers, each with one job,
+//   is itself a "fewer layers" choice (§10), and it leaves more room for the
+//   glide to be the thing the ear tracks.
+//
+// LEAD PHRASE — 16 steps/cycle, rotating <A B C D> every cycle across 12
+// cycles (3 full rounds), per MUSIC-QC-LOOP.md's real-leap/rest/development
+// checklist:
+//   A (call/motif):    0 ~ 2 3 ~ 0 4 ~ 0 ~ 3 2 ~ 0 ~ ~  -- leaps of a 3rd,
+//                       2nd, a 4th down, up to the 5th-equivalent (G) and
+//                       back, landing on tonic.
+//   B (variation,      0 ~ 2 3 ~ 5 ~ 3 ~ 4 ~ 6 ~ 3 ~ ~  -- same opening, but
+//      unresolved):     climbs past the octave (5) to a 9th-equivalent (6)
+//                       and stops there on a rest — unresolved tension.
+//   C (peak, literal   7 ~ 6 5 ~ 3 2 0 ~ 6 5 3 ~ 2 0 ~  -- leap above the
+//      retrograde):     octave (7), then B's rising core (0 2 3 5 6) played
+//                       in exact retrograde (6 5 3 2 0), echoed a second time
+//                       from mid-phrase before settling on tonic.
+//   D (release,        0 ~ ~ ~ -2 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~  -- mostly rests, one
+//      sparse):         leap BELOW the tonic (E below, -2), breathing room
+//                       after C's peak.
+//
+// TEMPO: setcpm(31) with a bd*4 kick -> BPM = cpm * beats/cycle = 124, real
+// acid-house territory (120-130). CYCLES: 12. 12 * 60/31 = 23.2s.
+// ============================================================================
+
+setcpm(31)
+let CYCLES = 12
+
+// drums — just kick (drives the sidechain) + a classic acid-house hat
+// pattern (closed/open alternating, open choking closed via cut(1)). No
+// clap/snare this time: fewer layers, each with one job (§10), and it leaves
+// more room for the glide below to be the thing the ear tracks.
+let drums = stack(
+  s("bd*4").bank("RolandTR909")
+    .duckorbit(2).duckattack(.03).duckdepth(.35)
+    .gain(.56),
+  s("[hh oh]*8").bank("RolandTR909").cut(1).gain(.16).degradeBy(.1),
+)
+
+let melody = n(`<
+  [0 ~ 2 3 ~ 0 4 ~ 0 ~ 3 2 ~ 0 ~ ~]
+  [0 ~ 2 3 ~ 5 ~ 3 ~ 4 ~ 6 ~ 3 ~ ~]
+  [7 ~ 6 5 ~ 3 2 0 ~ 6 5 3 ~ 2 0 ~]
+  [0 ~ ~ ~ -2 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~]
+>`).scale("A:minor:pentatonic")
+
+// one 303 voice, bass+lead duty. lpf's slow range sweep moves the filter's
+// CENTER across the whole clip (established device); penv/pattack/pdecay/
+// pcurve/panchor give each NOTE its own fast pitch glide ON TOP of that —
+// the real mechanism for the "glide" MUSIC-KNOWLEDGE §4 flagged as unused
+// (checked the docs: legato/clip only changes note duration, .slide() is
+// ZZFX-only — a PITCH envelope is the actual verified device for this synth).
+// panchor(1) + penv(5): each note starts a 4th below true pitch and snaps up
+// into tune over pdecay(.05) — the classic 303 "slide" character. Lightly
+// ducked by the kick (orbit 2) so the voice stays legible, not chopped.
+let lead = melody
+  .sound("sawtooth")
+  .attack(.005).decay(.1).sustain(.08).release(.04)
+  .lpf(sine.range(450, 2400).slow(8))
+  .lpq(10)
+  .pattack(0).pdecay(.05).pcurve(0).panchor(1).penv(5)
+  .distort(.24)
+  .gain(.34)
+  .orbit(2)
+
+stack(drums, lead)
