@@ -1,0 +1,112 @@
+// ============================================================================
+// DAILY — 2026-10-10 (Saturday): Xenharmonic tuning experiment — 11edo, as
+// a Goa trance track
+// ============================================================================
+//
+// THE TUNING: 11edo divides the octave into 11 equal steps of 1200/11 ≈
+// 109.09 cents each. Checked against all seven prior Saturdays (17edo,
+// 19edo, 31edo, 15edo, 24edo, 22edo, 13edo) before writing a note of this:
+// 11edo is genuinely different because its best "fifth" (6 steps = 654.55c)
+// is 47.41c FLAT of a pure 3:2 (701.955c) — a worse fifth error than every
+// EDO used on this slot so far, including 13edo's sharp 36.5c (last week's
+// previous worst). Nothing here is sweetened like 19edo/31edo; this is the
+// flattest, most strained fifth this project has tuned to yet.
+//
+// THE SCALE: stacking that flat generator (6 steps) seven times mod 11
+// gives a genuine 2-step-size MOS (moment of symmetry) — the same test
+// that makes 12edo's diatonic scale special. This is well documented in
+// xenharmonic theory as MAVILA[7] ("anti-diatonic"): {0,6,1,7,2,8,3} sorted
+// → {0,1,2,3,6,7,8}, step pattern 1-1-1-3-1-1-3 (109.1-109.1-109.1-327.3-
+// 109.1-109.1-327.3 cents). Mavila is known for a flat-fifth-driven comma
+// that makes stacked thirds behave unlike 12edo's major/minor pair — degree
+// 3 (327.3c) sits 11.6c sharp of a just minor third but 59c flat of a just
+// major third, so it reads unambiguously dark, not "major with a wobble."
+// Degrees used: 0 (tonic) and 6 (flat "fifth") anchor the piece, same
+// vadi/samvadi-equivalent role raga anchoring uses.
+//
+// ARRANGEMENT: a genre never yet used on this slot (17/19/31edo predate the
+// genre-first direction; 15edo=techno, 24edo=psytrance, 22edo=acid house,
+// 13edo=dubstep half-time) — GOA TRANCE (MUSIC-KNOWLEDGE.md §6), first use
+// on a daily pattern (previously only applied to the weekly session kit).
+// Two voices, not one: a low, drone-like, rolling bass parked almost
+// entirely on the tonic (minimal pitch movement is the point, not a
+// simplification) UNDER a distinct, more melodic arpeggiated lead riding
+// the mavila run — exactly §6's bass/lead split, which also satisfies §10's
+// "fewer layers, each with one job" (the bass covers the drone role itself,
+// no separate pad). The lead's climax uses §6's pitch-lift device: at cycle
+// 10 the whole peak phrase re-types one octave up rather than adding a new
+// layer — a real "drop" using only material already established. Kick's
+// sidechain into the bass+lead orbit uses §10's hard/fast TECHNO-OR-GOA
+// value (not acid house's lighter duck), because the pump itself is part
+// of Goa trance's groove. Four-on-the-floor + hats is a deliberate genre
+// choice here (Goa trance's identity runs on that pulse), not autopilot
+// percussion. Synth basics throughout (sine bass, sawtooth lead) per
+// MUSIC-KNOWLEDGE.md §2.5 — no gm_* samples.
+//
+// MELODY — anchored on the tonic (0) and the flat "fifth" (6). Demo block
+// (bare, no kit), then four alternating phrases, each one 8-step cycle:
+//   demo (bare):                       0 ~ 6 ~ 0 ~ 3 ~
+//   A (call — leap to the flat 5th, descend the mavila run):
+//                                      0 ~ 6 ~ 3 2 1 ~
+//   B (response — climb back up, resolve home):
+//                                      1 2 3 ~ 6 ~ 3 0
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//                                      ~ 1 2 3 ~ 6 ~ 0
+//   D (peak & release — up to the octave-up tonic and beyond, then home):
+//                                      6 ~ 11 14 ~ 11 6 0
+//   LIFT (D transposed a full octave up — the Goa trance pitch-lift climax):
+//                                      17 ~ 22 25 ~ 22 17 11
+// Order: demo, A B C D, A B C D, LIFT, D — 11 phrases across 11 cycles,
+// ending on the release (D) after the lift, same convention prior Saturdays
+// used to land the clip cleanly rather than cutting mid-phrase.
+//
+// CYCLES: 11 (a deliberate nod to 11edo itself), setcpm(35), 4 beats/cycle
+// = 140 BPM (real Goa trance tempo, 135-145 range per CREATIVE-DIRECTION.md
+// — checked per the 09-18/09-19 tempo-math fix). 11 * 60/35 = 18.86s.
+// ============================================================================
+
+setcpm(35)
+let CYCLES = 11
+
+stack(
+  // BASS — Goa trance rolling bass (MUSIC-KNOWLEDGE.md §6): low, drone-like,
+  // minimal pitch movement, parked on the tonic with one passing dip to the
+  // flat "fifth" each cycle. Doubles as this arrangement's only drone layer.
+  i("0!15 6").xen("11edo").sound("sine")
+    .lpf(500).gain(.4).orbit(2),
+
+  // LEAD — the mavila[7] run, sawtooth, plucked (fast attack, short decay).
+  // Slow filter sweep (period 9 cycles, nodding to mavila's own MOS[9]
+  // size) gives it movement without competing with the bass's static role.
+  i(`<
+    [0 ~ 6 ~ 0 ~ 3 ~]
+    [0 ~ 6 ~ 3 2 1 ~]
+    [1 2 3 ~ 6 ~ 3 0]
+    [~ 1 2 3 ~ 6 ~ 0]
+    [6 ~ 11 14 ~ 11 6 0]
+    [0 ~ 6 ~ 3 2 1 ~]
+    [1 2 3 ~ 6 ~ 3 0]
+    [~ 1 2 3 ~ 6 ~ 0]
+    [6 ~ 11 14 ~ 11 6 0]
+    [17 ~ 22 25 ~ 22 17 11]
+    [6 ~ 11 14 ~ 11 6 0]
+  >`).xen("11edo")
+    .sound("sawtooth")
+    .attack(.005).decay(.12).sustain(.1).release(.1)
+    .lpf(sine.range(900, 2600).slow(9)).lpq(5)
+    .gain(.4).orbit(2),
+
+  // KICK — four-on-the-floor, Goa trance tempo. Silent for the bare demo
+  // cycle. Hard, fast sidechain pump into the bass+lead orbit (low attack,
+  // high depth — MUSIC-KNOWLEDGE.md §10's techno/Goa-trance value, the pump
+  // IS the groove here, not acid house's lighter duck).
+  s("bd*4").bank("RolandTR909")
+    .duckorbit(2).duckattack(.01).duckdepth(.85)
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.8),
+
+  // HATS — off-beat, minimal texture, silent during the bare demo cycle
+  s("~ hh ~ hh ~ hh ~ hh").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.12).degradeBy(.25),
+)
