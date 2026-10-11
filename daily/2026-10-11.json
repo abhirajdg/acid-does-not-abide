@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-11",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "TWO SYSTEMS, ONE SCALE",
+  "pattern_file": "daily/2026-10-11-wildcard-kalyan-kalyani-convergence.strudel",
+  "cycles": 12,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "let H = \"<[0 ~ 2 ~ ~ 4 ~ 7] [6 ~ 4 ~ 2 ~ 0 ~]>\"",
+    "    .euclid(5, 11)"
+  ]
+}

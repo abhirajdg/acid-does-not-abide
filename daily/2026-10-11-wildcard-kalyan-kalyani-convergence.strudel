@@ -1,0 +1,134 @@
+// ============================================================================
+// DAILY — 2026-10-11 (Sunday): Wildcard — Kalyan meets Kalyani, two systems,
+// one scale
+// ============================================================================
+//
+// WHY THIS (Step 0 check against this week + recent Sundays): 09-13 was a
+// pitch canon, 09-20 a canon by inversion, 09-27 a Thue-Morse hocket, 10-04
+// a rate transform (augmentation/diminution) — all four took ONE melodic
+// idea and transformed it in time or pitch. This week's own Tuesday file
+// (daily/2026-10-06-carnatic-melakarta-65.strudel) surfaced something none
+// of those devices fit: melakarta #65 (Kalyani) reduces to the EXACT same
+// interval set — 0 2 4 6 7 9 11, tonaljs's "lydian" — as this project's own
+// first Monday raga, Kalyan (daily/2026-08-24-hindustani-kalyan.strudel),
+// both already centered on tonic D. Two independently-derived systems
+// (Hindustani parent-scale theory, Carnatic melakarta combinatorics)
+// landing on the identical scale, with even the names echoing each other
+// (Kalyan/Kalyani, both "auspicious") — Tuesday's file flagged this as
+// "genuinely interesting, not just a coincidence of naming" but didn't build
+// anything around it. Today does: two voices, each dressed in its own
+// tradition's idiom, proven to share one scale by actually hearing them
+// converge, not just stating the fact in a comment.
+//
+// THE CONVERGENCE: D:lydian, degrees 0=S(D) 1=R(E) 2=G(F#) 3=M#(G#) 4=P(A)
+// 5=D(B) 6=N(C#) 7=S'(D5) — identical to both 08-24's and 10-06's mapping.
+// Kalyan's own vadi/samvadi (Ga=2, Ni=6 — confirmed in 08-24's header) anchor
+// the HINDUSTANI voice below; melakarta 65's own derived numbers (chakra=11,
+// position=5 — confirmed in 10-06's header) drive the CARNATIC voice's
+// rhythm. Both voices use the one scale; none of today's pitch material is
+// invented, it's borrowed verbatim from the two systems that already met
+// here this week.
+//
+// ARRANGEMENT — contrast, not doubling (MUSIC-KNOWLEDGE.md §2): the two
+// voices need to stay legible as two different musical languages until the
+// moment they're meant to collide, so they get opposing timbres, opposing
+// rhythmic treatments, and opposing stereo positions, over ONE shared drone
+// (both systems ultimately root in the same tonic — the drone doesn't take
+// a side):
+//   DRONE — sine, tonic+fifth (D2/A2), tanpura convention, centered, held
+//     the whole piece with no automation: the one thing both systems agree
+//     on.
+//   HINDUSTANI voice — triangle (pure/soft, MUSIC-KNOWLEDGE.md §1, a singing
+//     quality), slow attack/release, free-rhythm alap phrasing (long rests,
+//     no metric grid), panned left. Filter breathes on a 7-cycle period (the
+//     scale's own 7 degrees) — the whole clip's only gentle, non-mechanical
+//     motion on this voice.
+//   CARNATIC voice — square (sharp/precise, MUSIC-KNOWLEDGE.md §1, reads as
+//     calculated rather than sung), short decay, gated through
+//     euclid(5,11) — melakarta 65's own chakra/position numbers used
+//     exactly as 10-06 used them, not a borrowed formula with new numbers
+//     swapped in, since it's the SAME raga's math being cited on purpose.
+//     Panned right. Filter sweep period 11 (chakra) and delay time 1/5
+//     (position) are the same two parameter choices 10-06 made, reused
+//     deliberately because they're this specific melakarta's own derived
+//     numbers, not a template copy.
+//
+// MELODY:
+//   HINDUSTANI (call-and-response, anchored on vadi/samvadi):
+//     H1 (call, rises through vadi Ga to the octave):  S ~ G ~ ~ P ~ S'
+//                                                       0 ~ 2 ~ ~ 4 ~ 7
+//     H2 (response, opens on samvadi Ni, descends home): N ~ P ~ G ~ S ~
+//                                                          6 ~ 4 ~ 2 ~ 0 ~
+//     <H1 H2> alternating — cycles 0-3 (solo) and again under the climax
+//     (8-11).
+//   CARNATIC (retrograde pair, built on the S->M# tritone 10-06's own
+//     melody centered on, gated by its own chakra/position euclid mask):
+//     C1: 0 3 ~ 4 3 0 ~ -1 0 3 0
+//     C2 (literal retrograde of C1): 0 3 0 -1 ~ 0 3 4 ~ 3 0
+//     <C1 C2> alternating, euclid(5,11)-gated — cycles 4-7 (solo) and again
+//     under the climax (8-11).
+//
+// STRUCTURE (12 cycles): 0-3 Hindustani voice alone (the raga, sung
+//   plainly). 4-7 Carnatic voice alone (the same scale, counted instead of
+//   sung). 8-11 both together, hard-panned L/R over the shared drone — the
+//   convergence made audible, not just asserted in a comment.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question): no drum kit.
+// The Hindustani voice is free-rhythm alap (no metric pulse by tradition);
+// the Carnatic voice's own euclid(5,11) mask, generated from the raga's own
+// derived numbers, IS its audible pulse already — a kit underneath would
+// restate a pulse that's already there from the real math, the same
+// autopilot-percussion failure MUSIC-QC-LOOP.md already flags.
+//
+// CYCLES: 12. setcpm(36) -> 12 * 60/36 = 20.0s.
+// ============================================================================
+
+setcpm(36)
+let CYCLES = 12
+
+let H = "<[0 ~ 2 ~ ~ 4 ~ 7] [6 ~ 4 ~ 2 ~ 0 ~]>"
+let C = "<[0 3 ~ 4 3 0 ~ -1 0 3 0] [0 3 0 -1 ~ 0 3 4 ~ 3 0]>"
+
+stack(
+  // DRONE — shared common ground, tonic + fifth, tanpura convention. Held
+  // the full 12 cycles, no automation: the one thing both systems agree on.
+  note("<d2 a2>/4")
+    .sound("sine")
+    .attack(2).release(3)
+    .gain(.22)
+    .room(4.5)
+    .pan(.5),
+
+  // HINDUSTANI VOICE — alap-style call-and-response, anchored on Kalyan's
+  // own vadi (Ga) and samvadi (Ni). Free-rhythm (rests, no grid), sung by a
+  // pure/soft triangle. Present cycles 0-3 (solo) and 8-11 (with Carnatic).
+  n(H)
+    .scale("D:lydian")
+    .sound("triangle")
+    .attack(.1).decay(.3).sustain(.4).release(.6)
+    .lpf(sine.range(700, 2200).slow(7)) // breathing period = the scale's 7 degrees
+    .lpq(3)
+    .gain(.38)
+    .pan(.28)
+    .room(3.2)
+    .mask("<1 1 1 1 0 0 0 0 1 1 1 1>"),
+
+  // CARNATIC VOICE — retrograde pair (C1/C2), gated through melakarta 65's
+  // own chakra(11)/position(5) euclid mask, not a decorative substitute.
+  // Sharp/precise square, short decay. Present cycles 4-7 (solo) and 8-11
+  // (with Hindustani).
+  n(C)
+    .euclid(5, 11)
+    .scale("D:lydian")
+    .sound("square")
+    .attack(.006).decay(.1).sustain(.05).release(.08)
+    .lpf(sine.range(900, 3200).slow(11)) // sweep period = chakra (10-06's own number)
+    .lpq(6)
+    .delay(.18)
+    .delaytime(1/5) // position (5) -> the same quintuplet delay 10-06 used
+    .delayfeedback(.22)
+    .gain(.36)
+    .pan(.72)
+    .room(1.6)
+    .mask("<0 0 0 0 1 1 1 1 1 1 1 1>")
+)
