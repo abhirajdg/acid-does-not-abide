@@ -1,0 +1,129 @@
+// ============================================================================
+// DAILY — 2026-10-12 (Monday): Hindustani raga of the day — RAGA POORVI
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: Mondays so far have covered Kalyan (lydian),
+// Bhairavi (phrygian), Khamaj (mixolydian), Bhairav (double-harmonic / its
+// own 22-shruti JI retuning), Kafi (dorian), Todi (explicit note-letter
+// fallback, verified against tonaljs), and Marwa (explicit note-letter
+// fallback, confirmed ABSENT from tonaljs entirely). Of the 10 thaats, only
+// Bilawal, Asavari, and Poorvi remain untouched. Bilawal/Asavari are plain
+// Western major/aeolian with nothing left to verify — Poorvi is the more
+// interesting pick: the 09-28 Todi file's own research already checked
+// tonaljs's "purvi raga" entry directly against the real source
+// (github.com/tonaljs/tonal, packages/scale-type/data.ts) and found it does
+// NOT verify — "1P 2m 3M 4P 4A 5P 6m 7M" is 8 degrees (both a perfect AND an
+// augmented 4th), not the real 7-note Poorvi thaat below (only a tivra Ma,
+// no shuddh Ma). Reusing that finding rather than re-deriving it, per that
+// file's own note. So, like Marwa, this is written as an explicit
+// note-letter mini-notation pattern, not a guessed "close enough" scale name.
+//
+// THEORY NOTES:
+// Poorvi's swaras (from the thaat table): S r G M# P d N — komal Re, tivra
+// Ma, komal Dha (Ga, Pa, Ni shuddh).
+//   -> semitone offsets from tonic: 0, 1, 4, 6, 7, 8, 11
+//   -> tonic set to B — Kalyan=D, Bhairavi=E, Khamaj=G, Bhairav=A, Kafi=A3,
+//      Todi=C, Marwa=F; B is unused for a Monday so far.
+//   -> note names at tonic B4, melody octave 4/5 (accidentals spelled against
+//      B major's own key signature — shuddh/raised degrees fall on B major's
+//      natural sharps, komal degrees land a semitone below those as naturals):
+//        S=b4(0)  r=c5(1)  G=d#5(4)[vadi]  M#=f5(6)  P=f#5(7)[rare]
+//        d=g5(8)  N=a#5(11)[samvadi]  S'=b5(12)
+//   -> vadi (dominant) = Ga, samvadi (sub-dominant) = Ni — one commonly cited
+//      pairing for Poorvi (same hedge Kafi's/Todi's files used: sources
+//      aren't unanimous on Hindustani vadi/samvadi attributions, this is the
+//      one most repeated).
+//
+// POORVI'S DEFINING FEATURE, and why it drives the WHOLE arrangement below,
+// not just the pitch list: Pa (the fifth) is traditionally treated with
+// "alpatva" — scarcity — commonly described as touched only briefly and
+// mostly in descent (avarohan), never used as a resting tone, while Sa and
+// vadi Ga remain the raga's real points of rest. This is a different flavor
+// of twilight-raga asymmetry from last Monday's Marwa, which dropped Pa from
+// its vocabulary ENTIRELY and avoided resting on Sa too — Poorvi keeps Pa in
+// its vocabulary, it's just rare and descent-only, and Sa is a legitimate
+// resting point here. The melody below touches Pa (f#5) exactly twice, both
+// times in a falling line, never ascending into it and never landing on it.
+//
+// ARRANGEMENT — driven by the Pa-is-rare-not-absent fact above, not a
+// template with new pitches:
+//   - DRONE: tonic + Pa (b2/f#3), the standard tanpura tonic+fifth tuning —
+//     deliberately NOT retuned the way Marwa's drone was last week, because
+//     Poorvi's Pa, while rare in the melody, is still a real part of the
+//     raga's vocabulary (unlike Marwa, which excludes Pa outright and so
+//     needed the alternate jod-string tuning). Sine, for the purest tone,
+//     per MUSIC-KNOWLEDGE.md §2.5.
+//   - LEAD: `sawtooth` — reused from Khamaj (09-07), but shaped as its
+//     opposite: Khamaj's sawtooth was a quick plucked pop (attack .01,
+//     release .15) for a light-classical dance feel; this one swells in
+//     slowly (attack .03, release .35) for Poorvi's serene, yearning
+//     register. All five synth-basics timbres (sine/sawtooth/square/
+//     supersaw/triangle) have now cycled through the raga-Monday leads at
+//     least once, so reuse is now about shaping the same oscillator toward
+//     a different character, not finding an unused name.
+//   - AUTOMATION: NOT a continuous filter sweep, step-filter pattern, delay
+//     automation, or pan drift — all four of those have been used on the
+//     last four raga Mondays (Bhairav, Kafi, Todi, Marwa respectively).
+//     Instead, `gain`/`room` are stepped WITH the phrase rotation, lifted
+//     only on the two phrases that contain the rare Pa touch (B and D) —
+//     a brief dynamic/spatial "spotlight" on the one note the raga itself
+//     treats as scarce, nothing lifted on the Pa-less phrases (A and C).
+//     The cutoff/resonance stay static; the thing worth animating here is
+//     the raga's own rare-note grammar, not a mood arc.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// every time): this is a short alap-style exposition over a drone, same
+// shape as 09-14/09-21/09-28/10-05's raga days, all correctly carrying no
+// metric pulse. Poorvi is a serious, devotional sandhi-prakash (twilight)
+// raga with no light-classical dance-tala register the way Khamaj's keherwa
+// has — no drum layer here, decided explicitly rather than defaulted.
+//
+// MELODY — four alternating phrases (note names, not scale degrees, per
+// the explicit-notation fallback above):
+//   A (call — a tritone leap from Sa straight up to tivra Ma, held across a
+//      rest, then a stepwise fall through vadi Ga to komal Re, left
+//      unresolved to lead into the climax):
+//        S ~ M# ~ G r    ->  b4 ~ f5 ~ d#5 c5
+//   B (climax — a sixth leap from vadi Ga up to the octave, held, then the
+//      FIRST rare Pa touch on the way down, resolving on samvadi Ni;
+//      tension -> release):
+//        G ~ S' ~ P N    ->  d#5 ~ b5 ~ f#5 a#5
+//   C (retrograde of A, the QC-loop device — literal reverse, closing on Sa
+//      rather than trailing off unresolved, since Sa IS a real resting tone
+//      in this raga, unlike Marwa):
+//        r G ~ M# ~ S    ->  c5 d#5 ~ f5 ~ b4
+//   D (coda — vadi/samvadi call-and-response, then the SECOND rare Pa touch
+//      in descent, resolving to Sa):
+//        G ~ N ~ P ~ S   ->  d#5 ~ a#5 ~ f#5 ~ b4
+//   rotation <A B C D> over 16 cycles (4 full statements of the rotation).
+//
+// CYCLES: 16. setcpm(48) -> 16 * 60/48 = 20s.
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16
+
+stack(
+  // DRONE — tanpura convention: tonic + fifth (S, P). Sine for purest tone,
+  // slow attack/release so it sits still under the phrases. Kept standard
+  // (not retuned like Marwa's) because Pa is still part of Poorvi's real
+  // vocabulary — see ARRANGEMENT above.
+  note("<b2 f#3>/4")
+    .sound("sine")
+    .gain(.24)
+    .room(4.5)
+    .attack(2).release(3),
+
+  // MELODY — four alternating phrases, see MELODY notes above. Pa (f#5)
+  // appears exactly twice, both times in a falling line (B, D) — the
+  // "alpatva" grammar, not an omission.
+  note("<[b4 ~ f5 ~ d#5 c5] [d#5 ~ b5 ~ f#5 a#5] [c5 d#5 ~ f5 ~ b4] [d#5 ~ a#5 ~ f#5 ~ b4]>")
+    .sound("sawtooth")
+    .attack(.03).decay(.2).sustain(.3).release(.35)
+    .lpf(1400)
+    .lpq(4)
+    .gain("<.38 .52 .38 .52>") // spotlight on B & D, the two phrases
+    .room("<2 3.8 2 3.8>")     // carrying the rare Pa touch -- see
+                                 // AUTOMATION note above
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+)

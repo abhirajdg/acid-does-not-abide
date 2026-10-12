@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-12",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "RAGA POORVI",
+  "pattern_file": "daily/2026-10-12-hindustani-poorvi.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "note(\"<[b4 ~ f5 ~ d#5 c5] [d#5 ~ b5 ~ f#5 a#5] [c5 d#5 ~ f5 ~ b4] [d#5 ~ a#5 ~ f#5 ~ b4]>\")",
+    ".gain(\"<.38 .52 .38 .52>\")"
+  ]
+}
