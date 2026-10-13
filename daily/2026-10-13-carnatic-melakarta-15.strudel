@@ -1,0 +1,143 @@
+// ============================================================================
+// DAILY — 2026-10-13 (Tuesday) — Carnatic melakarta math
+// Melakarta #15: Mayamalavagowla
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (same chakra/position scheme used every Tuesday this
+// project has run — 08-25's #22, 09-01's #20, 09-08's #57, 09-15's #29,
+// 09-22's #23, 09-29's #21, 10-06's #65):
+//   chakra = ceil(N / 6), position = N - 6*(chakra - 1)
+// For N = 15: chakra = ceil(15/6) = 3 -> chakra <= 6 means SHUDDHA Ma (M1).
+//             Ri-Ga combo index = chakra itself = #3 of the 6-combo cycle
+//             (1=R1G1 2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) -> R1 G3 (shuddha
+//             Ri, antara Ga)
+//             position = 15 - 6*2 = 3 -> Dha-Ni combo #3 of its own 6-combo
+//             cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) -> D1 N3
+//             (shuddha Dha, kakali Ni)
+// melakarta 15 = S R1 G3 M1 P D1 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 1 4 5 7 8 11 — the exact
+// interval set as Hindustani raga Bhairav (S r G M P d N), which this project
+// already verified against tonaljs as "double harmonic major" / "gypsy"
+// (sets/bhairav-session-v1.strudel). Two independent systems — Hindustani
+// parent-thaat theory and Carnatic melakarta combinatorics — landing on the
+// identical scale again, the same convergence 10-06's Kalyan/Kalyani=lydian
+// Tuesday noted. Tonic kept at E here — not C (bhairav-session-v1) or D
+// (10-06) — both already used for this exact interval set in this project,
+// so the convergence is heard on its own terms rather than as a literal
+// repeat of either prior file.
+//   -> .scale("E:gypsy"), degrees: 0=S 1=r 2=G 3=M 4=P 5=d 6=N 7=S'
+//
+// KATAPAYADI VERIFICATION (the real naming-to-number encoding, not a
+// substitute scheme): the first two consonants of "MAyamalavagowla" are
+// M and Y. Katapayadi consonant table: M -> row 5 (ṅ/ṇ/m/ś), Y -> row 1
+// (k/ṭ/p/y). Digits in name order: 5, 1 -> REVERSE to get the melakarta
+// number: 15. This is the standard textbook example for the katapayadi
+// sankhya method (Mayamalavagowla is always cited as #15 for exactly this
+// reason) — checked against the real system, not invented.
+//
+// THE MATH DRIVING TODAY'S PATTERN — melakarta 15 is a notable case because
+// chakra AND position are BOTH 3 (15 sits at the exact midpoint of its own
+// chakra's position range) — a genuine numerical coincidence, used twice:
+//   - chakra/position = 3 -> lead filter LFO sweep period = 3 cycles, AND
+//     delay time = a 1/3 (triplet) subdivision — one number driving two
+//     independent automated parameters, audibly tying them together.
+//   - katapayadi's reversed digits (5, 1 -> "15") -> euclid(1,5) directly
+//     gates the tambura's bright tara (high) Pa-string accent pluck below —
+//     the derived number gets an audible outlet inside the EXISTING drone
+//     layer, not a new kick/snare/hat layer (MUSIC-QC-LOOP.md's autopilot-
+//     percussion lesson).
+//
+// ARRANGEMENT — a Carnatic alapana-style scale exposition over a tambura
+// drone, not a tala-bound kriti, so NO metric kit (same standing call as
+// every prior melakarta Tuesday: 09-08's #57, 10-06's #65, etc. — a real
+// alapana has no drum underneath it):
+//   drone:  sine (purest waveform, MUSIC-KNOWLEDGE.md §2.5), voiced as an
+//           actual PLUCKED tambura string cycle (Pa-Sa-Sa-Sa, a real 4-string
+//           tambura tuning), not a sustained pad — every prior Tuesday here
+//           used a sustained pad drone; the plucked-and-let-ring cycle is
+//           the more honestly Carnatic texture (a tambura is plucked, not
+//           bowed/held), a genuine arrangement choice for THIS file, not a
+//           template carryover. The tara-Pa accent (euclid(1,5) above) sits
+//           in the same patch, one octave up.
+//   lead:   sawtooth (harmonically dense, MUSIC-KNOWLEDGE.md §2.5's
+//           "plucked" guidance) — picked over supersaw, which the last two
+//           melakarta Tuesdays both used, for variety and because its
+//           leaner harmonic stack keeps the gamaka ornaments below legible
+//           instead of shimmering them out. Fast attack / short decay.
+//   gamaka: Carnatic music's signature oscillating ornament, realized as
+//           fast neighbor-tone cells ([2 1 2] on Ga, [6 5 6] on Ni) — the
+//           two swaras Mayamalavagowla is traditionally sung WITH gamaka
+//           (karvai), not held plain. This is what a straight scale-run
+//           would miss, and the main thing that makes today's pattern read
+//           as Carnatic rather than "Bhairav again."
+//
+// MELODY — four phrases (call / climax-response / drop / motif-variation),
+// anchored on S and P, built around the Ga/Ni gamaka cells above:
+//   A (call): tonic, leap a fifth to Pa, a Ga-gamaka cell, left hanging on
+//     rests — not resolving yet:
+//                                          0 ~ 4 ~ [2 1 2] ~ ~ ~
+//   B (climax/response, call-and-response device): from above the octave, a
+//     big leap down, a Ni-gamaka cell answering A's Ga-gamaka, falling
+//     stepwise toward Re:
+//                                          7 ~ [6 5 6] ~ 4 2 1 ~
+//   C (the drop, tension->release device): Ni down a tritone-ish leap to Ma,
+//     a third down to Re, then the leading tone approached from BELOW the
+//     tonic (degree -1, a half-step under S) resolving up into S:
+//                                          6 ~ 3 1 ~ -1 0 ~
+//   D (motif-and-variation of A — same Ga-gamaka cell reused, inverted
+//     descending contour this time, closing on the tonic):
+//                                          4 3 [2 1 2] ~ 1 0 ~ ~
+//
+// CYCLES = 20. setcpm(60) -> 20 * 60/60 = 20.0s exactly, five clean passes of
+// the 4-phrase rotation.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 20 // 20 * 60/60 = 20.0s; five clean passes of the 4-phrase melody
+
+stack(
+  // DRONE — tambura convention (MUSIC-KNOWLEDGE.md §3), but PLUCKED rather
+  // than a sustained pad (see ARRANGEMENT above): the real 4-string
+  // Pa-Sa-Sa-Sa tambura cycle, sine, fast pluck/long resonant release so
+  // each string rings out before the next.
+  n("<4 0 0 0>")
+    .scale("E2:gypsy")
+    .sound("sine")
+    .gain(.3)
+    .attack(.01).decay(.3).sustain(.4).release(2.6)
+    .room(4),
+
+  // DRONE ACCENT — the tambura's bright tara Pa string, one octave up,
+  // plucked wherever the katapayadi math says: 15 reversed is 5,1 ->
+  // euclid(1,5). Same patch as the main drone, same layer's job (tambura),
+  // just the outlet for today's derived number instead of a drum hit.
+  n("4")
+    .scale("E3:gypsy")
+    .sound("sine")
+    .euclid(1, 5)
+    .gain(.16)
+    .attack(.01).decay(.2).release(1.4)
+    .room(4),
+
+  // MELODY — see MELODY note above. Real leaps (a fifth, a tritone-ish
+  // interval, thirds), rests, call-and-response (A/B), tension->release (C),
+  // motif-and-variation (D reuses A's gamaka cell), and the Ga/Ni gamaka
+  // cells as the Carnatic-specific ornament device.
+  n(`<
+    0 ~ 4 ~ [2 1 2] ~ ~ ~
+    7 ~ [6 5 6] ~ 4 2 1 ~
+    6 ~ 3 1 ~ -1 0 ~
+    4 3 [2 1 2] ~ 1 0 ~ ~
+  >`)
+    .scale("E:gypsy")
+    .sound("sawtooth")
+    .attack(.006).decay(.1).sustain(.15).release(.18)
+    .lpf(sine.range(600, 3000).slow(3)) // chakra (3) -> sweep period
+    .lpq(6)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.45)
+    .room(2.4)
+    .delay(.2)
+    .delaytime(1/3) // position (3) -> a triplet delay
+    .delayfeedback(.28)
+)
