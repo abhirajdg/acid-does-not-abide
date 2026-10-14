@@ -1,0 +1,120 @@
+// ============================================================================
+// DAILY — 2026-10-14 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-10-14 -- day 14, month 10 (October), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Recent Wednesdays each found a different arithmetic relationship between
+//   day and month (digit sequence 08-26; clock rates 09-02; a hocket when
+//   day==month 09-09; two coprime grid-lengths 09-16; per-token Euclidean
+//   flutters when day was prime 09-23; a GCD-reduced 10:3 polyrhythm 09-30;
+//   day/month fed straight into euclid(7,10) as a mask 10-07). Today's two
+//   numbers don't invite another ratio or GCD trick cleanly (GCD(14,10)=2,
+//   reducing to 7:5 -- the same device-family as 09-30/10-07 twice running).
+//   Instead this week reads the two numbers in BINARY and uses the bits
+//   themselves, directly, as a rhythmic gate -- a different kind of math
+//   entirely from ratios/Euclid, not a relabelled repeat:
+//     day   14 = 1110 (bits: 8 4 2 1 -> 1 1 1 0)
+//     month 10 = 1010 (bits: 8 4 2 1 -> 1 0 1 0)
+//   Each 4-bit string becomes a fixed 4-token onset/rest mask for that
+//   voice -- 1 sounds a note, 0 is a literal rest ("~") -- held constant
+//   across all four alternating phrases below, exactly the way 10-07 held
+//   its euclid(7,10) mask constant while the phrase content varied.
+//   Comparing the two masks bit-by-bit is the actual payoff: bits 1 and 3
+//   (the "8" and "2" places) agree -- both voices sound together there.
+//   Bit 4 (the "1" place) also agrees -- both rest together. Only bit 2
+//   (the "4" place) disagrees: day has a 1, month a 0, so DAY alone sounds
+//   a note right where MONTH is silent. Three of four bits lock the voices
+//   together; the fourth is where the date's two numbers genuinely differ,
+//   and that's the one spot the piece asks the ear to notice a solo voice
+//   where it just heard both.
+//
+//   Structural tones reuse this project's established day/month-mod-7
+//   mapping (honest reuse -- the mapping hasn't changed, see 09-16/09-30's
+//   own note on this): day 14 mod 7 = 0 -> tonic anchors DAY's phrases;
+//   month 10 mod 7 = 3 -> scale degree 3 anchors MONTH's phrases.
+//
+//   DAY (mask "1 1 1 ~"): four alternating phrases -- CALL rises in leaps
+//   (0->4->7, root/fifth/octave, real 4th+3rd scale-step leaps) and ends
+//   open on the octave; RESPONSE answers downward (4->2->0), resolving to
+//   tonic; TENSION revisits the overshoot peaks with the widest leap in the
+//   piece (7->11->4, octave up to a 5th-above-the-octave and back); and
+//   RESOLUTION is CALL's exact retrograde (7->4->0), a real retrograde
+//   device, not just "a calmer phrase."
+//
+//   MONTH (mask "<token> ~ <token> ~", sparse): four alternating phrases
+//   anchored on degree 3 -- CALL rises (3->6), RESPONSE answers (0->3),
+//   TENSION leaps down (6->2), and RESOLUTION is CALL's own retrograde
+//   (6->3) -- the same retrograde device as DAY, applied independently to
+//   the sparser voice too, a small deliberate symmetry between the two.
+//
+//   CYCLES = 25 = day-digit-sum (1+4=5) + month (10) + year-digit-sum
+//   (2+0+2+6=10). setcpm(72) x 25 cycles / 60 = 20.8s.
+//
+// Scale: C minor -- fresh for this slot (last four Wednesdays used A minor,
+// E minor, G minor, and D major); the bits are the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: the two binary masks interlocking
+// (agree / agree / disagree / agree) ARE this piece's audible pulse, read
+// straight off the date's own digits -- a metric kit underneath would just
+// restate a pulse that's already there, the reflexive-percussion failure
+// MUSIC-QC-LOOP.md flags.
+//
+// Instrumentation, chosen for what's distinctive about THIS week's device
+// (binary bits), not a template carried over: DAY gets `square` -- the
+// harmonically sharp, "digital-sounding" waveform (MUSIC-KNOWLEDGE.md §1's
+// sharp/abrasive row), appropriate for the voice literally reading bits.
+// MONTH gets `triangle` -- pure/soft, deliberately contrasting timbre
+// (§1-2's blend/contrast) so the two masks stay legible as separate voices
+// even where they agree. DRONE stays `sine` -- tanpura convention, tonic
+// and fifth, no automation, held still under both (§2.5, §3). Only DAY
+// carries a light acid-distortion + filter sweep (the taste layer, per
+// CREATIVE-DIRECTION.md); the sweep period (4 cycles) is the exact bit
+// value the two masks disagree on, tying the one automated parameter in the
+// piece back to the one bit that makes this week's date interesting.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(72)
+let CYCLES = 25 // day-digit-sum (5) + month (10) + year-digit-sum (10)
+
+stack(
+  // DAY -- mask fixed by 14's binary (1110): tokens 1-3 sound, token 4
+  // rests. Four alternating phrases, anchored on tonic (day mod 7 = 0).
+  // CALL rises in leaps and ends open; RESPONSE answers downward to tonic;
+  // TENSION revisits the overshoot peaks with the widest leap; RESOLUTION
+  // is CALL's exact retrograde.
+  n("<[0 4 7 ~] [4 2 0 ~] [7 11 4 ~] [7 4 0 ~]>")
+    .scale("C:minor")
+    .sound("square")
+    .attack(.006).decay(.11).sustain(0).release(.05)
+    .distort(.14) // acid taste layer, kept light so the bit-mask stays legible
+    .lpf(sine.range(500, 2400).slow(4)) // sweep period = the one bit the masks disagree on
+    .gain(.32)
+    .pan(.68)
+    .room(1.1),
+
+  // MONTH -- mask fixed by 10's binary (1010): token 1 and 3 sound, 2 and 4
+  // rest -- the sparser voice. Anchored on degree 3 (month mod 7 = 3).
+  // CALL rises, RESPONSE answers, TENSION leaps down, RESOLUTION is CALL's
+  // own retrograde.
+  n("<[3 ~ 6 ~] [0 ~ 3 ~] [6 ~ 2 ~] [6 ~ 3 ~]>")
+    .scale("C:minor")
+    .sound("triangle")
+    .attack(.04).decay(.3).sustain(.15).release(.9)
+    .gain(.27)
+    .pan(.32)
+    .room(2.6),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full piece with
+  // no automation (the one moving filter this week lives on DAY instead).
+  note("[c2,g2]/25")
+    .sound("sine")
+    .attack(1.4).release(2)
+    .gain(.22)
+    .pan(.5)
+    .room(3.2)
+)
