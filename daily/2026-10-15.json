@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-15",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "CATALAN NUMBERS",
+  "pattern_file": "daily/2026-10-15-catalan-numbers.strudel",
+  "cycles": 10,
+  "target_duration_sec": 23,
+  "code_highlight_lines": ["[2 ~ 4 7 ~ 4 2 0]", ".lpf(`<1600 1100 1100 1100 600 2400 1650 1650 1650 900>`)"]
+}

@@ -1,0 +1,85 @@
+// ============================================================================
+// DAILY — 2026-10-15 (Thursday): Pure math sequence — the Catalan numbers
+// ============================================================================
+//
+// THE SEQUENCE (OEIS A000108): C(n) = (2n choose n)/(n+1). C0..C5 =
+// 1, 1, 2, 5, 14, 42. C(n) counts the number of distinct ways to validly
+// nest n pairs of parentheses (equivalently: full binary trees with n
+// internal nodes). C(3) = 5 is the number this piece is actually built
+// from — the 5 valid nestings of 3 bracket pairs:
+//   A ((()))   B (()())   C (())()   D ()(())   E ()()()
+//
+// THE MUSICAL MAPPING: for each structure, track nesting DEPTH after every
+// token (open = +1, close = -1), then map depth -> scale degree (depth 0 =
+// tonic, 1 = third, 2 = fifth, 3 = octave) — a real leap, not a step, per
+// level of nesting:
+//   A depths 1,2,3,2,1,0 -> degrees 2 4 7 4 2 0   (one arch, all the way up)
+//   B depths 1,2,1,2,1,0 -> degrees 2 4 2 4 2 0   (two shallower arches)
+//   C depths 1,2,1,0,1,0 -> degrees 2 4 2 0 2 0   (one arch, then flat)
+//   D depths 1,0,1,2,1,0 -> degrees 2 0 2 4 2 0   (flat, then one arch)
+//   E depths 1,0,1,0,1,0 -> degrees 2 0 2 0 2 0   (pure pendulum, no nesting)
+// Played in that order (A->E), the piece's own phrase development performs
+// an actual mathematical fact: as C(3)'s five structures run out, the
+// melodic contour literally collapses from deepest nesting (A, reaching the
+// octave) to no nesting at all (E, alternating flat) — structure, not
+// decoration.
+//
+// CYCLES 6-10 restate A-E RETROGRADE (each note order reversed — jazz-improv
+// device #1) and lifted an octave (+7 degrees) as the climax register (the
+// Goa-trance pitch-lift convention, MUSIC-KNOWLEDGE.md §6, used here because
+// it's free: no new layer, same five structures, now read backwards and up
+// an octave). Degree 0 recurs as the anchor every phrase closes on — the
+// structural tone every nesting always resolves back to (device #2).
+//
+// FILTER AUTOMATION tracks each structure's own MAX DEPTH, not an arbitrary
+// LFO: A(3) brightest, B/C/D(2) mid, E(1) darkest, then all five scaled up
+// 1.5x for the lifted retrograde pass — the cutoff literally reports how
+// deeply each structure nests.
+//
+// SCALE: D:major — fresh tonic/mode for this slot (prior Thursdays: C minor
+// pentatonic, D harmonic minor, E phrygian, D dorian, A aeolian, E
+// mixolydian, G lydian); plain major suits pure counting, no borrowed color.
+//
+// ARRANGEMENT: lead is `square` (sharp/discrete, MUSIC-KNOWLEDGE.md §1) — a
+// combinatorics topic reads better austere than lush, and it's unused on a
+// recent Thursday (Padovan: supersaw, Thue-Morse: sawtooth). Drone is a
+// doubled-octave UNISON on the tonic (sine, pure/soft) rather than a dyad of
+// two different notes — standing for C(0)=C(1)=1, the recurrence's two equal
+// base cases, not an arbitrary interval. NO percussion: nesting depth has no
+// inherent metric pulse, and the two numbers this topic needs an audible
+// outlet for (which structure is playing, how deep it nests) are already
+// spent on the phrase alternation itself and the depth-tracking filter — a
+// drum layer would be a third, decorative outlet for numbers already heard.
+//
+// TEMPO: setcpm(26), 4 quarter-note beats/cycle = 104 BPM. No genre-specific
+// tempo mandate on a math-sequence day. CYCLES: 10. 26 x 10 / 60 = 23.08s.
+// ============================================================================
+
+setcpm(26)
+
+$lead: n(`<
+  [2 ~ 4 7 ~ 4 2 0]
+  [2 ~ 4 2 ~ 4 2 0]
+  [2 ~ 4 2 ~ 0 2 0]
+  [2 ~ 0 2 ~ 4 2 0]
+  [2 ~ 0 2 ~ 0 2 0]
+  [7 ~ 9 11 ~ 14 11 9]
+  [7 ~ 9 11 ~ 9 11 9]
+  [7 ~ 9 7 ~ 9 11 9]
+  [7 ~ 9 11 ~ 9 7 9]
+  [7 ~ 9 7 ~ 9 7 9]
+>`)
+  .scale("D:major")
+  .sound("square")
+  .attack(.01).decay(.12).sustain(.1).release(.18)
+  .lpf(`<1600 1100 1100 1100 600 2400 1650 1650 1650 900>`)
+  .lpq(3)
+  .gain(.4)
+  .room(1.1)
+
+$drone: n("0 7").scale("D:major")
+  .sound("sine")
+  .attack(1.2).release(2)
+  .lpf(500)
+  .gain(.2)
+  .room(2.4)
