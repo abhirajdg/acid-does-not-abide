@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-16",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "MAJOR BLUES CRUSH",
+  "pattern_file": "daily/2026-10-16-acid-major-blues-crush.strudel",
+  "cycles": 12,
+  "target_duration_sec": 24,
+  "code_highlight_lines": [">`).scale(\"C2:major:blues\")", ".crush(sine.range(4, 16).slow(6))"]
+}
