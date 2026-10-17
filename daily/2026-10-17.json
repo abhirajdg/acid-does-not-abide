@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-17",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "16EDO PSY-TECHNO",
+  "pattern_file": "daily/2026-10-17-xenharmonic-16edo.strudel",
+  "cycles": 11,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["i(\"0 0 0 ~ 0 0 0 ~ 0 0 0 ~ 0 0 0 6\").xen(\"16edo\").sound(\"sine\")", "    .duckorbit(\"2:3\").duckattack(\"0.01:0.3\").duckdepth(\"0.8:0.5\")"]
+}

@@ -1,0 +1,145 @@
+// ============================================================================
+// DAILY — 2026-10-17 (Saturday): Xenharmonic tuning experiment — 16edo, as
+// a psy-techno track
+// ============================================================================
+//
+// THE TUNING: 16edo divides the octave into 16 equal steps of 1200/16 = 75
+// cents each (a power-of-two division, unlike any prior Saturday's EDO —
+// 17/19/31/13/11 are prime, 15=3x5, 22=2x11, 24=2^3x3). Checked against all
+// eight prior Saturdays (17edo, 19edo, 31edo, 15edo, 24edo, 22edo, 13edo,
+// 11edo) before writing a note of this. Its best "fifth" (9 steps = 675c)
+// is 26.955c FLAT of a pure 3:2 (701.955c) — a flat-fifth magnitude this
+// slot hasn't used before (11edo's flat fifth was worse, -47.41c; 13edo's
+// was sharp, +36.5c; everything else sits within ~18c of just). 16edo sits
+// in its own, fresh spot on that spectrum.
+//
+// THE SCALE — verified, not assumed, the same MOS test 13edo's file used:
+// stacking the 9-step generator and checking at each size n whether the
+// result reduces to just two step sizes. Unlike 13edo (which jumps straight
+// from a 5-note MOS to 8 notes, with NO 7-note/diatonic-sized MOS at all),
+// 16edo genuinely HAS one. Stack the generator six times mod 16:
+//   0, 9, 18%16=2, 27%16=11, 36%16=4, 45%16=13, 54%16=6
+//   → sorted {0, 2, 4, 6, 9, 11, 13}
+// Step pattern: 2-2-2-3-2-2-3 (150-150-150-225-150-150-225 cents) — five
+// steps of one size, two of the other, the SAME 5:2 count-shape as 12edo's
+// own diatonic scale (five whole-tones, two semitones), just realized with
+// different step sizes. A genuine diatonic-analog living inside a tuning
+// whose fifth is nearly 27 cents flat of just. Degrees used: 0 (tonic) and
+// 9 (the flat "fifth" generator itself) anchor the piece, the vadi/samvadi-
+// equivalent role raga anchoring uses; the scale's one odd gap (6 to 9, a
+// 3-step jump rather than the surrounding 2-step motion) splits it into two
+// 2-step-linked clusters, {0,2,4,6} and {9,11,13} — used below as the
+// melody's two "neighborhoods."
+//
+// ARRANGEMENT: a genre never yet used on this slot (17/19/31edo predate the
+// genre-first direction; 15edo=techno/canon, 24edo=psytrance/drop,
+// 22edo=acid house, 13edo=dubstep half-time, 11edo=Goa trance) — PSY-TECHNO,
+// the growth sub-genre researched 14 Oct 2026 (MUSIC-KNOWLEDGE.md §12,
+// Beatport's official sub-genre as of 27 Jan 2026, 128-138 BPM, techno's
+// drive plus psy's melodic layering). Also the first daily pattern to apply
+// §12's "the lead does less" lesson (added three days ago, previously only
+// folded into the EP tracks): ONE melodic voice, phrases on an 8th-note
+// grid with real rests (not 16ths end to end), the same two-phrase block
+// repeated once rather than varied bar to bar (development happens BETWEEN
+// blocks, not within one), and hats sitting back at .08 gain — roughly 3dB
+// below this project's earlier .12 habit, per §12's measured correction.
+// Sidechain uses the documented ":"-mininotation duck feature
+// (knowledge-base/strudel/learn/effects.md "## Duck") for the first time on
+// this slot: the kick ducks bass+lead (orbit 2) hard/fast and the drone
+// (orbit 3) soft/slow in one line, the two separate §10 sidechain profiles
+// (techno-bass vs. pad) applied together instead of picking just one.
+// DRONE is a supersaw dyad (tonic+"fifth"), dropped an octave (same
+// register trick 13edo's drone used) — a fresh instrument choice for this
+// slot's drone otherwise (none of the eight prior weeks used supersaw
+// there: separate pad / Sound-on-Sound kalimba-delay / four stacked sines /
+// root-third-fifth sines / two panned sines). BASS is a gapped rolling line
+// (three hits then a rest, four times a cycle) parked on the tonic with one
+// passing dip to 6 (the gap's lower neighbor) — a different rolling-bass
+// shape from 11edo's fully legato "0!15 6", though the same "minimal
+// movement, one passing note" idea generalized from Goa trance to
+// psy-techno. Synth basics throughout (sine bass, sawtooth lead, supersaw
+// drone) per MUSIC-KNOWLEDGE.md §2.5 — no gm_* samples. Four-on-the-floor +
+// hats is a deliberate genre choice (psy-techno's identity runs on that
+// pulse), not autopilot percussion.
+//
+// MELODY — anchored on the tonic (0) and the flat "fifth" (9), moving
+// between the scale's two clusters {0,2,4,6} and {9,11,13}. Demo block
+// (bare, no kit), then four alternating phrases, each an 8-step cycle:
+//   demo (bare):                        0 ~ 9 ~ 0 ~ 9 ~
+//   A (call — leap to the flat 5th, descend through the upper cluster into
+//      the lower one):                  0 ~ 9 ~ 6 4 2 ~
+//   B (response — climb the lower cluster, leap up, resolve home):
+//                                        2 4 6 ~ 9 11 ~ 0
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//                                        ~ 2 4 6 ~ 9 ~ 0
+//   D (peak & release — up to the octave-up tonic and beyond, then home):
+//                                        9 ~ 16 18 ~ 16 9 0
+//   LIFT (D transposed a full octave up — the Goa/psy pitch-lift climax,
+//      MUSIC-KNOWLEDGE.md §6, portable beyond just Goa trance):
+//                                        25 ~ 32 34 ~ 32 25 16
+// Order: demo, A B C D, A B C D, LIFT, D — 11 phrases across 11 cycles,
+// same landing convention prior Saturdays used (ending on the release, D,
+// rather than cutting mid-phrase).
+//
+// CYCLES: 11, setcpm(33), 4 beats/cycle = 132 BPM (psy-techno's 128-138
+// range, MUSIC-KNOWLEDGE.md §12 — checked per the 09-18/09-19 tempo-math
+// fix). 11 * 60/33 = 20s.
+// ============================================================================
+
+setcpm(33)
+let CYCLES = 11
+
+stack(
+  // DRONE — supersaw dyad, tonic + flat "fifth", dropped an octave, held
+  // the whole clip. Fresh instrument choice for this slot's drone (see
+  // header). Soft/slow duck profile (orbit 3) per MUSIC-KNOWLEDGE.md §10's
+  // pad/drone value.
+  stack(
+    i("-16").xen("16edo").sound("supersaw").pan(.3),
+    i("-7").xen("16edo").sound("supersaw").pan(.7),
+  ).attack(3).release(4).gain(.16).room(1.5).orbit(3),
+
+  // BASS — gapped rolling bass (three hits, a rest, four times a cycle),
+  // parked on the tonic with one passing dip to 6 (the scale's gap-
+  // neighbor below the fifth). Hard/fast duck profile (orbit 2).
+  i("0 0 0 ~ 0 0 0 ~ 0 0 0 ~ 0 0 0 6").xen("16edo").sound("sine")
+    .lpf(500).gain(.4).orbit(2),
+
+  // LEAD — the one melodic voice (MUSIC-KNOWLEDGE.md §12), plucked
+  // sawtooth, slow filter sweep (period 7 cycles, nodding to this week's
+  // genuine 7-note MOS). Same orbit as the bass — psy-techno's pump runs
+  // through the whole low-to-mid mix, not just the sub.
+  i(`<
+    [0 ~ 9 ~ 0 ~ 9 ~]
+    [0 ~ 9 ~ 6 4 2 ~]
+    [2 4 6 ~ 9 11 ~ 0]
+    [~ 2 4 6 ~ 9 ~ 0]
+    [9 ~ 16 18 ~ 16 9 0]
+    [0 ~ 9 ~ 6 4 2 ~]
+    [2 4 6 ~ 9 11 ~ 0]
+    [~ 2 4 6 ~ 9 ~ 0]
+    [9 ~ 16 18 ~ 16 9 0]
+    [25 ~ 32 34 ~ 32 25 16]
+    [9 ~ 16 18 ~ 16 9 0]
+  >`).xen("16edo")
+    .sound("sawtooth")
+    .attack(.005).decay(.12).sustain(.1).release(.1)
+    .lpf(sine.range(800, 2200).slow(7)).lpq(6)
+    .gain(.4).orbit(2),
+
+  // KICK — four-on-the-floor, psy-techno tempo. Silent for the bare demo
+  // cycle. Ducks bass+lead (orbit 2, hard/fast) and the drone (orbit 3,
+  // soft/slow) in one line via the ':' per-orbit duck mininotation
+  // (knowledge-base/strudel/learn/effects.md "## Duck") — MUSIC-KNOWLEDGE.md
+  // §10's two sidechain profiles, applied together for the first time here.
+  s("bd*4").bank("RolandTR909")
+    .duckorbit("2:3").duckattack("0.01:0.3").duckdepth("0.8:0.5")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.8),
+
+  // HATS — off-beat, sitting back per §12's measured correction (.08, not
+  // the earlier .12 habit). Silent during the bare demo cycle.
+  s("~ hh ~ hh ~ hh ~ hh").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.08),
+)
