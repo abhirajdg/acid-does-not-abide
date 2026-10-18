@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-18",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "MIRROR CANON",
+  "pattern_file": "daily/2026-10-18-wildcard-mirror-canon.strudel",
+  "cycles": 14,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let A    = \"1 ~ 5 7 ~ 4 2 ~\"", "let AREV = \"~ 2 4 ~ 7 5 ~ 1\" // literal reverse of A — the mirror voice, not a new phrase"]
+}

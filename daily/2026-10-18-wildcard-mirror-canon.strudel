@@ -1,0 +1,150 @@
+// ============================================================================
+// DAILY — 2026-10-18 (Sunday): Wildcard — a true mirror (crab) canon
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY (checked against every prior Sunday before writing
+// a note of this, per MUSIC-KNOWLEDGE.md's "don't template last cycle"
+// rule): 09-13 was a pitch canon (one tune, time-offset, same pitches).
+// 09-20 was canon BY INVERSION (one tune, time-offset, mirrored pitches).
+// 09-27 was a Thue-Morse hocket (two voices alternating note-by-note).
+// 10-04 was augmentation/diminution (one tune at three rates). 10-11 was
+// two independent systems converging on one shared scale. None of those
+// five is a TRUE mirror canon — Bach's "crab canon" device (Musical
+// Offering): two voices start together and play the SAME tune, one reading
+// it forward, the other reading it backward, so the two meet and pull apart
+// across the piece rather than one voice chasing or inverting the other in
+// time. Genuinely new mechanism for this project: no time offset at all
+// (unlike 09-13/09-20), no alternation (unlike 09-27), one tune not three
+// rates (unlike 10-04), one scale explored two ways in time, not two
+// systems compared (unlike 10-11).
+//
+// THE SCALE: this week's own Tuesday (daily/2026-10-13-carnatic-melakarta-
+// 15.strudel) found melakarta 15 (Mayamalavagowla) reduces to the exact
+// same interval set — 0 1 4 5 7 8 11 — as Hindustani raga Bhairav, already
+// verified against tonaljs as "gypsy" (double harmonic major) in
+// sets/bhairav-session-v1.strudel. That file used tonic C, 10-13 used
+// tonic E; today uses G — a third, still-unused tonic for a scale this
+// project keeps rediscovering from two different directions. Degrees in
+// G:gypsy: 0=G(S) 1=Ab(r, samvadi) 2=B(G) 3=C(M) 4=D(P) 5=Eb(d, vadi)
+// 6=F#(N) 7=G'(S') — vadi/samvadi confirmed in bhairav-session-v1's header
+// (vadi=Dha=degree5, samvadi=Re=degree1), reused as this piece's own
+// structural anchors rather than invented fresh.
+//
+// THE PHRASES — A is the call (opens on samvadi, leaps to vadi then the
+// octave, descends, left hanging on a rest, unresolved):
+//   A:    r ~ d S' ~ P G ~   ->   1 ~ 5 7 ~ 4 2 ~
+// B answers (call-and-response): opens on Ga, leaps to the octave, drops to
+// vadi, descends through P to samvadi, resolves home on Sa:
+//   B:    G ~ S' d ~ P r S   ->   2 ~ 7 5 ~ 4 1 0
+// REV(x) below means the literal array reverse of x — the mirror voice,
+// not a new phrase.
+//
+// WHAT THE MIRROR ACTUALLY DOES, checked by hand before trusting it (the
+// same discipline as 10-13's chakra/position coincidence): overlay A with
+// REV(A) position-by-position — only 2 of 8 steps land a note in BOTH
+// voices at once (steps 3 and 6); the other 6 steps are hocket-like, one
+// voice sounding where the other rests. Overlay B with REV(B): 4 of 8 steps
+// land in both voices. B's own call-and-response shape, which already
+// crosses itself (opens high, closes home), turns out to mirror into a
+// noticeably denser, more harmonically fused canon than A's sparser one —
+// a real, discovered difference between the two phrases, not designed in
+// advance and not stated without checking.
+//
+// STRUCTURE (14 cycles, 2 per block, 7 blocks): 0-1 voice 1 states A alone
+// (learn the tune). 2-3 voice 2 states REV(A) alone (hear it backward).
+// 4-5 BOTH together — the true crab canon on A, meeting and parting as
+// above. 6-7 both together on B/REV(B) — the denser mirror. 8-9 the A
+// mirror again, BOTH voices lifted a full octave (+7 degrees, the Goa/psy
+// pitch-lift convention, MUSIC-KNOWLEDGE.md §6, used here as a free climax
+// device exactly as 10-15's Catalan file borrowed it: no new layer, same
+// two identities, transposed). 10-11 the B mirror lifted the same way.
+// 12-13 TAG: both voices play "S ~ S ~ S ~ S ~" — a phrase that is its own
+// reverse, a literal palindrome. This is the canon's natural resting state:
+// forward and backward material become indistinguishable, so the two
+// voices that spent the whole piece mirroring different things finally
+// mirror NOTHING, landing in true unison. The ending is the device's own
+// logic, not a tacked-on fade.
+//
+// ARRANGEMENT — two equal voices, deliberately contrasting timbre so each
+// stays legible through every crossing (MUSIC-KNOWLEDGE.md §2): voice 1
+// (forward) is `sawtooth` (harmonically dense, reads as the "stated"
+// identity, per §2.5's plucked-lead guidance); voice 2 (mirror) is
+// `triangle` (pure/soft, reads as the "reflected" identity). Hard-panned
+// opposite sides (MUSIC-KNOWLEDGE.md §7's stereo-duel device) so the
+// meeting is heard harmonically, never spatially blurred — the two voices
+// stay physically apart even while their pitches cross. DRONE is `sine`,
+// tonic + fifth (G2/D3), the tanpura convention, held centered the full
+// piece with no automation — the fixed point both mirrored voices pull
+// away from and return to. ONE automated parameter, shared by both voices
+// (not stacked per-voice, per §10's "fewer layers, one job" correction):
+// `lpf` stepped by BLOCK, not a continuous sweep — it tracks the canon's
+// own structure (alone, sparse-mirror, dense-mirror, lifted climax,
+// resolved tag), the automation reporting the form instead of decorating
+// it.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question): no drum kit.
+// This is a two-voice chamber/canon device — the interlocking hocket-vs-
+// fusion pattern the mirror itself produces (see "WHAT THE MIRROR ACTUALLY
+// DOES" above) IS the piece's audible pulse. A metric kit underneath would
+// compete with the exact thing being listened for, the same failure mode
+// already caught on 09-08/09-09/10-04.
+//
+// CYCLES: 14. No genre-specific tempo mandate (a contrapuntal device, not a
+// drum-driven genre) — setcpm(42) chosen for clean division: 14 * 60/42 =
+// 20.0s exactly, matching the 7-block x 2-cycle structure above.
+// ============================================================================
+
+setcpm(42)
+let CYCLES = 14
+
+let A    = "1 ~ 5 7 ~ 4 2 ~"
+let AREV = "~ 2 4 ~ 7 5 ~ 1" // literal reverse of A — the mirror voice, not a new phrase
+let B    = "2 ~ 7 5 ~ 4 1 0"
+let BREV = "0 1 4 ~ 5 7 ~ 2"
+let ALIFT    = "8 ~ 12 14 ~ 11 9 ~"   // A, +7 degrees (one octave up)
+let AREVLIFT = "~ 9 11 ~ 14 12 ~ 8"   // AREV, +7 degrees
+let BLIFT    = "9 ~ 14 12 ~ 11 8 7"
+let BREVLIFT = "7 8 11 ~ 12 14 ~ 9"
+let SIL  = "~ ~ ~ ~ ~ ~ ~ ~"
+let TAG  = "0 ~ 0 ~ 0 ~ 0 ~" // its own reverse — the canon's resolved, mirror-free resting state
+
+let V1 = `<[${A}] [${A}] [${SIL}] [${SIL}] [${A}] [${A}] [${B}] [${B}] [${ALIFT}] [${ALIFT}] [${BLIFT}] [${BLIFT}] [${TAG}] [${TAG}]>`
+let V2 = `<[${SIL}] [${SIL}] [${AREV}] [${AREV}] [${AREV}] [${AREV}] [${BREV}] [${BREV}] [${AREVLIFT}] [${AREVLIFT}] [${BREVLIFT}] [${BREVLIFT}] [${TAG}] [${TAG}]>`
+
+// shared automation — tracks the BLOCK (alone / sparse-mirror / dense-mirror
+// / lifted climax / resolved tag), not a decorative sweep on either voice.
+let LPF = "<900 900 900 900 1300 1300 1500 1500 2600 2600 2800 2800 650 650>"
+
+stack(
+  // DRONE — tanpura convention, tonic + fifth (G2/D3). Held centered the
+  // full piece, no automation: the fixed point the mirror pulls away from.
+  note("<g2 d3>/4")
+    .sound("sine")
+    .attack(2).release(3)
+    .gain(.22)
+    .room(4.5)
+    .pan(.5),
+
+  // VOICE 1 — forward reading. Sawtooth, the "stated" identity.
+  n(V1)
+    .scale("G:gypsy")
+    .sound("sawtooth")
+    .attack(.02).decay(.18).sustain(.2).release(.3)
+    .lpf(LPF)
+    .lpq(4)
+    .gain(.38)
+    .pan(.22)
+    .room(2.4),
+
+  // VOICE 2 — mirror reading (literal array reverse). Triangle, the
+  // "reflected" identity, panned to the opposite side.
+  n(V2)
+    .scale("G:gypsy")
+    .sound("triangle")
+    .attack(.05).decay(.25).sustain(.25).release(.4)
+    .lpf(LPF)
+    .lpq(4)
+    .gain(.38)
+    .pan(.78)
+    .room(2.4)
+)
