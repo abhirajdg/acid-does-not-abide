@@ -1,0 +1,143 @@
+// ============================================================================
+// DAILY — 2026-10-19 (Monday): Hindustani raga of the day — RAGA ASAVARI
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: Mondays so far have covered Kalyan, Bhairavi,
+// Khamaj, Bhairav (+ its 22-shruti JI retuning), Kafi, Todi, Marwa, and
+// Poorvi — 8 of the 10 thaats. Only Asavari and Bilawal remain. Bilawal is
+// the plain "all shuddh" thaat with nothing left to verify or discover in
+// its grammar; Asavari is the far more interesting pick because the real
+// raga (not just the aeolian scale under it) has a genuine, well-documented
+// aroha/avaroha asymmetry to build the whole arrangement around — see
+// THEORY NOTES below. Leaves Bilawal as the one thaat still untouched for a
+// future Monday.
+//
+// THEORY NOTES:
+// Asavari's swaras (from the thaat table): S R g M P d n — shuddh Re, komal
+// Ga, shuddh Ma, shuddh Pa, komal Dha, komal Ni.
+//   -> semitone offsets from tonic: 0, 2, 3, 5, 7, 8, 10 — this IS the
+//      Western natural minor / aeolian interval set exactly (unlike Marwa
+//      and Poorvi, which needed an explicit note-letter fallback because no
+//      tonaljs scale name matched). "aeolian" is one of the seven standard
+//      Greek modes tonaljs has always supported — no verification hedge
+//      needed here, so this is written with `.scale()` rather than spelled
+//      out note-by-note.
+//   -> tonic set to Eb — Kalyan=D, Bhairavi=E, Khamaj=G, Bhairav=A, Kafi=A,
+//      Todi=C, Marwa=F, Poorvi=B; Eb is unused for a Monday so far.
+//   -> scale degree numbers used in n() below map like this in
+//      "Eb:aeolian": 0=S(Eb) 1=R(F) 2=g(Gb) 3=M(Ab) 4=P(Bb) 5=d(Cb) 6=n(Db)
+//      7=S'(Eb')
+//   -> vadi (dominant) = Dha, samvadi (sub-dominant) = Ga — one commonly
+//      repeated pairing for Asavari (same hedge Kafi's/Todi's/Poorvi's files
+//      used: sources aren't unanimous on Hindustani vadi/samvadi
+//      attributions). The pointed thing about this pairing: the two notes
+//      tradition calls structurally MOST important are also the two the
+//      raga's own grammar (below) treats as rarest. That paradox is what
+//      the arrangement is built around, not just a pitch-list footnote.
+//
+// ASAVARI'S DEFINING FEATURE, and why it drives the WHOLE arrangement below,
+// not just the pitch list: the real raga is audav (5-note) in ascent —
+// S R M P n S' — omitting both komal Ga and komal Dha going up. They only
+// appear descending, as brief "vakra" (crooked/zigzag) passing tones,
+// approached by a skip rather than a step, never held as a resting point.
+// This is a different flavor of asymmetry from Marwa (drops Pa entirely),
+// Poorvi (keeps Pa but rare, descent-only), and Todi (augmented tetrachord)
+// — here it's not one note that's scarce, it's TWO, and they're exactly the
+// two the tradition calls vadi/samvadi.
+//
+// ARRANGEMENT — a genuine hocket (MUSIC-KNOWLEDGE.md §2), not the
+// gain/room "spotlight" Poorvi used last week for its own rare note, and
+// not a continuous filter/pan/delay sweep (Bhairav/Kafi/Todi/Marwa all used
+// one of those). Two voices trade the line so that the main lead literally
+// RESTS at the exact slot where each vakra note falls, and a second,
+// contrasting voice fills only that slot — true hocket, each voice resting
+// exactly where the other plays (same device as sets/hocket-raga-blues-
+// demo.strudel's sitar/blues trade). It's motivated by the theory, not
+// decorative: Dha and Ga are handed to a different voice because the raga
+// itself treats them as a different kind of note — brief, skip-approached,
+// never a resting tone — rather than folding them into the main line.
+//   - DRONE: tonic + Pa (eb2/bb2), standard tanpura tuning — not retuned,
+//     because (like Poorvi, unlike Marwa) Pa is a full, un-scarce member of
+//     this raga's vocabulary. Sine, per MUSIC-KNOWLEDGE.md §2.5.
+//   - MAIN LEAD (the confident, audav-only notes — S R M P n): sawtooth,
+//     fairly tight pluck (attack .02, short decay/sustain) — the voice that
+//     "owns" the line and never touches Dha/Ga.
+//   - SHADOW VOICE (vakra echo — ONLY Dha in phrase B, ONLY Ga in phrase
+//     D): square, filtered dark (lpf 600) and quieter than the main lead —
+//     a muffled, fleeting color, panned to the opposite side from the main
+//     lead, deliberately NOT given its own development; it only ever
+//     flickers in for one note per appearance, which is the point.
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// every time): this is a short alap-style exposition over a drone, same
+// shape as every prior raga Monday. Asavari is a serious, somewhat
+// melancholic raga (no light-classical dance-tala register the way
+// Khamaj's keherwa has) — no drum layer here, decided explicitly rather
+// than defaulted.
+//
+// MELODY — four alternating phrases, scale degrees in "Eb:aeolian":
+//   A (call — pure audav ascent, no Dha/Ga at all: a fourth-leap S->M, a
+//      step to P, a skip up past the forbidden-in-ascent Dha straight to
+//      Ni, resolving up to the octave and left hanging):
+//        0 ~ 3 4 ~ 6 7 ~
+//   B (first vakra touch — a descending fourth-leap from the octave down
+//      to Pa, THEN the shadow voice catches komal Dha in the gap between
+//      Pa and the main line's continuing step down to Ma; partial
+//      resolution, not a true rest):
+//        main:   7 ~ ~ ~ 4 ~ 3 ~
+//        shadow: ~ ~ 5 ~ ~ ~ ~ ~   (Dha, vadi)
+//   C (retrograde of A, the QC-loop device — literal reverse of A's event
+//      list including its rests, closing on Sa rather than trailing off
+//      unresolved, since Sa IS the true resting tone here):
+//        ~ 7 6 ~ 4 3 ~ 0
+//   D (second vakra touch — a descending fourth-leap from Pa that skips
+//      straight over where Ga would sit, the shadow voice filling exactly
+//      that gap with komal Ga, then resolving fully to Sa):
+//        main:   ~ 4 ~ ~ ~ 1 0 ~
+//        shadow: ~ ~ ~ 2 ~ ~ ~ ~   (Ga, samvadi)
+//   rotation <A B C D> over 16 cycles (4 full statements of the rotation).
+//
+// CYCLES: 16. setcpm(48) -> 16 * 60/48 = 20s.
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16
+
+stack(
+  // DRONE — tanpura convention: tonic + fifth (S, P). Sine for purest tone,
+  // slow attack/release so it sits still under the phrases. Standard tuning
+  // kept (not retuned like Marwa's) because Pa is a full, un-scarce part of
+  // Asavari's vocabulary — see ARRANGEMENT above.
+  note("<eb2 bb2>/4")
+    .sound("sine")
+    .gain(.24)
+    .room(4.5)
+    .attack(2).release(3),
+
+  // MAIN LEAD — the confident, audav-only voice. Never touches Dha or Ga;
+  // rests exactly where the shadow voice below fills in the vakra note.
+  n("<[0 ~ 3 4 ~ 6 7 ~] [7 ~ ~ ~ 4 ~ 3 ~] [~ 7 6 ~ 4 3 ~ 0] [~ 4 ~ ~ ~ 1 0 ~]>")
+    .scale("eb4:aeolian")
+    .sound("sawtooth")
+    .attack(.02).decay(.15).sustain(.25).release(.2)
+    .lpf(1600)
+    .lpq(3)
+    .gain(.4)
+    .pan(.32)
+    .room(2)
+    .sometimes(x => x.ply(2)), // improv hook: occasional ornament
+
+  // SHADOW VOICE — the vakra echo. Only ever plays Dha (phrase B) or Ga
+  // (phrase D), one note at a time, muffled and quieter than the main
+  // lead, opposite pan — true hocket with the main voice above, never
+  // overlapping it.
+  n("<~ [~ ~ 5 ~ ~ ~ ~ ~] ~ [~ ~ ~ 2 ~ ~ ~ ~]>")
+    .scale("eb4:aeolian")
+    .sound("square")
+    .attack(.01).decay(.08).sustain(.05).release(.1)
+    .lpf(600)
+    .lpq(2)
+    .gain(.22)
+    .pan(.75)
+    .room(3)
+)

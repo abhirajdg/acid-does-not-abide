@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-19",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "RAGA ASAVARI",
+  "pattern_file": "daily/2026-10-19-hindustani-asavari.strudel",
+  "cycles": 16,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "n(\"<[0 ~ 3 4 ~ 6 7 ~] [7 ~ ~ ~ 4 ~ 3 ~] [~ 7 6 ~ 4 3 ~ 0] [~ 4 ~ ~ ~ 1 0 ~]>\")",
+    "n(\"<~ [~ ~ 5 ~ ~ ~ ~ ~] ~ [~ ~ ~ 2 ~ ~ ~ ~]>\")"
+  ]
+}
