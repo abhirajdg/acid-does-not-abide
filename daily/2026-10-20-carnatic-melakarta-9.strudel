@@ -1,0 +1,151 @@
+// ============================================================================
+// DAILY — 2026-10-20 (Tuesday) — Carnatic melakarta math
+// Melakarta #9: Dhenuka
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (same chakra/position scheme used every Tuesday this
+// project has run — 08-25's #22, 09-01's #20, 09-08's #57, 09-15's #29,
+// 09-22's #23, 09-29's #21, 10-06's #65, 10-13's #15):
+//   chakra = ceil(N / 6), position = N - 6*(chakra - 1)
+// For N = 9: chakra = ceil(9/6) = 2 -> chakra <= 6 means SHUDDHA Ma (M1).
+//            Ri-Ga combo index = chakra = #2 of the 6-combo cycle (1=R1G1
+//            2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) -> R1 G2 (shuddha Ri,
+//            sadharana Ga)
+//            position = 9 - 6*1 = 3 -> Dha-Ni combo #3 of its own 6-combo
+//            cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) -> D1 N3
+//            (shuddha Dha, kakali Ni)
+// melakarta 9 = S R1 G2 M1 P D1 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 1 3 5 7 8 11.
+//
+// SCALE NAME, VERIFIED NOT GUESSED: the tempting Western label for 0 1 3 5 7
+// 8 11 is "Neapolitan minor" (b2, b3, nat4, nat5, b6, nat7) — but checking the
+// real tonaljs scale-type source (packages/scale-type/data.ts on GitHub, the
+// same discipline "gypsy" was checked against for Bhairav) shows tonaljs does
+// NOT have an entry called "neapolitan minor" at all. The interval set 1P 2m
+// 3m 4P 5P 6m 7M is filed there under a different name entirely: "balinese".
+// Guessing the Western-sounding name instead of checking would have shipped
+// a scale Strudel can't resolve. -> .scale("A:balinese") (tonic A — not used
+// in the last ~2 weeks of daily patterns; E/D/B/G/C/Eb all recently taken).
+// Worth naming on-camera: an Indonesian gamelan scale name and a South Indian
+// melakarta landing on the identical interval set is a genuine coincidence
+// of two unrelated tuning traditions, not a claim that they're historically
+// connected — same "two systems, one scale" moment 10-06 (Kalyan/Kalyani)
+// and 10-13 (Bhairav/Mayamalavagowla) noted, this time crossing continents
+// instead of crossing Hindustani/Carnatic.
+//
+// KATAPAYADI VERIFICATION (the real naming-to-number encoding, not a
+// substitute scheme): the first two consonants of "DHEnuka" are Dh and N.
+// Katapayadi consonant table: Dh -> row 9 (jha/dha), N -> row 0 (ña/na).
+// Digits in name order: 9, 0 -> REVERSE to get the melakarta number: 09 = 9.
+// Matches.
+//
+// THE MATH DRIVING TODAY'S PATTERN — position(3) and chakra(2) drive two
+// independent automated parameters (swapped roles from 10-13's #15, which
+// also had position=3, so the SAME number doesn't produce the SAME result
+// twice in a row):
+//   - position (3) -> lead filter LFO sweep period = 3 cycles.
+//   - chakra (2) -> delay time = a half-note (1/2) subdivision — a fresh
+//     fraction, 10-13 used 1/3 and 10-06 used 1/5 for this same slot.
+//   - the katapayadi digit pair here is (9, 0) — a zero digit makes it
+//     useless as a euclid() parameter directly (euclid(0,9) is silence, not
+//     an "audible outlet"). So instead euclid(chakra, N) = euclid(2, 9) —
+//     still two real numbers intrinsic to the melakarta's own index, not an
+//     arbitrary substitute — gates a short accent pluck of the raga's own
+//     defining color tone (the komal Re / b2, scale degree 1) inside the
+//     EXISTING drone patch, one octave up. No new kick/snare/hat layer
+//     (MUSIC-QC-LOOP.md's autopilot-percussion lesson).
+//
+// ARRANGEMENT — a Carnatic alapana-style scale exposition over a tambura
+// drone, not a tala-bound kriti, so NO metric kit (same standing call as
+// every prior melakarta Tuesday — a real alapana has no drum underneath it):
+//   drone:  sine (purest waveform, MUSIC-KNOWLEDGE.md §2.5), tonic + Pa, but
+//           voiced an octave apart (A2 / E3) rather than the same octave
+//           every prior Tuesday's tambura drone used — this scale's only
+//           "anomaly" relative to a plain major/minor is the tight b2 right
+//           next to the tonic, not a special fifth-adjacent interval worth
+//           retuning the drone for (unlike 10-06's raised-4th drone), so the
+//           deliberate choice here is register separation for openness, not
+//           a retuned interval.
+//   lead:   square (synth-basic, MUSIC-KNOWLEDGE.md §2.5) — not sawtooth
+//           (10-13) or supersaw (10-06): square's leaner, more hollow/reedy
+//           harmonic stack keeps the half-step (b2) color legible as a
+//           distinct pitch rather than a blur, which denser waveforms would
+//           risk. Fast attack / short decay for a plucked attack.
+//
+// MELODY — four phrases (call / climax-response / drop / motif-variation),
+// anchored on S and P (scale degrees 0 and 4), built to keep this raga's two
+// real colors audible: the tight half-step S->komal-Re (degree 0->1) and the
+// augmented-second leap between komal-Dha and the natural (leading-tone) Ni
+// (degree 5->6, which lands as a plain adjacent scale-step in code but reads
+// as a stretched, exotic 3-semitone gap by ear):
+//   A (call): tonic straight into its own b2 (the raga's defining color,
+//     not a leap), then a real leap up to Pa, rest, falls back to the b2,
+//     held through rests — not resolving yet:
+//                                          0 1 ~ 4 ~ 1 ~ ~
+//   B (climax/response, call-and-response device): the SAME b2 motif restated
+//     an octave up (degree 8) answering A's register, leap down through the
+//     augmented-second (degree 5->6), stepwise down to Ga, rest:
+//                                          8 ~ 5 6 ~ 2 ~ ~
+//   C (the drop, tension->release device): the leading-tone Ni leapt down to
+//     Ga, step to komal-Re, rest, then the leading tone approached again from
+//     BELOW the tonic (degree -1) resolving up into S — tension built across
+//     A and B finally released onto the tonic:
+//                                          6 ~ 2 1 ~ -1 0 ~
+//   D (motif-and-variation of A — the same b2 motif, but resolving DOWN to
+//     the tonic immediately this time instead of hanging on rests, then the
+//     same leap to Pa, closing with a firm stepwise descent to S):
+//                                          1 0 ~ 4 2 1 0 ~
+//
+// CYCLES = 16. setcpm(48) -> 16 * 60/48 = 20.0s exactly, four clean passes of
+// the 4-phrase rotation. cpm here just paces the phrase slots for legibility
+// (no tala is implied — there's no drum layer to check a genre BPM against).
+// ============================================================================
+
+setcpm(48)
+let CYCLES = 16 // 16 * 60/48 = 20.0s; four clean passes of the 4-phrase melody
+
+stack(
+  // DRONE — tambura convention (MUSIC-KNOWLEDGE.md §3): tonic + Pa, but
+  // register-separated (A2 / E3) rather than same-octave (see ARRANGEMENT
+  // above). Plain sine, slow attack/release so it swells rather than snaps.
+  note("<a2 e3>/4")
+    .sound("sine")
+    .gain(.28)
+    .attack(2.4).release(3)
+    .room(4.5),
+
+  // DRONE ACCENT — the raga's own defining color tone (komal Re / b2), one
+  // octave up, plucked wherever euclid(chakra, N) = euclid(2, 9) says. Same
+  // patch as the main drone, same layer's job (tambura), just the outlet for
+  // today's derived numbers instead of a drum hit.
+  n("1")
+    .scale("A4:balinese")
+    .sound("sine")
+    .euclid(2, 9)
+    .gain(.15)
+    .attack(.01).decay(.2).release(1.2)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (a fourth-ish into Pa, an
+  // octave restatement, the aug-2nd gap, a leading-tone approach from below),
+  // rests, call-and-response (A/B share the b2 motif at two registers),
+  // tension->release (C), and motif-and-variation (D vs A) as the required
+  // jazz-improv devices.
+  n(`<
+    0 1 ~ 4 ~ 1 ~ ~
+    8 ~ 5 6 ~ 2 ~ ~
+    6 ~ 2 1 ~ -1 0 ~
+    1 0 ~ 4 2 1 0 ~
+  >`)
+    .scale("A:balinese")
+    .sound("square")
+    .attack(.006).decay(.1).sustain(.15).release(.16)
+    .lpf(sine.range(650, 2800).slow(3)) // position (3) -> sweep period
+    .lpq(5)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.44)
+    .room(2.4)
+    .delay(.2)
+    .delaytime(1/2) // chakra (2) -> a half-note delay
+    .delayfeedback(.26)
+)
