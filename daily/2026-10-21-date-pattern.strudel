@@ -1,0 +1,129 @@
+// ============================================================================
+// DAILY — 2026-10-21 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-10-21 -- day 21, month 10 (October), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Recent Wednesdays each found a different relationship between day and
+//   month: a digit sequence (08-26), three clock rates (09-02), a hocket
+//   when day==month (09-09), two independent coprime grid-lengths (09-16),
+//   per-token Euclidean flutters (09-23), a GCD fraction-reduction into a
+//   10-against-3 polyrhythm (09-30), day/month fed straight into
+//   `.euclid(7,10)` as a rhythmic mask (10-07), and day/month's binary bits
+//   compared bit-by-bit (10-14). Today day (21) and month (10) are AGAIN
+//   coprime (GCD(21,10)=1, the same relationship as 09-16/10-07) -- but
+//   rather than reaching for another grid-pair or another `.euclid()` mask
+//   (both already used on exactly this coprime relationship), this time the
+//   actual STEPS of the Euclidean algorithm that PROVES the GCD become the
+//   structure, not just its answer:
+//     21 = 2 x 10 + 1   (divide day by month: quotient 2, remainder 1)
+//     10 = 10 x 1 + 0   (divide month by the remainder: quotient 10, exact)
+//   GCD = 1 confirms the coprimality, but the quotients (2, 10) and the
+//   remainder (1) are what drive the music: day's number, measured in
+//   month-sized units, is exactly TWO complete tens plus ONE left over
+//   (21 = 10 + 10 + 1). That three-part split -- not the habitual
+//   call/response/tension/resolution four-phrase template every prior
+//   Wednesday has used -- becomes the form: two full "month-length" (10)
+//   phrases, then one lone "remainder" phrase, cycling in a 3-slot `<...>`
+//   instead of 4. The day's raw value (21) is never used directly as a
+//   scale degree -- at 21 mod 7 = 0 it would overshoot three full octaves
+//   above tonic, an ugly, untasteful leap for a short line -- so the
+//   piece uses the algorithm's own derived numbers (2, 10, 1) instead,
+//   the same taste call MUSIC-QC-LOOP.md asks for over literal arithmetic.
+//
+//   Two structural tones anchor every phrase, the project's established
+//   day/month-mod-7 mapping (honest reuse, unchanged mapping): day 21
+//   mod 7 = 0 -> tonic anchors DAY's phrases. Month 10 mod 7 = 3 -> scale
+//   degree 3 anchors MONTH's phrases, the same month value (10) as 10-07,
+//   reaching the same overshoot peak (degree 10, one octave + degree 3)
+//   for the exact same honest reason -- the month genuinely hasn't changed.
+//
+//   DAY (tonic-anchored, mask "<[10 tokens] [10 tokens] 0>"): PHRASE ONE
+//   (CALL) rises in leaps through a wide arc and ends open on the octave;
+//   PHRASE TWO (RESPONSE) is CALL's near-exact retrograde, answering back
+//   down to a doubled tonic landing -- a real retrograde device, reversed
+//   pitch-for-pitch; PHRASE THREE is the remainder itself made audible: a
+//   single held tonic note for the entire cycle, long attack/release, the
+//   one moment with no motion at all -- "1" has nothing left to subdivide.
+//
+//   MONTH (degree-3-anchored, same 3-slot form, deliberately sparser):
+//   PHRASE ONE and TWO punctuate degree 3 and the degree-10 overshoot peak
+//   with rests between, a true countermelody to DAY's denser lines; PHRASE
+//   THREE sits silent through nearly the whole remainder cycle except one
+//   late pickup note right at its very end -- a one-note bridge back into
+//   the loop's restart, MONTH's own answer to DAY's single sustained note.
+//
+//   CYCLES = 23 = day-digit-sum (2+1=3) + month (10) + year-digit-sum
+//   (2+0+2+6=10). setcpm(60) x 23 cycles / 60 = 23s.
+//
+// Scale: B minor -- fresh for this slot (last three Wednesdays used E
+// minor, G minor, and C minor); the algorithm is the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: the 2-tens-plus-a-remainder
+// form IS the piece's audible structure, read straight off the actual
+// Euclidean-algorithm steps for today's date -- a metric kit underneath
+// would just restate a pulse that's already there, the reflexive-
+// percussion failure MUSIC-QC-LOOP.md flags.
+//
+// Instrumentation, chosen for what's distinctive about THIS week's device
+// (a quotient/remainder split, not a bit-mask or a ratio), and a fresh
+// pairing from the last three Wednesdays (saw+triangle, supersaw+sine,
+// square+triangle): DAY gets `square` -- clean and whole, fitting the
+// "exact division" half of the idea (MUSIC-KNOWLEDGE.md §1's digital row).
+// MONTH gets `sawtooth` -- a busier-grained edge for the finer, sparser
+// countermelody voice. DRONE stays `sine` -- tanpura convention, tonic and
+// fifth, no automation (§2.5, §3). Only DAY carries the acid taste layer
+// (light distortion + a filter sweep); the sweep period (2 cycles) is the
+// OTHER derived number -- the quotient of complete tens (2) -- so the
+// piece's one automated parameter ties back to the same algorithm as the
+// form, not a number pulled in from a different week's formula.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 23 // day-digit-sum (3) + month (10) + year-digit-sum (10)
+
+stack(
+  // DAY -- tonic-anchored (21 mod 7 = 0). Three-slot form reading 21 as
+  // 2 complete month-lengths (10) plus a remainder (1), not the habitual
+  // four-phrase call/response/tension/resolution template: PHRASE ONE
+  // (CALL) rises in leaps to the month-overshoot peak and ends open;
+  // PHRASE TWO (RESPONSE) is CALL's near-exact retrograde, landing on a
+  // doubled tonic; PHRASE THREE is the remainder itself -- one held note,
+  // nothing left to subdivide.
+  n("<[0 ~ 3 5 7 5 10 7 ~ 7] [7 ~ 10 7 5 7 ~ 3 0 0] 0>")
+    .scale("B:minor")
+    .sound("square")
+    .attack(.006).decay(.11).sustain(0).release(.05)
+    .distort(.15) // acid taste layer, kept light so the retrograde stays legible
+    .lpf(sine.range(500, 2400).slow(2)) // sweep period = the quotient of complete tens (2)
+    .gain(.32)
+    .pan(.68)
+    .room(1.1),
+
+  // MONTH -- degree-3-anchored (10 mod 7 = 3), reaching the same degree-10
+  // overshoot peak as 10-07 for the same honest reason (month is still
+  // 10). Sparser countermelody, same 3-slot form: PHRASE ONE and TWO
+  // punctuate degree 3 and the peak with rests between; PHRASE THREE sits
+  // silent through the remainder cycle except one late pickup note right
+  // at the very end -- a one-note bridge back into the loop.
+  n("<[3 ~ ~ 6 ~ 3 ~ 10 ~ ~] [~ 10 ~ 3 ~ 6 ~ ~ 3 ~] [~ ~ ~ ~ ~ ~ ~ ~ ~ 6]>")
+    .scale("B:minor")
+    .sound("sawtooth")
+    .attack(.04).decay(.3).sustain(.15).release(.9)
+    .gain(.27)
+    .pan(.32)
+    .room(2.6),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full piece with
+  // no automation (the one moving filter this week lives on DAY instead).
+  note("[b2,f#2]/23")
+    .sound("sine")
+    .attack(1.4).release(2)
+    .gain(.22)
+    .pan(.5)
+    .room(3.2)
+)

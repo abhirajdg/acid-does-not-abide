@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-21",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "21 . 10 . 2026",
+  "pattern_file": "daily/2026-10-21-date-pattern.strudel",
+  "cycles": 23,
+  "target_duration_sec": 23,
+  "code_highlight_lines": ["n(\"<[0 ~ 3 5 7 5 10 7 ~ 7] [7 ~ 10 7 5 7 ~ 3 0 0] 0>\")", "n(\"<[3 ~ ~ 6 ~ 3 ~ 10 ~ ~] [~ 10 ~ 3 ~ 6 ~ ~ 3 ~] [~ ~ ~ ~ ~ ~ ~ ~ ~ 6]>\")"]
+}
