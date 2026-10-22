@@ -1,0 +1,91 @@
+// ============================================================================
+// DAILY — 2026-10-22 (Thursday): Pure math sequence — the Kolakoski sequence
+// ============================================================================
+//
+// THE SEQUENCE (OEIS A000002): the only sequence over the alphabet {1,2}
+// (besides a trivial shift) that is its OWN run-length encoding — read its
+// runs of equal symbols and you get the sequence back. Terms 1-16:
+//   1 2 2 1 1 2 1 2 2 1 2 2 1 1 2 1
+// Check: runs are (1)(2,2)(1,1)(2)(1)(2,2)(1)(2,2)(1,1)(2)(1)... — run
+// LENGTHS 1,2,2,1,1,2,1,2,2,1,... are exactly the sequence itself. Terms
+// 1-8 sum to 12, terms 9-16 also sum to 12 — a clean two-phrase split.
+//
+// THE MUSICAL MAPPING plays the sequence's own self-description: the SAME
+// 16 terms drive two different musical roles, one role per half of the
+// piece, demonstrating "the sequence describes itself" rather than stating
+// it in a comment.
+//   Cycles 1-2 (terms as RHYTHM): each term is a note's elongation weight
+//   (`@1`/`@2`, i.e. a run-length, directly) under a freely-composed call
+//   (cycle 1) and response (cycle 2) melody — real leaps (tritone, major
+//   3rd), a dip below the tonic, landing unresolved to invite the reply.
+//   Cycles 3-4 (terms as PITCH): the SAME 16 terms now pick each note's
+//   LEAP SIZE (1 -> up/down a 3rd, 2 -> up/down a tritone) against a
+//   hand-placed up/down contour, in even note-values — rhythm traded for
+//   pitch, the two roles the sequence's own self-description already
+//   proves interchangeable. Cycle 4 dives to the piece's lowest point
+//   (degree -7) before climbing back to the tonic.
+// Cycles 5-8 are the RETROGRADE (jazz-improv device) of cycles 1-4, note
+// order reversed — "reading the sequence backwards" is itself a kind of
+// self-reference. The two-note drone (tonic + the step a major 3rd above,
+// standing for the sequence's two symbols 1 and 2) enters only here, as
+// the piece turns reflective. Retrograde of cycle 4 means the PIECE'S OWN
+// ENDING is the low dive followed by silence, not a resolved tonic —
+// deliberate: Kolakoski's density/periodicity is still not fully settled
+// mathematically, so the piece doesn't resolve neatly either.
+//
+// SCALE: F:whole:tone — six equal whole-steps, no leading tone, no
+// perfect 5th (MUSIC-KNOWLEDGE.md's "E whole tone" Friday precedent, new
+// root here). Picked for this topic specifically: a 2-symbol alphabet
+// with no internal hierarchy pairs with a scale that has no tonal
+// hierarchy either — every step is the same size, same as every symbol
+// in {1,2} is just "1" or "2," no scale degree more "central" than another
+// except by repetition, same as Kolakoski has no privileged symbol.
+//
+// ARRANGEMENT: lead is `pulse` (sharp/abrasive, MUSIC-KNOWLEDGE.md §1) —
+// unused on a recent Thursday (Padovan: supersaw, Catalan: square) and
+// fits a binary/combinatorial topic better than a soft pad. Drone is a
+// dyad (tonic + major-3rd-up), not a unison, specifically because the
+// alphabet has TWO symbols, not one (contrast Catalan's doubled-UNISON
+// drone, which stood for two EQUAL base cases). NO percussion: Kolakoski
+// has no known period and no inherent pulse, and the two numbers this
+// topic needs an audible outlet for (rhythm, pitch) are already spent as
+// the piece's own central device — a drum layer would be a third,
+// decorative outlet for numbers already fully heard.
+//
+// FILTER tracks each cycle's own peak |degree| reached (500 + |degree|*250
+// Hz) — a real derived number, not an LFO: cycles 1/2/5/6 peak at degree 6
+// (2000 Hz), 3/7 at degree 5 (1750 Hz), 4/8 at the piece's deepest dive,
+// degree 7 (2250 Hz). ROOM widens for the retrograde half (1.1 -> 1.6),
+// marking "looking back" the same way the piece's own structure splits.
+//
+// TEMPO: setcpm(24), ~4 beats/cycle = 96 BPM. CYCLES: 8.
+// 24 x 8 / 60 = 20s.
+// ============================================================================
+
+setcpm(24)
+
+$lead: n(`<
+  [0@1 3@2 6@2 ~@1 4@1 2@1 0@2 ~@1 -2@1 1@2]
+  [1@2 -2@1 0@2 ~@1 2@2 4@1 6@1 ~@1 3@2 0@1]
+  [2 5 2 0 2 -1 1 -2 ~]
+  [~ -5 -7 -4 -1 1 -1 2 0]
+  [1@2 -2@1 ~@1 0@2 2@1 4@1 ~@1 6@2 3@2 0@1]
+  [0@1 3@2 ~@1 6@1 4@1 2@2 ~@1 0@2 -2@1 1@2]
+  [~ -2 1 -1 2 0 2 5 2]
+  [0 2 -1 1 -1 -4 -7 -5 ~]
+>`)
+  .scale("F:whole:tone")
+  .sound("pulse")
+  .attack(.01).decay(.12).sustain(.1).release(.18)
+  .lpf(`<2000 2000 1750 2250 2000 2000 1750 2250>`)
+  .lpq(4)
+  .gain(.4)
+  .room(`<1.1 1.1 1.1 1.1 1.6 1.6 1.6 1.6>`)
+
+$drone: n("<~ ~ ~ ~ [0,2] [0,2] [0,2] [0,2]>")
+  .scale("F:whole:tone")
+  .sound("sine")
+  .attack(1.2).release(2)
+  .lpf(500)
+  .gain(.18)
+  .room(2.4)
