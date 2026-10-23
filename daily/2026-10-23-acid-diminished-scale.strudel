@@ -1,0 +1,116 @@
+// ============================================================================
+// DAILY — 2026-10-23 (Friday): Acid / psychedelia free jam — the diminished scale
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction: genre structure drives Friday, not raga performance form).
+// Checked every prior Friday before writing this one (MUSIC-KNOWLEDGE.md's
+// "don't template last cycle" rule): 08-28 harmonic minor / Goa bass-lead
+// split. 09-04 whole tone / Sound-on-Sound delay drone + wobble sub + phaser.
+// 09-11 locrian / duckorbit sidechain + psytrance bass + pad dyad. 09-18
+// natural minor / single 303 + one slow lpf sweep. 09-25 phrygian dominant /
+// half-time dub + kick-locked wobble. 10-02 dorian / per-note FILTER envelope
+// (lpenv) under a slow lpf sweep, four-on-the-floor + clap. 10-09 minor
+// pentatonic / per-note PITCH envelope (penv), sparse kick + choked hat.
+// 10-16 major blues / automated BITCRUSH replacing the filter sweep, kick +
+// sparse rim. Today picks a scale none of those eight used, and a production
+// device (automated PHASER) not used since 09-04 seven weeks ago:
+//
+//   SCALE: C whole-half diminished (an octatonic scale — verified against
+//   tonaljs's own scale-type data before use, same discipline as Bhairav's
+//   "gypsy" check: intervals 1P 2M 3m 4P 5d 6m 6M 7M, alias "diminished").
+//   Degrees: 0=C 1=D 2=Eb 3=F 4=Gb(tritone) 5=Ab 6=A 7=B 8=C'. Eight notes to
+//   the octave instead of seven, built from alternating whole/half steps —
+//   which makes it TRULY symmetric: transposing any shape by 2 scale degrees
+//   (a minor third) lands every note back inside the same eight-note set,
+//   unchanged in shape. That's not a quirk of this key, it's the scale's
+//   actual structure, and it's the real jazz vocabulary for it (Coltrane-
+//   style outside playing sequences a diminished lick by minor thirds) —
+//   directly usable material for someone with Abhiraj's jazz-improv
+//   background, not a decorative scale pick. The melody below exploits this
+//   literally: phrase B is phrase A's exact shape moved +2 degrees, phrase C
+//   moves it +4 (two minor thirds = a major third, still symmetric), so B and
+//   C sound like true continuations of A's color, not new material.
+//
+//   PRODUCTION — the new device is automated PHASER speed, not a filter,
+//   pitch, or bitcrush move (all three already used the last three weeks
+//   running) — verified against `knowledge-base/strudel/learn/effects.md`
+//   "## Phaser" before use. `lpf` stays FIXED (tone-shaping only, no sweep),
+//   same "one new automated device replaces the sweep rather than stacking
+//   under it" choice 10-16 made with crush. Phaser speed drifts slowly
+//   between .5 Hz and 6 Hz over a 7-cycle period — a classic psychedelic
+//   effect, genuinely different texture family from filter/pitch envelopes,
+//   and it reads as swirl/disorientation that suits a symmetric, "outside"
+//   scale better than another cutoff sweep would.
+//
+//   DRUMS: kick only — drives the sidechain, no hat/clap/rim this week. None
+//   of the prior eight Fridays went this sparse (all kept at least one
+//   secondary percussion layer). Deliberate, not a cut corner: the diminished
+//   scale is already a dense, "outside" harmonic texture on its own, and a
+//   minimal low end leaves the phaser-swirled lead as the one thing the ear
+//   tracks, per MUSIC-QC-LOOP.md's instrumentation question (would removing a
+//   layer serve the moment better than adding one — here, yes).
+//
+// LEAD PHRASE — 16 steps/cycle, rotating <A B C D> every cycle across 12
+// cycles (3 full rounds), per MUSIC-QC-LOOP.md's real-leap/rest/development
+// checklist:
+//   A (call, states the   0 ~ 3 4 ~ 0 6 ~ 0 ~ 4 3 ~ 0 ~ ~  -- leap to the
+//      tritone):                                              tritone (Gb,
+//                         degree 4) and the major 6th (A, degree 6), each
+//                         resolved back to tonic.
+//   B (variation, exact   2 ~ 5 6 ~ 2 8 ~ 2 ~ 6 5 ~ 2 ~ ~  -- A's shape moved
+//      minor-3rd shift):   up 2 degrees (a true minor 3rd in this symmetric
+//                          scale) -- same contour, same color, new center;
+//                          ends on its own tonic (2), not the piece's, so it
+//                          reads as continuing rather than resolving.
+//   C (peak, moved a      8 ~ 6 5 ~ 2 0 ~ 8 ~ 6 5 ~ 2 0 ~  -- A moved +4
+//      major 3rd, then     degrees (two minor 3rds); also literal retrograde
+//      retrograde):        of B's rising run (2 5 6 8 -> 8 6 5 2), stated
+//                          twice, each time resolving down to the true tonic.
+//   D (release, sparse):  0 ~ ~ ~ -2 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~  -- mostly rests;
+//                          the one non-tonic note (-2) is the SAME interval
+//                          the whole piece transposes by (a minor 3rd), now
+//                          applied below the tonic instead of above it.
+//
+// TEMPO: setcpm(32) with a bd*4 kick -> BPM = cpm * beats/cycle = 128, real
+// acid/psy-techno territory (CREATIVE-DIRECTION/MUSIC-KNOWLEDGE §12).
+// CYCLES: 12. 12 * 60/32 = 22.5s.
+// ============================================================================
+
+setcpm(32)
+let CYCLES = 12
+
+// drums — kick only this week, driving the sidechain. No hat/clap/rim: a
+// deliberate choice to leave the phaser-swirled lead as the one thing the
+// ear tracks against a dense, symmetric scale (see header).
+let drums = s("bd*4").bank("RolandTR909")
+  .duckorbit(2).duckattack(.03).duckdepth(.35)
+  .gain(.58)
+
+let melody = n(`<
+  [0 ~ 3 4 ~ 0 6 ~ 0 ~ 4 3 ~ 0 ~ ~]
+  [2 ~ 5 6 ~ 2 8 ~ 2 ~ 6 5 ~ 2 ~ ~]
+  [8 ~ 6 5 ~ 2 0 ~ 8 ~ 6 5 ~ 2 0 ~]
+  [0 ~ ~ ~ -2 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~]
+>`).scale("C2:diminished")
+
+// one 303-style voice, bass+lead duty. lpf is FIXED (tone only, no sweep) --
+// automated PHASER speed alone carries the track's one slow arc this week,
+// drifting between .5Hz and 6Hz over a 7-cycle period. supersaw gives the
+// phaser something harmonically dense to swirl, distinct from the plain
+// square/sawtooth leads the last two Fridays used. Lightly ducked by the
+// kick (orbit 2) so the voice stays legible, not chopped.
+let lead = melody
+  .sound("supersaw")
+  .attack(.004).decay(.08).sustain(.05).release(.05)
+  .lpf(1400)
+  .lpq(8)
+  .phaser(sine.range(.5, 6).slow(7))
+  .phaserdepth(.85)
+  .phasercenter(900)
+  .distort(.15)
+  .pan(.5)
+  .gain(.32)
+  .orbit(2)
+
+stack(drums, lead)

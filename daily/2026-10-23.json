@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-23",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "DIMINISHED SCALE ACID",
+  "pattern_file": "daily/2026-10-23-acid-diminished-scale.strudel",
+  "cycles": 12,
+  "target_duration_sec": 23,
+  "code_highlight_lines": [">`).scale(\"C2:diminished\")", ".phaser(sine.range(.5, 6).slow(7))"]
+}
