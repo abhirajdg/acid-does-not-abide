@@ -1,0 +1,137 @@
+// ============================================================================
+// DAILY — 2026-10-24 (Saturday): Xenharmonic tuning experiment — Hexany
+// (1,3,5,7), as a dub techno track
+// ============================================================================
+//
+// THE TUNING: every prior Saturday (17/19/31/15/24/22/13/11/16edo) was an
+// EQUAL division of the octave — the whole story each week was "how far off
+// is this EDO's best fifth from pure 3:2." This week is deliberately NOT an
+// edo at all: it's a Combination Product Set Hexany, built from four JUST
+// INTONATION "identities" {1,3,5,7} (the odd harmonics), derived by hand
+// (not a preset name trusted blind, same discipline as verifying "gypsy"
+// for Bhairav): take all 6 pairwise products of the four identities, octave-
+// reduce each into [1,2) by dividing by a power of 2, keep 1/1 as the
+// implicit tonic:
+//   1x3=3  -> 3/2  = 701.96c   (identity 3 alone — a PURE, exact fifth)
+//   1x5=5  -> 5/4  = 386.31c   (identity 5 alone — a PURE major third)
+//   1x7=7  -> 7/4  = 968.83c   (identity 7 alone — the harmonic/septimal 7th)
+//   3x5=15 -> 15/8 = 1088.27c  (combination tone — just major 7th)
+//   3x7=21 -> 21/16= 470.78c   (combination tone — septimal "narrow 4th")
+//   5x7=35 -> 35/32= 155.14c   (combination tone — septimal "neutral 2nd")
+// Sorted into a 7-tone scale (tonic + 6 hexany tones), scale-step index ->
+// ratio:  0:1/1  1:35/32  2:5/4  3:21/16  4:3/2  5:7/4  6:15/8  (7 = octave).
+// Two kinds of tone: the three "identity" degrees (0, 2, 4, 5) are each a
+// pure single harmonic above the root and ring with ZERO cents error —
+// unlike every edo this slot has used so far, which all approximated their
+// fifth/third with a logged error. The three "combination" degrees (1, 3, 6)
+// are genuinely alien 7-limit colors no edo below 41 reaches cleanly. That
+// split — pure identities vs. septimal combinations — IS this week's
+// structural idea, not a decoration on top of it.
+//
+// ARRANGEMENT: a genre never yet used on this slot (17/19/31edo predate the
+// genre-first direction; 15edo=techno, 24edo=psytrance, 22edo=acid house,
+// 13edo=dubstep half-time, 11edo=Goa trance, 16edo=psy-techno) — DUB TECHNO
+// (Basic Channel/Chain Reaction lineage: a chord struck once and left to
+// ring through delay/reverb over a sparse kick, not a continuous pad or a
+// rolling bass). Chosen BECAUSE it's just intonation: dub techno's whole
+// aesthetic is "let the chord ring out and be heard clearly," which is
+// exactly what a comma-free pure 3:2/5:4 tetrad needs to prove its point —
+// an edo approximation would beat faintly against itself; this won't.
+// CHORD — the four identity tones (0,2,4,5 = 1/1,5/4,3/2,7/4, i.e. the
+// hexany's own generating tetrad) stacked and struck once per cycle, left
+// to ring via long release + delay, instead of a sustained drone/pad (every
+// prior Saturday's drone was continuous — this is the first stab-and-ring).
+// BASS — sparse root-then-fifth (0 then 4, the exact 3/2), two hits a cycle
+// with wide gaps, not the rolling/near-continuous bass every prior Saturday
+// used (Goa/psy-techno's rolling-bass convention is deliberately dropped —
+// dub is spacious, not driving). LEAD — triangle pluck, moves between the
+// pure identities and the alien combination tones (the split described
+// above, made audible as call/response). Synth basics throughout (sine,
+// supersaw, triangle) per MUSIC-KNOWLEDGE.md §2.5 — no gm_* samples.
+// PERCUSSION — kick only, no hats, no rim. Dub techno's classic minimal kit
+// IS kick + chord + bass; a hat layer here would be exactly the unexamined
+// default MUSIC-QC-LOOP.md's percussion checklist warns against, and the
+// chord's own delay trail already supplies the off-beat motion a hat would
+// have added. Sidechain: kick ducks both bass (orbit 2) and chord (orbit 3)
+// with a moderate, SLOW profile (MUSIC-KNOWLEDGE.md §10's pad/drone value,
+// softened further — dub's pump is a breath, not techno/Goa's hard shove).
+// The lead (orbit 1) is left unducked, §10's acid-lead "stay legible" rule.
+//
+// MELODY — anchored on the tonic (0) and the pure fifth (4), moving between
+// the identity cluster {0,2,4,5} and the combination cluster {1,3,6}. Demo
+// block (bare, no kit, just the four identities in order), then four
+// alternating phrases, each an 8-step cycle:
+//   demo (bare, the identities only):   0 ~ 2 ~ 4 ~ 5 ~
+//   A (call — leap to the pure 5th, descend through combination tones):
+//                                        0 ~ 4 ~ 3 2 1 ~
+//   B (response — climb the combination tones, leap up, resolve home):
+//                                        1 2 3 ~ 4 5 ~ 0
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//                                        ~ 1 2 3 ~ 4 ~ 0
+//   D (peak & release — up to the octave-up tonic and beyond, then home):
+//                                        4 ~ 7 9 ~ 7 4 0
+//   LIFT (D transposed a full octave up — the Goa/psy pitch-lift climax,
+//      MUSIC-KNOWLEDGE.md §6, portable beyond just Goa trance):
+//                                        11 ~ 14 16 ~ 14 11 7
+// Order: demo, A B C D, A B C D, LIFT, D — 11 phrases across 11 cycles,
+// same landing convention prior Saturdays used (ending on the release, D).
+//
+// CYCLES: 11, setcpm(30), 4 beats/cycle = 120 BPM (real dub techno tempo —
+// Basic Channel/Rhythm & Sound sit ~120-123; checked per the 09-18/09-19
+// tempo-math fix). 11 * 60/30 = 22s.
+// ============================================================================
+
+setcpm(30)
+let CYCLES = 11
+
+// Hexany(1,3,5,7), derived by hand above, octave-reduced, tonic = 1/1.
+// index: 0=1/1  1=35/32  2=5/4  3=21/16  4=3/2  5=7/4  6=15/8
+const RATIOS = [1, 35/32, 5/4, 21/16, 3/2, 7/4, 15/8]
+
+stack(
+  // CHORD — the hexany's own generating tetrad (identities 1,3,5,7), struck
+  // once per cycle and left to ring via release + room + a dub-style delay
+  // chain, instead of a sustained pad (see header). Soft/slow duck profile
+  // (orbit 3), softened below MUSIC-KNOWLEDGE.md §10's techno/Goa value —
+  // dub's pump breathes, it doesn't shove.
+  i("[0,2,4,5] ~ ~ ~ ~ ~ ~ ~").xen(RATIOS).sound("supersaw")
+    .attack(.02).release(3.5).gain(.22).room(1.4)
+    .delay(.4).delaytime(.375).delayfeedback(.55)
+    .orbit(3),
+
+  // BASS — sparse root-then-fifth (not a rolling line — see header), the
+  // exact 3/2 identity as its only movement. Harder/faster duck (orbit 2).
+  i("0 ~ ~ ~ 4 ~ ~ ~").xen(RATIOS).sound("sine")
+    .lpf(350).gain(.45).sustain(.3).release(.5).orbit(2),
+
+  // LEAD — the one melodic voice (MUSIC-KNOWLEDGE.md §12), triangle pluck,
+  // moving between the identity and combination clusters (header). Slow
+  // filter sweep, period 6 cycles (nodding to the hexany's 6 combination
+  // tones). Unducked — §10's "acid lead stays legible" rule, orbit 1.
+  i(`<
+    [0 ~ 2 ~ 4 ~ 5 ~]
+    [0 ~ 4 ~ 3 2 1 ~]
+    [1 2 3 ~ 4 5 ~ 0]
+    [~ 1 2 3 ~ 4 ~ 0]
+    [4 ~ 7 9 ~ 7 4 0]
+    [0 ~ 4 ~ 3 2 1 ~]
+    [1 2 3 ~ 4 5 ~ 0]
+    [~ 1 2 3 ~ 4 ~ 0]
+    [4 ~ 7 9 ~ 7 4 0]
+    [11 ~ 14 16 ~ 14 11 7]
+    [4 ~ 7 9 ~ 7 4 0]
+  >`).xen(RATIOS)
+    .sound("triangle")
+    .attack(.005).decay(.15).sustain(.1).release(.15)
+    .lpf(sine.range(700, 2000).slow(6)).lpq(5)
+    .gain(.4).orbit(1),
+
+  // KICK — the only percussion (see header: no hats, no rim — dub techno's
+  // minimal kit is kick + chord + bass). Silent for the bare demo cycle.
+  // Moderate, slow duck into bass+chord via the ':' per-orbit duck
+  // mininotation (knowledge-base/strudel/learn/effects.md "## Duck").
+  s("bd*4").bank("RolandTR909")
+    .duckorbit("2:3").duckattack("0.05:0.15").duckdepth("0.35:0.45")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.7),
+)
