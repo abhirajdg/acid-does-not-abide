@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-25",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "KOLAKOSKI x HEXANY",
+  "pattern_file": "daily/2026-10-25-wildcard-kolakoski-hexany.strudel",
+  "cycles": 14,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["const RATIOS = [1, 35/32, 5/4, 21/16, 3/2, 7/4, 15/8]", "let DUET_A     = \"0 ~ ~ 2 4 ~ 5 ~ ~ 0 ~ ~ 2 4 ~ 5\""]
+}

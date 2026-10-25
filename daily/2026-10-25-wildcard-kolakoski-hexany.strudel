@@ -1,0 +1,188 @@
+// ============================================================================
+// DAILY — 2026-10-25 (Sunday): Wildcard — the Kolakoski sequence picks its
+// own hocket partition out of Saturday's hexany
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY (checked against all nine prior Sundays before
+// writing a note of this, per MUSIC-KNOWLEDGE.md's "don't template last
+// cycle" rule): 08-23 retuned one phrase into one tuning (solo). 08-30 and
+// 09-27 both traded ONE melodic line between two voices (hocket by external
+// alternation/bits). 09-06 ran two independent voices in contrary motion.
+// 09-13/09-20/10-18 are the canon family (staggered-in-time, same/mirrored/
+// crab pitches). 10-04 was a rate transform (augmentation/diminution).
+// 10-11 combined two independently-derived systems that happened to share
+// ONE SCALE. None of those nine assigns a melody's own PITCH-CLASS STRUCTURE
+// to decide who sings it — today does: this week's two most distinctive
+// results (Thursday's Kolakoski sequence, a sequence that IS its own run-
+// length encoding, and Saturday's Hexany(1,3,5,7), a 7-tone just-intonation
+// scale that splits cleanly into "pure identity" tones and "alien
+// combination" tones) are fused so the SAME derivation that picks each
+// pitch also picks which voice plays it — self-reference (Thursday's whole
+// point) applied to the hexany's own structural split (Saturday's whole
+// point), not an externally-imposed alternation like 08-30/09-27's hockets.
+//
+// THE SEQUENCE: Kolakoski (OEIS A000002), terms 1-16, same values Thursday's
+// file already verified: 1 2 2 1 1 2 1 2 2 1 2 2 1 1 2 1 (an exact 8-ones/
+// 8-twos split — checked by hand, not assumed).
+//
+// THE TUNING, reused verbatim from Saturday (honest reuse of the SAME
+// derived object, the same discipline 10-11 reused Tuesday's raga numbers
+// with): Hexany(1,3,5,7), octave-reduced ratios index 0-6 = 1/1, 35/32, 5/4,
+// 21/16, 3/2, 7/4, 15/8. Identity degrees (a pure single harmonic over the
+// root, zero cents error): {0,2,4,5}. Combination degrees (alien 7-limit
+// colors no edo below 41 reaches cleanly): {1,3,6}. This split is Saturday's
+// own discovery, not invented fresh today.
+//
+// THE MAPPING: read the 16 Kolakoski terms in order. A term of "1" draws the
+// NEXT identity degree (cycling 0,2,4,5,0,2,4,5,...); a term of "2" draws
+// the NEXT combination degree (cycling 1,3,6,1,3,6,...). This is the role
+// Thursday's cycles 3-4 gave the sequence (terms picking pitch material) but
+// applied to a different axis — not leap-size, but WHICH structural class of
+// this week's tuning speaks. Working through all 16 terms gives one 16-note
+// derived line (degree indices, in sounding order):
+//   0 1 3 2 4 6 5 1 3 0 6 1 2 4 3 5
+// Because term==1 always draws identity and term==2 always draws
+// combination, the exact 8/8 term-balance above is also the exact 8/8 split
+// of how many notes in this derived line are identity vs. combination —
+// a fact discovered by tracing the derivation, not asserted.
+//
+// STRUCTURE (14 cycles):
+//   CALL (cyc 0-1) — first 8 of the derived line, shaped with two breathing
+//     rests, left hanging on a combination tone (unresolved, invites reply):
+//       0 1 3 ~ 2 4 6 5 ~ 1
+//   RESPONSE (cyc 2-3) — second 8 of the derived line, shaped with rests
+//     after its two widest leaps (3->0->6 and 6->1), plus one added tonic at
+//     the very end (the one non-literal note in this piece, a genuine
+//     resolution gesture, same taste call 10-21's Wednesday file made over
+//     literal arithmetic):
+//       3 0 ~ 6 ~ 1 2 4 3 5 ~ 0
+//   RETROGRADE (cyc 4-5, the required jazz-improv device) — literal reverse
+//     of CALL's own 8 notes, now resolving home instead of hanging:
+//       1 5 ~ 6 4 2 3 ~ 1 0
+//   DUET (cyc 6-9) — the full 16-note derived line split BY ITS OWN CLASS
+//     MEMBERSHIP into two simultaneous voices, true hocket (each voice rests
+//     exactly where the other plays), the partition falling straight out of
+//     the derivation instead of an external bit source:
+//       VOICE A (identity):    0 ~ ~ 2 4 ~ 5 ~ ~ 0 ~ ~ 2 4 ~ 5
+//       VOICE B (combination): ~ 1 3 ~ ~ 6 ~ 1 3 ~ 6 1 ~ ~ 3 ~
+//     stated cyc 6-7, then its own literal array-reverse (retrograde of the
+//     hocket itself, not just of one voice) cyc 8-9:
+//       VOICE A rev: 5 ~ 4 2 ~ ~ 0 ~ ~ 5 ~ 4 2 ~ ~ 0
+//       VOICE B rev: ~ 3 ~ ~ 1 6 ~ 3 1 ~ 6 ~ ~ 3 1 ~
+//   LIFT (cyc 10-12) — the DUET's forward statement transposed +7 degrees
+//     (one octave, since this xen scale repeats every 7 steps) — the Goa/
+//     psy pitch-lift climax (MUSIC-KNOWLEDGE.md §6), reused exactly as prior
+//     Sundays (10-18, 10-24) have: same two identities, lifted, no new layer.
+//   TAG (cyc 13) — both voices silent; the lone solo voice strikes the full
+//     identity tetrad [0,2,4,5] once and lets it ring — the hocket's two
+//     classes, which spent the whole DUET trading turns, resolve back into
+//     the single pure cluster struck together. Closure the device's own
+//     logic produces, not a tacked-on fade.
+//
+// ARRANGEMENT — timbre assigned by structural MEANING, not habit
+// (MUSIC-KNOWLEDGE.md §1): the solo voice (CALL/RESPONSE/RETROGRADE/TAG) is
+// `sawtooth` — harmonically dense, reads as the single "stated" identity
+// before it ever splits (§2.5's plucked-lead guidance). Once it splits in
+// the DUET, VOICE A (identity cluster, pure single harmonics) gets `sine`
+// — the purest waveform available, matching what the degrees themselves
+// literally are. VOICE B (combination cluster, alien septimal colors) gets
+// `square` — sharp/abrasive, matching "alien" rather than "pure." Panned
+// opposite sides in the DUET/LIFT (MUSIC-KNOWLEDGE.md §7's stereo duel) so
+// the two classes stay legible while they interlock. DRONE is `sine`, the
+// tonic + the pure fifth (identity degrees 0 and 4 — Saturday's own bass
+// dyad), held as a single sustained chord the whole piece via `/14`, no
+// automation: the one thing both classes root in. ONE automated parameter,
+// tied to the derived 8/8 balance rather than decorative: `lpf` sweep
+// period = 8 cycles on every voice (the exact count of identity notes, and
+// of combination notes, in the derivation above) — the automation reports
+// the piece's own discovered symmetry instead of an arbitrary LFO rate.
+// VOICE A keeps a gentler resonance (lpq 3, pure tone colors stay smooth);
+// VOICE B a sharper one (lpq 6, the alien colors get an edge).
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly):
+// no drum kit. This is a two-class chamber hocket, not a genre-driven dance
+// track (contrast Saturday's own dub-techno treatment of the same tuning) —
+// the hocket's own interlocking IS the audible pulse, the same reasoning
+// 10-11 and 10-18 already established for this project's contrapuntal
+// Sunday devices. A kit underneath would restate a pulse the derivation
+// already supplies, the autopilot-percussion failure MUSIC-QC-LOOP.md flags.
+//
+// CYCLES: 14. No genre tempo mandate (a self-referential tuning device, not
+// a drum-driven genre). setcpm(42) chosen for clean division:
+// 14 * 60/42 = 20.0s exactly.
+// ============================================================================
+
+setcpm(42)
+let CYCLES = 14
+
+// Hexany(1,3,5,7), reused verbatim from Saturday's derivation. Identity
+// degrees (pure harmonics, zero cents error): 0,2,4,5. Combination degrees
+// (alien 7-limit colors): 1,3,6.
+const RATIOS = [1, 35/32, 5/4, 21/16, 3/2, 7/4, 15/8]
+
+let CALL  = "0 1 3 ~ 2 4 6 5 ~ 1"
+let RESP  = "3 0 ~ 6 ~ 1 2 4 3 5 ~ 0"
+let RETRO = "1 5 ~ 6 4 2 3 ~ 1 0"
+
+// DUET — the full 16-note derived line, split by its own class membership
+// (identity -> voice A, combination -> voice B): a true hocket the
+// derivation itself produces, not an externally chosen alternation.
+let DUET_A     = "0 ~ ~ 2 4 ~ 5 ~ ~ 0 ~ ~ 2 4 ~ 5"
+let DUET_B     = "~ 1 3 ~ ~ 6 ~ 1 3 ~ 6 1 ~ ~ 3 ~"
+// retrograde of the hocket itself — literal array reverse of both voices
+let DUET_A_REV = "5 ~ 4 2 ~ ~ 0 ~ ~ 5 ~ 4 2 ~ ~ 0"
+let DUET_B_REV = "~ 3 ~ ~ 1 6 ~ 3 1 ~ 6 ~ ~ 3 1 ~"
+// LIFT — DUET's forward statement, +7 degrees (one octave in this 7-step
+// scale), the established pitch-lift climax device
+let LIFT_A = "7 ~ ~ 9 11 ~ 12 ~ ~ 7 ~ ~ 9 11 ~ 12"
+let LIFT_B = "~ 8 10 ~ ~ 13 ~ 8 10 ~ 13 8 ~ ~ 10 ~"
+
+stack(
+  // DRONE — tonic + pure fifth (identity degrees 0, 4), held as one
+  // sustained chord across all 14 cycles via /14, no automation: the one
+  // thing both pitch-classes root in.
+  i("[0,4]/14").xen(RATIOS)
+    .sound("sine")
+    .attack(2.4).release(3.5)
+    .gain(.22)
+    .room(4.5)
+    .pan(.5),
+
+  // SOLO VOICE — carries CALL/RESPONSE/RETROGRADE (the derivation stated
+  // whole, before its own class-split is made audible), then the closing
+  // tag chord. Sawtooth: the single "stated" identity.
+  i(`<[${CALL}] [${CALL}] [${RESP}] [${RESP}] [${RETRO}] [${RETRO}] ~ ~ ~ ~ ~ ~ ~ [0,2,4,5]>`)
+    .xen(RATIOS)
+    .sound("sawtooth")
+    .attack(.02).decay(.18).sustain(.2).release(.3)
+    .lpf(sine.range(500, 2200).slow(8)) // period = the derived 8/8 balance
+    .lpq(4)
+    .gain(.36)
+    .pan(.5)
+    .room(2.6),
+
+  // VOICE A — identity cluster (pure single harmonics). Sine, smoother
+  // resonance. Silent through the solo phrases and the tag; present only in
+  // DUET/LIFT where the hocket actually plays.
+  i(`<~ ~ ~ ~ ~ ~ [${DUET_A}] [${DUET_A}] [${DUET_A_REV}] [${DUET_A_REV}] [${LIFT_A}] [${LIFT_A}] [${LIFT_A}] ~>`)
+    .xen(RATIOS)
+    .sound("sine")
+    .attack(.01).decay(.15).sustain(.1).release(.2)
+    .lpf(sine.range(600, 2400).slow(8))
+    .lpq(3)
+    .gain(.34)
+    .pan(.26)
+    .room(2.2),
+
+  // VOICE B — combination cluster (alien septimal colors). Square, sharper
+  // resonance. Rests exactly where voice A plays — the true hocket.
+  i(`<~ ~ ~ ~ ~ ~ [${DUET_B}] [${DUET_B}] [${DUET_B_REV}] [${DUET_B_REV}] [${LIFT_B}] [${LIFT_B}] [${LIFT_B}] ~>`)
+    .xen(RATIOS)
+    .sound("square")
+    .attack(.006).decay(.12).sustain(.08).release(.16)
+    .lpf(sine.range(600, 2400).slow(8))
+    .lpq(6)
+    .gain(.32)
+    .pan(.74)
+    .room(2.2)
+)
