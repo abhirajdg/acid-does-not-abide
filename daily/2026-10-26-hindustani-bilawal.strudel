@@ -1,0 +1,130 @@
+// ============================================================================
+// DAILY — 2026-10-26 (Monday): Hindustani raga of the day — RAGA BILAWAL
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY: the last 9 Mondays covered Kalyan, Bhairavi, Khamaj,
+// Bhairav (+ its 22-shruti JI retuning), Kafi, Todi, Marwa, Poorvi, and
+// Asavari — all 10 thaats except Bilawal. This closes the first full lap of
+// the rotation.
+//
+// THEORY NOTES:
+// Bilawal's swaras (from the thaat table): S R G M P D N — all shuddh, no
+// komal/tivra alterations at all.
+//   -> semitone offsets from tonic: 0, 2, 4, 5, 7, 9, 11 — this IS the
+//      Western major/ionian interval set exactly, confirmed against tonaljs's
+//      own "major" scale type (same discipline as the other thaats' name
+//      checks) — no note-letter fallback needed, same as Asavari's aeolian.
+//   -> tonic set to Bb — Kalyan=D, Bhairavi=E, Khamaj=G, Bhairav=A, Kafi=A,
+//      Todi=C, Marwa=F, Poorvi=B, Asavari=Eb; Bb is unused for a Monday so far.
+//   -> scale degree numbers used in n() below map like this in "bb3:major":
+//      0=S(Bb) 1=R(C) 2=G(D) 3=M(Eb) 4=P(F) 5=D(G) 6=N(A) 7=S'(Bb')
+//   -> vadi (dominant) = Dha, samvadi (sub-dominant) = Re — one commonly
+//      cited pairing for Bilawal (sources aren't unanimous on Hindustani
+//      vadi/samvadi attributions in general — same hedge Kafi's/Todi's/
+//      Poorvi's/Asavari's files used).
+//   -> incidental trivia, not load-bearing: this exact interval set is also
+//      Carnatic's Shankarabharanam, melakarta 29 (already covered here on
+//      2026-09-15) — the one scale where both systems converge on the same
+//      "default" shape, the way C major is the West's.
+//
+// BILAWAL'S DEFINING FEATURE, and why it drives the arrangement below: it has
+// no rare note, no vakra zigzag, no dropped swara, no retuned interval — every
+// other Monday thaat so far had some asymmetry or exotic color to build
+// around (Asavari's audav ascent hiding Dha/Ga, Marwa's missing Pa, Poorvi's
+// rare descent-only Pa, Bhairav's retuned komal Re/Dha). Bilawal has none of
+// that; it's the plain, complete major scale. So the honest compositional
+// point today is the opposite of "find the raga's one weird trick": prove
+// that real phrase craft — leaps, call-and-response, retrograde, vadi/samvadi
+// anchoring — carries interest on its own, without an exotic interval to lean
+// on. The arrangement reflects that directly: ONE voice (sawtooth) does
+// everything — call, response, and even the drone (built from that same
+// voice via a long feedback delay, not a separate pad patch) — because
+// nothing here needs a second timbre family to feel distinctive. First use
+// of the Sound on Sound self-sustaining drone (MUSIC-KNOWLEDGE.md §7) on a
+// Monday; every other Monday so far used a separate tanpura-pad drone.
+//   - DRONE (Sound on Sound): Sa-Pa pedal (bb2/f2), same sawtooth patch as
+//     the lead, filtered dark and run through heavy delay feedback so the
+//     notes ring and stack into a sustained wash instead of a held pad tone.
+//   - MAIN VOICE (call + its retrograde, phrases A/C below): bright-ish
+//     sawtooth, short pluck envelope, panned left-of-center.
+//   - RESPONSE VOICE (answer + its retrograde, phrases B/D below): the SAME
+//     sawtooth patch, distinguished from the main voice by register/filter/
+//     pan rather than a different instrument — a deliberate close-timbre
+//     "blend" choice (MUSIC-KNOWLEDGE.md §2), not the hocket Asavari used
+//     last week (that interleaved two voices note-by-note inside one bar;
+//     this trades whole phrases, one bar at a time, call then response).
+//
+// PERCUSSION CHECK (MUSIC-QC-LOOP.md's standing question, asked explicitly
+// every time): this is a short alap-style exposition over a drone, same
+// shape as every prior raga Monday except Khamaj (which earned its keherwa
+// theka from its own light-classical dance register). Bilawal here has no
+// such tala convention attached — no drum layer, decided explicitly.
+//
+// MELODY — call-and-response across four bars, degrees in "bb3:major":
+//   A (CALL, main voice, bar 1) — rises in leaps to the octave peak, then
+//     settles back onto vadi (Dha):
+//       0 ~ 3 ~ 5 7 ~ 5   (S, [rest], fourth-leap to M, [rest], third-leap to
+//       D/vadi, third-leap to S', [rest], fall back to D/vadi)
+//   B (RESPONSE, second voice, bar 2) — answers by falling from the same
+//     octave peak down through P and G to samvadi (Re), mirroring A's rise
+//     with a fall:
+//       7 ~ 4 2 ~ 1 ~ ~   (S', [rest], fourth-leap down to P, third-leap down
+//       to G, [rest], step down to R/samvadi, [rest] x2 — leaves space before
+//       the loop returns to A)
+//   C (retrograde of A, the QC-loop device — literal reverse of A's full
+//     event list including its rests, closing on Sa rather than vadi, since
+//     Sa is the true resting tone):
+//       5 ~ 7 5 ~ 3 ~ 0
+//   D (retrograde of B — rises from silence up through samvadi and Pa to a
+//     suspended octave Sa', left open so the loop back to A's own Sa feels
+//     like a continuation, not a hard stop):
+//       ~ ~ 1 ~ 2 4 ~ 7
+//   rotation <A B C D> over 16 cycles (4 full call/response statements).
+//
+// CYCLES: 16. setcpm(45) -> 16 * 60/45 = 21.3s.
+// ============================================================================
+
+setcpm(45)
+let CYCLES = 16
+
+stack(
+  // MAIN VOICE — the call (A) and its retrograde (C). Silent on the
+  // response bars (B, D) so the two voices genuinely trade whole phrases.
+  n("<[0 ~ 3 ~ 5 7 ~ 5] ~ [5 ~ 7 5 ~ 3 ~ 0] ~>")
+    .scale("bb3:major")
+    .sound("sawtooth")
+    .attack(.02).decay(.14).sustain(.08).release(.15)
+    .lpf(1800)
+    .lpq(4)
+    .gain(.42)
+    .pan(.32)
+    .room(1.5)
+    .sometimes(x => x.ply(2)), // improv hook: occasional ornament
+
+  // RESPONSE VOICE — the answer (B) and its retrograde (D). Same sawtooth
+  // patch as the main voice, darker filter + opposite pan for legibility —
+  // a close-timbre "blend" distinction, not a different instrument family.
+  n("<~ [7 ~ 4 2 ~ 1 ~ ~] ~ [~ ~ 1 ~ 2 4 ~ 7]>")
+    .scale("bb3:major")
+    .sound("sawtooth")
+    .attack(.015).decay(.1).sustain(.06).release(.12)
+    .lpf(1100)
+    .lpq(3)
+    .gain(.34)
+    .pan(.78)
+    .room(2.5),
+
+  // SOUND ON SOUND DRONE — the same sawtooth voice as above, not a separate
+  // pad patch, fed a slow Sa-Pa pedal through a long feedback delay so the
+  // notes ring and accumulate into a sustained wash (MUSIC-KNOWLEDGE.md §7).
+  note("<bb2 f2>/4")
+    .sound("sawtooth")
+    .attack(.01).decay(.1).sustain(.15).release(.4)
+    .lpf(900)
+    .gain(.16)
+    .delay(.65)
+    .delaytime(1.1)
+    .delayfeedback(.88)
+    .room(5)
+    .roomsize(6)
+)
