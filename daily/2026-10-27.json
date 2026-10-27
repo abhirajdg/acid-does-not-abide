@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-27",
+  "weekday": "Tuesday",
+  "topic": "carnatic-melakarta",
+  "topic_label": "MELAKARTA 28",
+  "pattern_file": "daily/2026-10-27-carnatic-melakarta-28.strudel",
+  "cycles": 24,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["note(\"f4\").sound(\"sine\").euclid(2, 8)", ".scale(\"G:mixolydian\")"]
+}

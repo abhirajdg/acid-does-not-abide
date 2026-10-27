@@ -1,0 +1,150 @@
+// ============================================================================
+// DAILY — 2026-10-27 (Tuesday) — Carnatic melakarta math
+// Melakarta #28: Harikambhoji
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (same chakra/position scheme used every Tuesday this
+// project has run — 08-25's #22, 09-01's #20, 09-08's #57, 09-15's #29,
+// 09-22's #23, 09-29's #21, 10-06's #65, 10-13's #15, 10-20's #9):
+//   chakra = ceil(N / 6), position = N - 6*(chakra - 1)
+// For N = 28: chakra = ceil(28/6) = 5 -> chakra <= 6 means SHUDDHA Ma (M1).
+//             Ri-Ga combo index = chakra = #5 of the 6-combo cycle (1=R1G1
+//             2=R1G2 3=R1G3 4=R2G2 5=R2G3 6=R3G3) -> R2 G3 (chatusruti Ri,
+//             antara Ga)
+//             position = 28 - 6*4 = 4 -> Dha-Ni combo #4 of its own 6-combo
+//             cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3 6=D3N3) -> D2 N2
+//             (chatusruti Dha, kaisiki Ni)
+// melakarta 28 = S R2 G3 M1 P D2 N2. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 2 4 5 7 9 10 — a plain
+// W-W-H-W-W-H-W step pattern, i.e. the major scale with a flattened 7th:
+// textbook MIXOLYDIAN, no guessing needed (unlike 10-20's balinese match,
+// this one's exact-interval-match to a common Western mode is obvious from
+// the semitone math itself: 0 2 4 5 7 9 10 is literally "major scale minus
+// one semitone on the 7th"). -> .scale("G:mixolydian"), degrees: 0=S 1=R
+// 2=G 3=M 4=P 5=D 6=N 7=S'. Tonic G — not A/E/D (the last three melakarta
+// Tuesdays) or B/C/Bb (this week's other days, 10-21/10-23/10-26).
+//
+// KATAPAYADI VERIFICATION (the real naming-to-number encoding, not a
+// substitute scheme): the first two consonants of "HArikAmbhoji" are H and
+// R. Katapayadi consonant table: H -> row 8 (ja/da/ha), R -> row 2
+// (kha/tha/pha/ra). Digits in name order: 8, 2 -> REVERSE to get the
+// melakarta number: 28. Matches — and cross-checks against the chakra/
+// position math above (chakra 5 = the "Bana" chakra, whose six ragas in
+// order are Mararanjani(25) Charukesi(26) Sarasangi(27) Harikambhoji(28)
+// Dheerashankarabharanam(29) Naganandini(30) — #28 is the 4th of those six,
+// matching position = 4 computed independently from N).
+//
+// THE MATH DRIVING TODAY'S PATTERN — chakra(5) and position(4) drive two
+// independent automated parameters (fresh pairing: 10-20 used period=3/
+// delay=1/2, 10-13 used period=3/delay=1/3, so neither value repeats):
+//   - chakra (5) -> lead filter LFO sweep period = 5 cycles.
+//   - position (4) -> delay time = a 1/4 subdivision — not yet used by any
+//     prior melakarta Tuesday (10-13 used 1/3, 10-06 used 1/5, 10-20 used
+//     1/2).
+//   - the katapayadi digits here are (8, 2) — both nonzero, so (unlike
+//     10-20's #9, which had a zero digit and fell back to euclid(chakra,N))
+//     they go straight into euclid(2,8): tens digit 2 as pulses, units
+//     digit 8 as steps — gating a pluck of this raga's own defining color
+//     tone (the kaisiki Ni / flat 7th, scale degree 6) one octave up,
+//     inside the EXISTING drone layer. No new kick/snare/hat layer
+//     (MUSIC-QC-LOOP.md's autopilot-percussion lesson).
+//
+// ARRANGEMENT — a Carnatic alapana-style scale exposition over a tambura
+// drone, not a tala-bound kriti, so NO metric kit (same standing call as
+// every prior melakarta Tuesday — a real alapana has no drum underneath
+// it):
+//   drone:  sine (purest waveform, MUSIC-KNOWLEDGE.md §2.5), but voiced as
+//           an actual sustained S-P-N2 stack (tonic, fifth, AND the flat-7th
+//           color tone, all three held together via mini-notation comma-
+//           stacking) rather than just tonic+fifth with the color tone kept
+//           only in the melody/accent — every prior melakarta Tuesday
+//           droned tonic+fifth alone. The reason this one earns a third
+//           drone voice: Harikambhoji's whole identity relative to a plain
+//           major scale IS that flat 7th, so letting it ring continuously
+//           underneath, not just visit in passing, is the honest way to
+//           drone THIS raga specifically.
+//   lead:   triangle (synth-basic, MUSIC-KNOWLEDGE.md §2.5) — not square
+//           (10-20) or sawtooth (10-13): triangle's pure/soft harmonic
+//           content (MUSIC-KNOWLEDGE.md §1) matches Harikambhoji's actual
+//           character. Its Ni is a WHOLE step below Sa (kaisiki Ni, not the
+//           natural/leading-tone Ni both 10-13's Mayamalavagowla and
+//           10-20's Dhenuka had) — there is no half-step snap pulling back
+//           to the tonic, just a soft, bluesy, mixolydian resolution. A
+//           harmonically dense lead (supersaw/sawtooth) would fight that
+//           softness; triangle doesn't.
+//
+// MELODY — four phrases (call / climax-response / drop / motif-variation),
+// anchored on S and P, built around the whole-step color tone (degree 6):
+//   A (call): tonic, leap a fifth to Pa, step down to Ma, leap up to the
+//     color tone (degree 6) and hang there unresolved — this raga's Ni
+//     doesn't need urgent resolution, so it's fine to just sit on it:
+//                                          0 ~ 4 ~ 3 ~ 6 ~
+//   B (climax/response, call-and-response device): from the octave above,
+//     step DOWN through that same color tone (a whole step, not a leap —
+//     the opposite shape from A's leap INTO it), continue stepwise to Dha,
+//     leap down to Ga, rest:
+//                                          7 6 ~ 5 ~ 2 ~ ~
+//   C (the drop, tension->release device): color tone leapt down a fourth
+//     to Ma, down to Re, rest, then approached from BELOW the tonic
+//     (degree -1) resolving up into S — the SAME "-1 -> 0" idiom 10-13 and
+//     10-20 both used, but here it's a whole-step approach, not a half-step
+//     one (because this raga's Ni is N2, not N3) — same notation, audibly
+//     different raga:
+//                                          6 ~ 3 ~ 1 ~ -1 0
+//   D (motif-and-variation of A — same opening fifth-leap, developed into a
+//     bigger closing gesture: step down a third, leap back up to the color
+//     tone, step down, then a wide leap straight onto the tonic):
+//                                          0 ~ 4 2 ~ 6 5 0
+//
+// CYCLES = 24. setcpm(72) -> 24 * 60/72 = 20.0s exactly, six clean passes of
+// the 4-phrase rotation. No tala implied (no drum layer to check a genre BPM
+// against) — cpm here just paces the phrase slots for legibility.
+// ============================================================================
+
+setcpm(72)
+let CYCLES = 24 // 24 * 60/72 = 20.0s; six clean passes of the 4-phrase melody
+
+stack(
+  // DRONE — tambura convention (MUSIC-KNOWLEDGE.md §3), voiced as a full
+  // S-P-N2 stack (see ARRANGEMENT above) rather than tonic+fifth alone, so
+  // this raga's own defining color tone rings continuously underneath, not
+  // just in passing. Plain sine, slow attack/release so it swells.
+  note("g2,d3,f3")
+    .sound("sine")
+    .gain(.22)
+    .attack(2.6).release(3.2)
+    .room(4.5),
+
+  // DRONE ACCENT — the raga's own defining color tone (kaisiki Ni / flat
+  // 7th), one octave up, plucked wherever the katapayadi digits (8, 2) say:
+  // euclid(2, 8). Same patch as the main drone, same layer's job (tambura),
+  // just the outlet for today's derived numbers instead of a drum hit.
+  note("f4")
+    .sound("sine")
+    .euclid(2, 8)
+    .gain(.16)
+    .attack(.01).decay(.2).release(1.2)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (a fifth, a fourth, thirds),
+  // rests, call-and-response (A/B trade the color tone in opposite
+  // directions), tension->release (C), and motif-and-variation (D vs A) as
+  // the required jazz-improv devices.
+  n(`<
+    0 ~ 4 ~ 3 ~ 6 ~
+    7 6 ~ 5 ~ 2 ~ ~
+    6 ~ 3 ~ 1 ~ -1 0
+    0 ~ 4 2 ~ 6 5 0
+  >`)
+    .scale("G:mixolydian")
+    .sound("triangle")
+    .attack(.008).decay(.12).sustain(.18).release(.2)
+    .lpf(sine.range(500, 2400).slow(5)) // chakra (5) -> sweep period
+    .lpq(4)
+    .sometimes(x => x.ply(2)) // improv hook: occasional stuttered ornament
+    .gain(.46)
+    .room(2.6)
+    .delay(.22)
+    .delaytime(1/4) // position (4) -> a quarter-note delay
+    .delayfeedback(.24)
+)
