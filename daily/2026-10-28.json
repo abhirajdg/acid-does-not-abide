@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-28",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "28 . 10 . 2026",
+  "pattern_file": "daily/2026-10-28-date-pattern.strudel",
+  "cycles": 30,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let CYCLES = 30 // day-digit-sum (10) + month (10) + year-digit-sum (10)", "note(\"[f2,c3]/30\")"]
+}

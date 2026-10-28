@@ -1,0 +1,120 @@
+// ============================================================================
+// DAILY — 2026-10-28 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-10-28 -- day 28, month 10 (October), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Recent Wednesdays each found a different relationship between day and
+//   month: a digit sequence (08-26), clock rates (09-02), a hocket when
+//   day==month (09-09), two coprime grid-lengths (09-16), per-token
+//   Euclidean flutters (09-23), a GCD-reduced polyrhythm (09-30), day/month
+//   fed into euclid(7,10) (10-07), binary bits compared (10-14), and the
+//   quotient/remainder steps of the Euclidean algorithm itself (10-21). None
+//   of those used what's actually special about TODAY's day-number: 28 is a
+//   PERFECT NUMBER -- its proper divisors (1, 2, 4, 7, 14) sum to exactly
+//   28, the number itself (1+2+4+7+14=28, the same property shared by 6,
+//   496, 8128). Month (10)'s proper divisors are only 1, 2, 5, summing to
+//   8 -- 10 is DEFICIENT, falling short of itself by 2. That contrast
+//   (day exactly fills its own number; month falls short of its own number)
+//   becomes the whole structure, a genuinely different kind of number-theory
+//   device from any GCD/ratio/binary trick used on prior Wednesdays.
+//
+//   DAY's bar is built from five motifs whose LENGTHS are its own divisors
+//   -- 1, 2, 4, 7, and 14 tokens -- concatenated so the bar's total length
+//   is exactly 28 steps: the divisors literally add up to fill the whole
+//   bar, audibly mirroring 1+2+4+7+14=28. Three phrases alternate: CALL
+//   orders the five motifs ascending by size (1,2,4,7,14 -- a widening
+//   accumulation, sparse to dense); RESPONSE is CALL's exact token-for-token
+//   retrograde (the whole 28-step bar reversed, a real retrograde device --
+//   reversing the concatenation also reverses the motif order to
+//   14,7,4,2,1, so the accumulation runs backward too); VARIATION reorders
+//   the same five motifs (7,1,14,2,4) -- same material, a genuine
+//   motif-and-variation device, not a new melody.
+//
+//   MONTH's bar is also 28 steps long (synced to DAY's bar) but only 8 of
+//   those steps are pitched -- the sum of 10's proper divisors (1+2+5=8) --
+//   the rest rest, audibly "falling short" the way a deficient number falls
+//   short of itself. The 8 pitched tokens are grouped the same way, by
+//   10's own divisor sizes (1, 2, 5), with rests filling the remaining 20
+//   steps. Three phrases mirror DAY's structure at smaller scale: A places
+//   the groups early-to-late with growing gaps; B is A's exact retrograde
+//   (reversed bar); C reorders the groups (5,1,2) -- the same
+//   retrograde/variation pairing as DAY, independently applied.
+//
+//   Structural tones use this project's established day/month-mod-7
+//   mapping: day 28 mod 7 = 0 -> tonic anchors DAY (28 is a clean multiple
+//   of 7, landing exactly on tonic -- fitting for the "exact" perfect
+//   number). Month 10 mod 7 = 3 -> scale degree 3 anchors MONTH, as in
+//   every prior Wednesday using this mapping.
+//
+//   CYCLES = 30 = day-digit-sum (2+8=10) + month (10) + year-digit-sum
+//   (2+0+2+6=10). setcpm(90) x 30 cycles / 60 = 20s.
+//
+// Scale: F minor -- fresh for this slot (recent Wednesdays used B minor,
+// C minor, and G minor); the divisor math is the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: the perfect/deficient divisor
+// grouping (dense accumulating motifs on DAY, sparse gapped motifs on
+// MONTH) IS this piece's audible rhythm, read straight off today's own
+// date digits -- a metric kit underneath would just restate a pulse that's
+// already there, the reflexive-percussion failure MUSIC-QC-LOOP.md flags.
+//
+// Instrumentation, a fresh pairing from last Wednesday (10-21 used
+// square+sawtooth): DAY gets `pulse` -- a synth basic (MUSIC-KNOWLEDGE.md
+// §2.5), harmonically busy enough to carry the acid taste layer on the
+// denser, "complete" voice. MONTH gets `triangle` -- pure/soft (§1),
+// matching the sparser, "falling short" voice. DRONE stays `sine` --
+// tanpura convention, tonic and fifth, no automation (§2.5, §3). Only DAY
+// carries the acid taste layer (light distortion + filter sweep); the
+// sweep period (2 cycles) is GCD(28,10) = 2, the one factor day and month
+// actually share -- a different, smaller role for a GCD-style number than
+// the full ratio/euclid devices prior Wednesdays built whole structures
+// from, here just flavoring the one automated parameter.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(90)
+let CYCLES = 30 // day-digit-sum (10) + month (10) + year-digit-sum (10)
+
+stack(
+  // DAY -- tonic-anchored (28 mod 7 = 0). Five motifs sized by 28's own
+  // divisors (1, 2, 4, 7, 14 -- summing to 28, a perfect number) make up
+  // the full 28-step bar. CALL orders them ascending (sparse->dense);
+  // RESPONSE is CALL's exact retrograde (whole bar reversed, motif order
+  // also reverses to 14,7,4,2,1); VARIATION reorders the same five motifs
+  // (7,1,14,2,4) -- motif-and-variation on the same material.
+  n("<[0 0 4 4 7 10 7 7 4 0 -3 0 4 7 0 3 7 10 ~ 10 7 4 ~ 0 -3 0 4 7] [7 4 0 -3 0 ~ 4 7 10 ~ 10 7 3 0 7 4 0 -3 0 4 7 7 10 7 4 4 0 0] [7 4 0 -3 0 4 7 0 0 3 7 10 ~ 10 7 4 ~ 0 -3 0 4 7 0 4 4 7 10 7]>")
+    .scale("F:minor")
+    .sound("pulse")
+    .attack(.006).decay(.11).sustain(0).release(.05)
+    .distort(.15) // acid taste layer, kept light so the divisor-motif shape stays legible
+    .lpf(sine.range(500, 2400).slow(2)) // sweep period = GCD(28,10) = 2
+    .gain(.32)
+    .pan(.68)
+    .room(1.1),
+
+  // MONTH -- degree-3-anchored (10 mod 7 = 3). Only 8 of the bar's 28 steps
+  // are pitched -- the sum of 10's proper divisors (1+2+5=8), 10's own
+  // deficiency made audible as rest. A groups early-to-late with growing
+  // gaps; B is A's exact retrograde (reversed bar); C reorders the same
+  // groups (5,1,2).
+  n("<[~ ~ ~ ~ 3 ~ ~ ~ ~ ~ ~ 6 3 ~ ~ ~ ~ ~ ~ 3 6 10 6 3 ~ ~ ~ ~] [~ ~ ~ ~ 3 6 10 6 3 ~ ~ ~ ~ ~ ~ 3 6 ~ ~ ~ ~ ~ ~ 3 ~ ~ ~ ~] [~ ~ ~ ~ 3 6 10 6 3 ~ ~ ~ ~ ~ ~ 3 ~ ~ ~ ~ ~ ~ 6 3 ~ ~ ~ ~]>")
+    .scale("F:minor")
+    .sound("triangle")
+    .attack(.04).decay(.3).sustain(.15).release(.9)
+    .gain(.27)
+    .pan(.32)
+    .room(2.6),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full piece with
+  // no automation (the one moving filter this week lives on DAY instead).
+  note("[f2,c3]/30")
+    .sound("sine")
+    .attack(1.4).release(2)
+    .gain(.22)
+    .pan(.5)
+    .room(3.2)
+)
