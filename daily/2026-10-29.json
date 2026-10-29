@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-29",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "VAN ECK SEQUENCE",
+  "pattern_file": "daily/2026-10-29-van-eck-sequence.strudel",
+  "cycles": 9,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "$lead: n(\"<[0@2 ~ 1] [0 ~ 2 0] [~ 2@2 1] [6 0 5] [0 ~ 2 6] [5 4 ~ 0] [~ 5 3 0] [3 2 9] [0]>\")",
+    ".delaytime(\"<0.08 0.11 0.11 0.23 0.23 0.20 0.20 0.32 0.05>\")"
+  ]
+}
