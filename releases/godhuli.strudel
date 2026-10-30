@@ -1,0 +1,328 @@
+// ============================================================================
+// GODHULI v7 (race_condition) -- raga Marwa, psytrance (FULL ARRANGEMENT)
+// RELEASE TITLE: "Godhuli" (named 5 Oct 2026; working title race_condition)
+// ============================================================================
+//
+// Two threads read the same memory (Marwa's six notes) at different rates and
+// only agree once.
+//
+// v7 (Abhiraj on v6, 14 Oct 2026: the lead "seems to be doing too much",
+// the Goa identity isn't coming through; hats a little loud. Bhairav After
+// Hours is the model: one melodic voice at a time, on a grid, repeating):
+//   - line A (the 303) states a pair of bars three times and then turns,
+//     in every 7-bar group, instead of a new bar almost every bar
+//   - drop 2: the 303 stops doubling the lock tune in 16ths. Line B carries
+//     the lock alone; under it the 303 plays a quiet Sa-pedal riff (Sa is
+//     unlocked now), so drop 2 is one tune over a hypnotic groove
+//   - hats about 3.5 dB down
+//
+// v6 (Abhiraj, 13 Oct 2026: wants Goa/psy atmosphere and a wider stereo
+// field across the EP). Notes, arrangement and v5's mix kept:
+//   - EP atmosphere kit (same in all five tracks): `air`, a wide filtered
+//     supersaw on Marwa's r+D and N+G (never Sa), 7 cycles each, under the
+//     whole track and up front in the intro, breaks and outro, alongside
+//     v5's break pad; `shimmer`, D M# G r / N D M# r two octaves up through
+//     a big reverb and long delay, alternating L/R (Sa only in the outro,
+//     after the lock); `zaps`, a Goa laser at the end of every 7th bar in
+//     the drops -- it dives onto r until the lock, onto Sa from drop 2
+//   - width: line B gets a Haas copy (12 ms, opposite side, +6 cents), line
+//     A a mirrored echo, hats split wider. Kick and bass stay centred
+//
+// v4 (after v3: "no variation", "no white noise", "drop 2 way better"):
+//   the acid got a new 7-bar sequence every 14 cycles and a sound that grows
+//   section to section; noise risers became mridangam rolls into each drop.
+//
+// v5 (Abhiraj on v4, 5 Oct 2026: "way better"; the drone "sounds like mic
+// feedback", the lead and the acid don't match between drop 1 and drop 2 --
+// "sways off from the goa vibe"; "too compressed at the center"; the
+// break-to-drop percussion transitions are "a great touch"):
+//   - the bowed-vibraphone drone + sine sub are gone; the breaks get a soft
+//     pad on Sa (low + octave, split left/right) and nothing else holds a tone
+//   - line B (the lead) sits out from drop 1 through break 2: the acid carries
+//     the middle of the track the Goa way, and the lead's FIRST entrance is the
+//     lock at drop 2 -- Sa on its first downbeat
+//   - break 1: the acid's call/response figure, filtered, long delay
+//   - stereo: acid drifts across the field until drop 2, then sits left
+//     against the lead on the right (it doubles the lead an octave down
+//     there); hats split, mridangam ghosts move, fills sweep L -> R, the lead
+//     gets an echo on the opposite side
+//   - mridangam rolls into the drops kept exactly as they were
+//
+// SECTIONS (cycles @ 35.5 cpm, all multiples of 7):
+//   intro      0-14   kick, offbeat hat; bass rolls in at 7
+//   groove    14-42   16th hats; acid enters sparse, then fuller; roll
+//   drop 1    42-84   mridangam ghosts; acid sequences, call/response gaps
+//   break 1   84-98   no drums: pad + the acid's call/response, dark; roll
+//   drop 1b  98-126   acid at its squelchiest: octave leaps, closing run
+//   break 2 126-140   pad + the acid's original drift figure; roll
+//   drop 2  140-182   THE LOCK: the lead enters on Sa (first Sa of the track),
+//                     the acid doubles it an octave down; lock, varied lock,
+//                     Goa pitch-lift for the last 14
+//   outro   182-196   acid carries the agreed phrase alone, lead holds one Sa
+//   = 196 cycles ~ 5:31
+//
+// RAGA MARWA (sunset, Godhuli): S r G M# D N, no Pa, Sa avoided/delayed.
+//   Vadi r, samvadi D. Pakad: D M# G r, N. D. r S.
+//   Degrees here: 0=S 1=r 2=G 3=M# 4=D 5=N  (-1=N. -2=D.  6=S' 7=r' 8=G' 9=M#')
+//   No tonal scale name matches {0,1,4,6,9,11}, so marwa() maps degrees to
+//   notes directly. Ornaments: kan swar as a 1/8-length grace inside a step
+//   ([3@1 2@7] = M# grazing into G); light vib on held D only. Re is steady.
+//   RULE: until drop 2, the acid never plays Sa (0 or 6). Bass and pad may.
+//
+// TEMPO: setcpm(35.5) x 4 = 142 BPM.
+// LAYERS (10): kick, perc, fills, bass, break pad, line A, line B, air,
+//   shimmer, zaps.
+// ============================================================================
+
+setcpm(35.5) // 142 BPM
+const CPS = 35.5 / 60
+const HAAS = .012 * CPS   // 12 ms, in cycles
+
+const MARWA = [0, 1, 4, 6, 9, 11]
+const marwa = root => v => {
+  const o = Math.floor(v.n / 6), i = ((v.n % 6) + 6) % 6
+  const { n, ...rest } = v
+  return { ...rest, note: root + 12 * o + MARWA[i] }
+}
+// light vibrato on held Dha (degree 4) -- before marwa(), which drops n
+const dhaVib = v => (((v.n % 6) + 6) % 6) === 4 ? { ...v, vib: 4, vibmod: .15 } : v
+// one-bar-per-cycle sequence from single-quoted bars (double quotes would be
+// parsed as mini-notation before the join)
+const seq = (...bars) => mini('<' + bars.join(' ') + '>')
+
+// -- LINE A BARS (16ths, never Sa) --
+const s1  = '[1 ~ ~ ~ ~ ~ 1 ~ ~ ~ 4 ~ ~ ~ ~ ~]'          // sparse: r . . r . D
+const s2  = '[1 ~ ~ 1 ~ ~ 3 ~ ~ ~ 2 ~ ~ ~ -1 ~]'
+const a1  = '[1 ~ 1 4 ~ 1 3 ~ 2 ~ 1 -1 ~ 1 ~ 2]'        // circling r, leap to D
+const a2  = '[1 ~ 1 4 ~ 5 4 ~ 3 2 ~ 1 ~ -1 1 ~]'
+const a3  = '[1 ~ 1 4 ~ 1 3 ~ 5 ~ 7 5 ~ 4 ~ 3]'        // climbs to r'
+const a4  = '[2 ~ 1 -1 ~ -2 -1 ~ 1 ~ 2 ~ 3 4 ~ 5]'      // dips to D., climbs back
+const a5  = '[1 ~ 7 4 ~ 1 3 ~ 2 ~ 8 -1 ~ 1 ~ 2]'        // octave leaps r->r', G->G'
+const a6  = '[1 ~ 7 5 ~ 4 8 ~ 3 2 ~ 7 ~ -1 1 ~]'
+const a7  = '[4 ~ 4 5 ~ 7 8 ~ 7 ~ 5 4 ~ 3 2 ~]'
+const a8  = '[1 ~ 1 7 ~ 1 5 ~ 4 ~ 3 2 ~ 1 -1 ~]'
+const a9  = '[~ 2 1 ~ 1 4 ~ 1 3 ~ 2 ~ 1 -1 ~ 1]'        // a1 displaced by a 16th
+const a10 = '[1 1 4 5 7 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~]'          // call: half a bar, then space
+const a11 = '[~ ~ ~ ~ ~ ~ ~ ~ 5 4 3 [3@1 2@7] 1 ~ -1 ~]' // response in the second half
+const a12 = '[1 2 3 4 5 7 8 7 5 4 3 2 1 -1 -2 -1]'      // the run that closes drop 1b
+
+// v2's drift section (break 2)
+const aDrift = "<[1 ~ 1 4 ~ 1 3 ~ 2 ~ 1 -1 ~ 1 ~ 2] [1 ~ 1 4 ~ 5 4 ~ 3 2 ~ 1 ~ -1 1 ~]>"
+// the lock: Sa on the downbeat, call (c1-2) / response (c3-4), Sa again at end
+const lock  = "<[0@2 ~ 1 4 ~ 3 2] [1 ~ -1 1 4@2 ~ ~] [5 ~ 7 5 4 ~ 3 [3@1 2@7]] [1 ~ -1 ~ 0@3 ~]>"
+// lock2: the agreed line, varied -- reaches M#' before coming home
+// drop 2 (v7): a Sa-pedal riff under the lock tune -- Sa is unlocked now
+const pedal = "<[0 ~ ~ 0 ~ ~ 1 ~ 0 ~ ~ 0 ~ ~ 4 ~] [0 ~ ~ 0 ~ ~ 1 ~ 0 ~ ~ 0 ~ ~ 5 ~]>"   // sparse 3-3-2 on Sa
+const lock2 = "<[0@2 ~ 1 4 ~ 5 7] [5 ~ 4 3 [3@1 2@7] ~ 1 ~] [-1 1 4 ~ 5 7 ~ 9] [7 5 4 ~ 1 ~ 0@2]>"
+
+// Goa pitch-lift for both lines: last 14 cycles of drop 2
+const lift = note(arrange([168, "0"], [14, "12"], [14, "0"]))
+
+// -- LINE B -- triangle; the soft thread against the acid
+const lineB = arrange(
+    [140, "~"],          // sits out until the lock: the acid carries the track
+    [16, n(lock)],       // drop 2: the lock -- the lead's first note is Sa
+    [12, n(lock2)],
+    [14, n(lock)],       //   lifted
+    [7, n("<[0@8] ~ ~ ~ ~ ~ ~>")], // outro: one last held Sa
+    [7, "~"],
+  )
+  .withValue(dhaVib)
+  .withValue(marwa(62))     // D4
+  .add(lift)
+  .s("tri")
+  .attack(.02).release(.15)
+  .room(.45)
+  .pan(.74)                 // right, against the acid on the left
+  .orbit(4)
+  .gain(.45)
+  // Haas copy: 12 ms late, opposite side, 6 cents sharp -- width, not an echo
+  .superimpose(x => x.late(HAAS).pan(.3).add(note(.06)).velocity(.6))
+  // echo on the opposite side, a dotted 8th late
+  .superimpose(x => x.late(3 / 16).pan(.22).velocity(.35))
+
+// -- LINE A -- 303 acid; in the lock it doubles B an octave down, plied to 16ths
+const lineA = arrange(
+    [14, "~"],                                     // intro
+    [14, n(seq(s1, s2, s1, s2, s1, s2, a1))],      // groove: sparse, filling in
+    // every 7 bars: a pair stated three times, then a turn
+    [14, n(seq(a1, a2, a1, a2, a1, a2, a4))],      // groove: full
+    [14, n(seq(a1, a2, a1, a2, a1, a2, a4))],      // drop 1
+    [14, n(seq(a10, a11, a10, a11, a10, a11, a4))], //   call/response gaps
+    [14, n(seq(a9, a2, a9, a2, a9, a2, a4))],      //   displaced by a 16th
+    [14, n(seq(a10, a11, a10, a11, a10, a11, a4))], // break 1: the acid's call/response, alone
+    [14, n(seq(a5, a6, a5, a6, a5, a6, a7))],      // drop 1b: octave leaps
+    [14, n(seq(a7, a8, a7, a8, a7, a8, a12))],     //   closes on the run
+    [14, n(aDrift)],                               // break 2 (v2)
+    [42, n(pedal)],                                // drop 2: Sa pedal under the lock tune
+    [7, n(lock).ply(2)],                           // outro: the agreed phrase, alone
+    [7, "~"],
+  )
+  .withValue(marwa(50))     // D3
+  .add(lift)
+  .s("sawtooth")
+  .lpf(arrange(
+    [14, "500"],
+    [28, saw.range(700, 1800).slow(28)],  // groove: opens across the section
+    [42, sine.range(500, 2200).slow(7)],  // drop 1
+    [14, sine.range(500, 1400).slow(7)],  // break 1: dark, opening and closing
+    [28, sine.range(600, 3000).slow(3.5)],// drop 1b: brighter, faster wobble
+    [14, sine.range(500, 2200).slow(7)],  // break 2
+    [42, sine.range(700, 2800).slow(7)],  // drop 2
+    [14, saw.range(1400, 400).slow(14)],  // outro: closes
+  ))
+  .lpq(arrange([42, "6"], [56, "10"], [28, "15"], [70, "10"]))           // squelch grows
+  .distort(arrange([42, "0.1"], [56, "0.2"], [28, "0.35"], [70, "0.2"]))
+  .decay(.14).sustain(0).release(.04)
+  .postgain(.7)
+  .delay(.3).delaytime(.316)                                             // dotted 8th at 142
+  .delayfeedback(arrange([42, "0.25"], [42, "0.35"], [14, "0.55"], [28, "0.5"], [70, "0.35"])) // long tail in break 1
+  .pan(arrange([140, sine.range(.12, .88).slow(7)], [56, "0.3"])) // sweeps the field, then left against the lead
+  // mirrored echo: the acid sweeps one way, its echo the other
+  .superimpose(x => x.late(3 / 16).pan(arrange([140, sine.range(.88, .12).slow(7)], [56, "0.75"])).velocity(.25))
+  .room(.3)
+  .orbit(3)
+  .gain(arrange([14, "0.32"], [28, "0.45"], [42, "0.32"], [14, "0.36"], [28, "0.26"], [14, "0.32"], [42, "0.22"], [14, "0.32"])) // up in the groove so the acid is heard, down in 1b where Q/drive are highest, back under the lock tune in drop 2
+
+// -- KICK -- out only for the two breaks; ducks the bass (1)
+const kick = arrange(
+    [84, "bd*4"],   // intro, groove, drop 1
+    [14, "~"],      // break 1
+    [28, "bd*4"],   // drop 1b
+    [14, "~"],      // break 2
+    [56, "bd*4"],   // drop 2 + outro
+  )
+  .s().bank("RolandTR909")
+  .orbit(0)
+  .duckorbit("1:2").duckattack(.01).duckdepth(.8)
+  .gain(.75)
+
+// -- BASS -- psy rolling 16ths on Sa (the bass may sit on Sa; the lines may
+// not). From drop 1b on, a low Ni at the end of every other bar.
+const roll  = "[~ 0 0 0]*4"
+const rollN = "<[~ 0 0 0]*4 [[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 -1 0]]>"
+const bass = arrange(
+    [7, "~"],
+    [7, roll],      // intro, second half
+    [28, roll],     // groove
+    [42, roll],     // drop 1
+    [14, "~"],      // break 1
+    [28, rollN],    // drop 1b
+    [14, "~"],      // break 2
+    [42, rollN],    // drop 2
+    [7, roll],      // outro
+    [7, "~"],
+  )
+  .n().withValue(marwa(26)) // D1
+  .s("sawtooth")
+  .lpf(arrange(
+    [42, "300"],
+    [42, saw.range(320, 600).slow(42)],   // drop 1: slow open
+    [14, "300"],
+    [28, saw.range(380, 700).slow(28)],   // drop 1b
+    [14, "300"],
+    [42, saw.range(450, 900).slow(42)],   // drop 2: furthest
+    [14, "300"],
+  )).lpq(4)
+  .decay(.09).sustain(0).release(.02)
+  .orbit(1)
+  .gain(.6)
+
+// -- HATS + MRIDANGAM GHOSTS --
+const offHat = s("[~ oh]*4").bank("RolandTR909").clip(.5).gain(.12).pan(.12)
+const hats16 = s("hh*16").bank("RolandTR909").gain("[.08 .05 .09 .05]*4").hpf(6000).pan(.88)
+const ghosts = s("[~ mridangam_ki mridangam_ta mridangam_na]*4").gain("[.0 .18 .12 .2]*4").hpf(400).pan(sine.range(.08, .92).slow(4))
+const perc = arrange(
+    [7, "~"],
+    [7, offHat],                           // intro, second half
+    [28, stack(offHat, hats16)],           // groove
+    [42, stack(offHat, hats16, ghosts)],   // drop 1
+    [14, "~"],                             // break 1
+    [28, stack(offHat, hats16, ghosts)],   // drop 1b
+    [14, "~"],                             // break 2
+    [42, stack(offHat, hats16, ghosts)],   // drop 2
+    [7, stack(offHat, hats16)],            // outro
+    [7, "~"],
+  ).orbit(5)
+
+// -- FILLS -- mridangam roll into each drop (replaces the v3 noise risers):
+// one cycle of 8ths, one of rising 16ths
+const fillA = s("[mridangam_ta mridangam_ki]*4").gain(.22)
+const fillB = s("[mridangam_ta mridangam_ki mridangam_na mridangam_ki]*4")
+  .gain("[.12 .14 .16 .18 .2 .22 .24 .26 .28 .3 .32 .34 .36 .38 .4 .44]")
+const fills = arrange(
+    [40, "~"], [1, fillA], [1, fillB],   // into drop 1
+    [54, "~"], [1, fillA], [1, fillB],   // into drop 1b
+    [40, "~"], [1, fillA], [1, fillB],   // into drop 2
+    [56, "~"],
+  ).hpf(200).pan(saw.range(.2, .8)).orbit(6) // each roll sweeps left -> right
+
+// -- PAD -- breaks only: a soft held Sa, low and octave, split left/right
+const pad = stack(
+  note("d2").s("gm_pad_warm").pan(.25),
+  note("d3").s("gm_pad_warm").pan(.75),
+).slow(14).attack(1.5).release(3).lpf(1400).room(.6)
+const breakPad = arrange(
+    [84, "~"],
+    [14, pad],      // break 1
+    [28, "~"],
+    [14, pad],      // break 2
+    [56, "~"],
+  ).orbit(2).gain(.6)   // was 1.1 -- Abhiraj: too loud
+
+// ---------------------------------------------------------- ATMOSPHERE --
+// The EP kit (13 Oct 2026, voiced from each raga). Sections: intro 14 |
+// groove 28 | drop 1 42 | break 1 14 | drop 1b 28 | break 2 14 | drop 2 42 |
+// outro 14.
+
+// AIR -- a wide, dark supersaw on Marwa's r+D and N+G, 7 cycles each, slow
+// attack and long tail, filter breathing. Never Sa: the pad keeps the
+// track's secret too.
+const air = note("<[eb3,b3] [c#3,f#3]>/7")
+  .s("supersaw").unison(5).spread(1).detune(.15)
+  .attack(3).release(5)
+  .lpf(sine.range(450, 1100).slow(14)).lpq(1)
+  .room(.8).roomsize(6)
+  .orbit(7)
+  .gain(arrange([14, ".14"], [28, ".07"], [42, ".05"], [14, ".12"], [28, ".05"], [14, ".12"], [42, ".05"], [14, ".16"]))
+
+// SHIMMER -- Marwa's pakad two octaves above line B, plucked, through a big
+// room and a long dotted-8th delay, alternating left/right. No Sa before the
+// lock; the outro version comes home.
+const shim = bars => n(bars).withValue(marwa(74))   // Sa = D5
+  .s("triangle").attack(.005).decay(.5).sustain(0).release(.3)
+  .pan("[.15 .85]*4")
+  .delay(.5).delaytime(.316).delayfeedback(.6)
+  .room(.9).roomsize(8)
+  .orbit(8)
+const shimmerLine = shim("<[4 ~ 3 ~ 2 ~ 1 ~] ~ [5 ~ 4 ~ 3 ~ 1 ~] ~>")    // D M# G r / N D M# r
+const shimmerHome = shim("<[4 ~ 3 ~ 2 ~ 1 ~] ~ [1 ~ -1 ~ 0@4] ~>")      // ... r N. S
+const shimmer = arrange(
+    [7, "~"], [7, shimmerLine],   // intro, second half
+    [28, "~"], [42, "~"],
+    [14, shimmerLine],            // break 1
+    [28, "~"],
+    [14, shimmerLine],            // break 2
+    [42, "~"],
+    [14, shimmerHome],            // outro
+  ).gain(.15)
+
+// ZAPS -- the Goa laser: a square diving two octaves, on the last 8th of
+// every 7th bar in the drops, ping-ponging left/right. Onto r until the
+// lock, onto Sa from drop 2.
+const zap = target => note(mini('<~ ~ ~ ~ ~ ~ [~ ~ ~ ~ ~ ~ ~ ' + target + ']>'))
+  .s("square").penv(24).pdecay(.3)
+  .decay(.35).sustain(0).release(.1)
+  .lpf(3500)
+  .pan("<~ ~ ~ ~ ~ ~ .1 ~ ~ ~ ~ ~ ~ .9>")
+  .delay(.5).delaytime(.316).delayfeedback(.5)
+  .room(.5)
+  .orbit(9)
+const zaps = arrange(
+    [42, "~"], [42, zap('eb4')],  // drop 1
+    [14, "~"], [28, zap('eb4')],  // drop 1b
+    [14, "~"], [42, zap('d4')],   // drop 2: the lock reaches the lasers too
+    [14, "~"],
+  ).gain(.14)
+
+stack(kick, perc, fills, bass, breakPad, lineA, lineB, air, shimmer, zaps)

@@ -1,0 +1,476 @@
+// ============================================================================
+// BAGESHRI v7 -- raga Bageshri, jazz x Goa trance (FULL ARRANGEMENT, extended)
+// RELEASE TITLE: "Kind of Bageshri" (named 5 Oct 2026)
+// ============================================================================
+//
+// Bageshri's notes are Kafi thaat == D Dorian, the mode of Miles Davis's
+// "So What", so modal jazz and the raga share one pitch set. Goa supplies the
+// engine (140 BPM, rolling bass parked on the tonic, four-on-the-floor); jazz
+// supplies the harmony, the form and the line.
+//
+// v3 (Abhiraj on v2, 5 Oct 2026: "love how this is doing", more lead early,
+// extend it, make variations noticeable, more trades like drop 2, delay on
+// the Rhodes for the blank areas, a better ending):
+//   - the lead now has a real theme in the groove, then trades fours with the
+//     Rhodes before the head ever arrives
+//   - extended to a full chart, 260 cycles ~ 7:26, one idea per chorus:
+//     solo -> fours -> double-time solo -> STOP-TIME -> a chorus up a half
+//     step in Eb (So What's own bridge move) -> twos -> ones -> unison
+//   - trades escalate the way a jazz band's do: fours, twos, ones, then lead
+//     and Rhodes play the last four bars together
+//   - Rhodes (comp and melody) gets a dotted-8th delay
+//   - ending: a jazz TAG (the head's last four bars, three times) and a final
+//     hit -- kick, crash, low D, the So What voicing and a held S' ringing
+//     out on the delays. No riser anywhere; drum fills lead into the drops
+//
+// v4 (Abhiraj on v3, 5 Oct 2026: "way better"; spread the sounds across the
+// stereo field for a psychedelic, atmospheric feel). Arrangement unchanged; only the stereo field:
+//   - Rhodes comping drifts slowly left <-> right across each 16-cycle form
+//   - trades happen ACROSS the field: Rhodes melody on the left, lead on the
+//     right, each with a quiet dotted-8th echo on the opposite side (a
+//     hand-built ping-pong delay)
+//   - ride right, hi-hat chick left, Goa open hat centre, fills sweep L -> R
+//   - a little more room on the Rhodes and lead; kick and bass stay centred
+//
+// v7 (21 Oct 2026): DistroKid rejected the release after its content check matched this
+// track to another artist's recording ("Itt Vagyok Veled", Betty Love). Nothing here is
+// sampled from anyone, but the stock TR-909 hits and the General MIDI Rhodes are the only
+// things the track shares with other people's music, so both are replaced by synthesis:
+//   - drums: kick, snare, hi-hats, ride and crash are noise and sine voices (kickV, snareV,
+//     hatV, rideV, crashV), level-matched to the 909 hits they replace
+//   - Rhodes: an FM electric piano (epV), level-matched to gm_epiano1
+// Notes, chart, form, delays, panning, bass and lead are unchanged from v6.
+//
+// v6 (Abhiraj on v5, 14 Oct 2026: the lead "seems to be doing too much",
+// the Goa identity isn't coming through; hats a little loud. Bhairav After
+// Hours is the model. Measured: v5's lead played 127 different bars in 192
+// bars of playing -- jazz soloing, the opposite of Goa's hypnotic repeats):
+//   - groove A: the M D n D riff as one 4-bar figure repeated, not 16 bars
+//   - chorus 1: that riff an octave up, repeated (was a 16th-note solo)
+//   - chorus 3: a dotted-8th riff, repeated (was double-time runs)
+//   - stop-time: one repeated cell in the gaps (was a climbing solo)
+//   - chorus 2's 16th run cut to 8ths
+//   The head, alap, trades, the lyrical Eb chorus, the tag and the ending
+//   are kept: the jazz lives in the harmony and the form, the Goa in the
+//   lead's repetition
+//   - ride, chick and open hat about 3 dB down
+//
+// v5 (Abhiraj, 13 Oct 2026: wants Goa/psy atmosphere and a wider stereo
+// field across the EP). Notes, chart and v4's mix kept. A note audit (every
+// note the file plays, checked against Bageshri) found the lines clean: the
+// one rising M P D is the raga's own crooked descent (M P D g M R S).
+//   - EP atmosphere kit (same in all five tracks): `air`, a wide filtered
+//     supersaw on quartal dyads S+M / n+g (So What's own fourths), 8 cycles
+//     each, following the band up to Eb in chorus 4; up front in the intro,
+//     breaks, stop-time and ring-out, low under the band. `shimmer`: M D n D
+//     / n S' D M two octaves up through a big reverb and long delay,
+//     alternating L/R, in the intro, breaks, stop-time gaps and ring-out. No
+//     lasers: this is the jazz track
+//   - width: comping drifts wider, the lead and the Rhodes melody each get a
+//     Haas copy (12 ms, opposite side, +6 cents), ride/chick split wider
+//
+// CHART (cycles @ 35 cpm, every section a multiple of 16 = one AABA form):
+//   intro        0-16   ride + kick, sparse Rhodes; bass at 8; lead teases
+//   groove A    16-32   the lead's groove theme (M D n D riff, developed)
+//   groove B    32-48   trading fours, lead / Rhodes
+//   break 1     48-64   no drums: Bageshri alap over held Rhodes; fill
+//   head        64-96   the head (AABA) twice, Rhodes doubles the second
+//   break 2     96-112  no drums: the Rhodes solos over held chords; fill
+//   solo ch1   112-128  v1's solo
+//   solo ch2   128-144  trading fours (v2)
+//   solo ch3   144-160  double-time: 16th runs, 3-note groupings, the riff
+//   stop-time  160-176  band hits only on each downbeat (kick, bass, chord),
+//                       hi-hat keeps time, the lead solos in the gaps; fill
+//   solo ch4   176-192  WHOLE BAND UP A HALF STEP (Eb): lyrical, long notes,
+//                       square-wave lead
+//   solo ch5   192-208  trading twos
+//   solo ch6   208-224  trading ones, then lead + Rhodes in unison
+//   head out   224-240  the head, Goa pitch-lift (+12)
+//   ending     240-260  tag x3 (12 cycles), final hit + ring-out (8)
+//   = 260 cycles ~ 7:26
+//
+// RAGA BAGESHRI (late night): S R g M P D n. Aroha S g M D n S' (Pa skipped),
+//   avaroha S' n D M P D g M R S. Vadi M, samvadi S. On D: S=D R=E g=F M=G
+//   P=A D=B n=C. Degrees are scale("D:dorian"): 0=S 1=R 2=g 3=M 4=P 5=D 6=n
+//   7=S' (8=R' 9=g' 10=M' 11=P' 12=D' 13=n' 14=S''). Pa only in passing.
+//
+// HARMONY -- quartal voicings, no plain triads:
+//   I   D G C F A   the "So What" voicing on D
+//   IV  G C F B     moves to the vadi M
+//   bVII C F B E    bridge colour, on n
+//   Form (per cycle): A = I I IV IV, B = bVII bVII IV IV -> AABA = 16 cycles.
+//   The bass stays on Sa throughout (Goa tonic bass == modal-jazz pedal).
+//
+// TEMPO: setcpm(35) x 4 = 140 BPM. Dotted 8th = .321 s.
+// LAYERS (9): kick, bass, cymbals, fills, comp, Rhodes melody, lead, air,
+//   shimmer.
+// Strings that get concatenated are single-quoted: Strudel parses every
+// double-quoted string as mini-notation. arrange() needs mini() around them.
+// ============================================================================
+
+setcpm(35) // 140 BPM
+const CPS = 35 / 60
+const HAAS = .012 * CPS   // 12 ms, in cycles
+
+// -- SYNTHESISED KIT (v7, 21 Oct 2026) -- DistroKid's content check flagged the sampled
+// 909 hits and General MIDI Rhodes in this track, so every sound here is now made in code:
+// noise and sine drums voiced to match the 909 hits' level and brightness, and an FM
+// electric piano. The notes, chart and mix are unchanged from v6.
+// synthesised drum kit: no samples. Each voice takes a struct pattern ('x ~ x ~'); the track's own
+// .gain() sets the level, the inner balance is postgain so it is not overwritten.
+const kickV = p => stack(
+  note("a1").s("sine").struct(p).penv(40).pdecay(.03).attack(.0008).decay(.12).sustain(0).postgain(3.8),
+  s("white").struct(p).hpf(1500).lpf(6000).attack(.0005).decay(.014).sustain(0).postgain(1.3))
+const clapV = p => {
+  const burst = (t, d) => s("white").struct(p).late(t * CPS).bpf(950).bpq(1.3).attack(.0005).decay(d).sustain(0).postgain(5)
+  return stack(burst(0, .011), burst(.012, .011), burst(.024, .011), burst(.036, .11))
+}
+const snareV = p => stack(
+  note("d3").s("triangle").struct(p).penv(10).pdecay(.03).attack(.001).decay(.1).sustain(0).postgain(1.4),
+  s("white").struct(p).hpf(1200).lpf(9000).attack(.001).decay(.18).sustain(0).postgain(1.1))
+const hatV = (p, d) => stack(
+  s("white").struct(p).hpf(4800).lpf(10500).attack(.0005).decay(d).sustain(0).postgain(1.5),
+  note("[d6,g6,c7,f#7]").s("square").struct(p).hpf(4000).lpf(9000).attack(.0005).decay(d).sustain(0).postgain(.35))
+const rideV = p => stack(
+  note("[d5,e5,a#5,c#6]").s("square").struct(p).hpf(2500).lpf(8500).attack(.001).decay(.8).sustain(0).postgain(.55),
+  s("white").struct(p).hpf(5000).lpf(10000).attack(.001).decay(.55).sustain(0).postgain(1.1))
+const crashV = p => stack(
+  note("[d5,e5,a#5,c#6,f6]").s("square").struct(p).hpf(3000).lpf(9000).attack(.001).decay(1.5).sustain(0).postgain(.55),
+  s("white").struct(p).hpf(4000).lpf(10000).attack(.001).decay(1.3).sustain(0).postgain(1.4))
+// FM electric piano, no samples: a sine body with a slow FM bloom (the warm bark of a Rhodes) plus a
+// short high-ratio FM tine on the attack (the bell). p is a note pattern, rel the release in seconds;
+// the track's own .gain() sets the level, the inner balance is postgain.
+const epV = (p, rel = .4) => stack(
+  p.s("sine").fm(2.1).fmh(1).fmattack(0).fmdecay(.45).fmsustain(.2).attack(.003).decay(1.6).sustain(.3).release(rel).postgain(.62),
+  p.s("sine").fm(1.6).fmh(14).fmattack(0).fmdecay(.05).fmsustain(0).attack(.001).decay(.12).sustain(0).release(.1).postgain(.15))
+
+
+// one-bar-per-cycle sequence from single-quoted bars
+const seq = (...bars) => mini('<' + bars.join(' ') + '>')
+
+// -- FORM -- one chord per cycle, 16-cycle AABA
+const I = '[d3,g3,c4,f4,a4]', IV = '[g3,c4,f4,b4]', VII = '[c3,f3,b3,e4]'
+const A = [I, I, IV, IV].join(' '), B = [VII, VII, IV, IV].join(' ')
+const form = '<' + [A, A, B, A].join(' ') + '>'
+
+// whole-band transposition: chorus 4 goes up a half step to Eb
+const keyShift = arrange([176, "0"], [16, "1"], [68, "0"])
+
+// ---------------------------------------------------------------- PHRASES --
+// (degrees; '~' is a bar of rest)
+const head = seq(
+  '[3 ~ 5 6 ~ 5 3 ~]', '[3 2 ~ 1 0@3 ~]', '[7 ~ 9 10 ~ 9 7 ~]', '[6 5 ~ 3 2 ~ 3 ~]',     // A
+  '[3 ~ 5 6 ~ 5 3 ~]', '[3 2 ~ 1 0@3 ~]', '[7 ~ 9 10 ~ 9 7 ~]', '[6 5 ~ 3 2 ~ 3 ~]',     // A
+  '[5 ~ 6 ~ 7@2 ~ 9]', '[7 6 5 ~ 6 5 3 ~]', '[2 ~ 3 5 ~ 3 2 ~]', '[2 3 ~ 1 ~ 0 ~ 3]',    // B
+  '[3 ~ 5 6 ~ 5 3 ~]', '[3 2 ~ 1 0@3 ~]', '[7 ~ 9 10 ~ 9 7 ~]', '[6 5 ~ 3 2 ~ 3 ~]')     // A
+// the tag: the head's last four bars, ending on M -- repeated three times
+const tag = seq('[3 ~ 5 6 ~ 5 3 ~]', '[3 2 ~ 1 0@3 ~]', '[7 ~ 9 10 ~ 9 7 ~]', '[6 5 ~ 3 2 ~ 3 ~]')
+
+// intro tease: the motif, stated and left hanging
+const tease = seq('[3 ~ 5 6 ~ ~ ~ ~]', '~', '[3 ~ 5 6 ~ 5 3 ~]', '~')
+
+// groove A: the lead's groove theme -- a Goa-style riff on M D n D,
+// sequenced up, then displaced by an 8th and taken into the upper octave
+const grooveTheme = seq(
+  '[3 5 6 5 ~ 3 ~ 5]', '[6 ~ 5 3 ~ 2 ~ ~]', '[3 5 6 5 ~ 3 ~ 5]', '[7 ~ 6 5 3 ~ ~ ~]')   // v6: one 4-bar riff, repeated
+
+// groove B: trading fours. Lead plays 1-4 and 9-12, Rhodes answers 5-8, 13-16
+const grooveFoursLead = seq(
+  '[3 ~ 5 ~ 6 5 3 ~]', '[2 3 ~ 5 ~ 3 2 ~]', '[1 ~ 2 3 ~ 1 0 ~]', '[~ ~ ~ ~ 0 2 3 5]',
+  '~', '~', '~', '~',
+  '[5 6 7 ~ 9 ~ 7 6]', '[5 ~ 3 ~ 5 6 ~ ~]', '[7 ~ 6 5 6 ~ 5 3]', '[3@4 ~ ~ ~ ~]',
+  '~', '~', '~', '~')
+const grooveFoursRhodes = seq(
+  '~', '~', '~', '~',
+  '[6 ~ 5 ~ 3 ~ 2 ~]', '[3 ~ 5 6 ~ 7 ~ ~]', '[9 7 ~ 6 5 ~ 3 ~]', '[2@4 ~ ~ ~ ~]',
+  '~', '~', '~', '~',
+  '[3 2 ~ 1 ~ 0 ~ -1]', '[0 ~ 2 3 ~ 5 ~ 6]', '[7 ~ 6 ~ 5 ~ 3 ~]', '~')
+
+// break 1: alap -- S n. D. n. S, the vadi M, aroha S g M D n S' (no Pa),
+// avaroha M P D g M R S
+const alap = seq(
+  '[0@3 ~ ~ ~ -1 ~]', '[-2@2 ~ -1 ~ 0@2 ~]', '[3@4 ~ ~ ~ ~]', '~',
+  '[~ ~ 2 ~ 3 ~ 5 ~]', '[6@3 ~ 5 ~ 3 ~]', '[2@2 ~ 3 1 ~ 0 ~]', '~',
+  '[0 ~ 2 ~ 3 ~ 5 ~]', '[6 ~ 7@3 ~ ~ ~]', '[~ 9 ~ 7 ~ 6 ~ 5]', '[3@4 ~ ~ ~ ~]',
+  '[~ ~ 5 ~ 6 ~ 5 ~]', '[3 ~ 4 5 ~ 2@3]', '[3 ~ 1 ~ 0@4]', '~')
+
+// break 2: the Rhodes alone over held chords, its delay filling the space
+const rhodesBreak = seq(
+  '[3@2 ~ 5 6@4]', '~', '[7@2 ~ 6 5@2 ~ 3]', '~',
+  '[2 ~ 3 5 ~ 6 ~ ~]', '[7@4 ~ ~ ~ ~]', '[~ 9 ~ 7 ~ 6 ~ 5]', '~',
+  '[3@2 ~ 2 3@4]', '~', '[5 ~ 6 ~ 7 ~ 9 ~]', '[10@4 ~ ~ ~ ~]',
+  '[9 ~ 7 ~ 6 ~ 5 ~]', '[3@4 ~ ~ 2 ~]', '[1 ~ 0@6]', '~')
+
+// solo chorus 1 (v1): displacement, fragment, enclosure of S', quartal runs,
+// 16ths climb, quotes the head to land
+const solo1 = seq(   // v6: the groove riff an octave up, repeated (S' g' M' g', D' M' g' S')
+  '[7 9 10 9 ~ 7 ~ 9]', '[10 ~ 9 7 ~ 6 ~ ~]', '[7 9 10 9 ~ 7 ~ 9]', '[12 ~ 10 9 7 ~ ~ ~]')
+
+// solo chorus 2 (v2): trading fours
+const fours2Lead = seq(
+  '[7 ~ 9 10 ~ 12 10 9]', '[10 ~ 9 7 6 ~ 7@2]', '[~ 6 7 9 ~ 10 ~ 13]', '[14@3 ~ 12 10 9 7]',
+  '~', '~', '~', '~',
+  '[0 3 6 9 12 9 6 3]', '[3 6 10 13 ~ 10 6 3]', '[7 ~ 6 5 ~ 3 2 ~]', '[7@4 ~ ~ 9 10]',
+  '~', '~', '~', '~')
+const fours2Rhodes = seq(
+  '~', '~', '~', '~',
+  '[3 ~ 5 6 ~ 5 3 ~]', '[~ 2 3 5 6 ~ 5 ~]', '[3 ~ 2 ~ 1 ~ 0 ~]', '~',
+  '~', '~', '~', '~',
+  '[10 ~ 9 7 ~ 6 5 ~]', '[6 ~ 5 3 ~ 2 ~ 3]', '[5 6 7 ~ 5 6 7 9]', '[7@6 ~ ~]')
+
+// solo chorus 3: double-time -- the groove riff at 16ths, 3-note groupings
+// across the beat (7 6 5 repeated), a descending sequence, stacked 4ths
+const solo3 = seq(   // v6: dotted 8ths (3+3+3+3+4), repeated -- M D n D M / n S' D M g
+  '[3 ~ ~ 5 ~ ~ 6 ~ ~ 5 ~ ~ 3 ~ ~ ~]', '[6 ~ ~ 7 ~ ~ 5 ~ ~ 3 ~ ~ 2 ~ ~ ~]')
+
+// stop-time: the band hits each downbeat, the lead answers in the gap --
+// climbing in sequence, then a repeated rhythmic cell climbing again
+const stopSolo = seq(   // v6: one cell in the gaps, repeated
+  '[~ ~ 3 5 6 ~ ~ ~]', '[~ ~ 6 5 3 ~ ~ ~]', '[~ ~ 3 5 6 ~ 7 ~]', '~')
+
+// solo chorus 4 (in Eb): lyrical -- long notes, wide intervals, space
+const solo4 = seq(
+  '[7@3 ~ 6 7 9@2]', '[10@4 9 ~ 7 ~]', '[6@2 ~ 5 6 ~ 7@2]', '[5@6 ~ ~]',
+  '[~ 3 5 6 ~ 9 ~ 7]', '[6 5 3@2 ~ 2 3@2]', '[5@2 6@2 7@2 9@2]', '[10@6 ~ ~]',
+  '[12 ~ 10 9 ~ 10 12 ~]', '[13@4 12 ~ 10 ~]', '[9 10 9 7 6 7 6 5]', '[3@4 ~ ~ ~ ~]',
+  '[~ 2 3 5 6@2 5 3]', '[2@2 3 1@2 ~ 0 ~]', '[~ 0 3 6 9 ~ 7 ~]', '[7@4 ~ ~ ~ ~]')
+
+// solo chorus 5: trading twos -- each answer starts where the call ended,
+// the pair climbing an octave across the chorus
+const twosLead = seq(
+  '[3 5 6 ~ 9 7 6 5]', '[3 ~ 2 3 5@2 ~ ~]', '~', '~',
+  '[7 9 10 ~ 12 10 9 7]', '[6 ~ 7 9 10@2 ~ ~]', '~', '~',
+  '[12 13 14 ~ 12 10 9 7]', '[9 ~ 10 12 14@2 ~ ~]', '~', '~',
+  '[9 7 6 5 3 2 1 0]', '[0@2 3 5 7@2 ~ ~]', '~', '~')
+const twosRhodes = seq(
+  '~', '~', '[6 5 3 ~ 5 6 7 ~]', '[9@2 7 6 5@2 ~ ~]',
+  '~', '~', '[10 9 7 ~ 9 10 12 ~]', '[13@2 12 10 9@2 ~ ~]',
+  '~', '~', '[14 12 10 ~ 9 7 6 5]', '[3@2 5 6 7@2 ~ ~]',
+  '~', '~', '[6 5 3 2 3 5 6 7]', '[7@4 ~ ~ ~ ~]')
+
+// solo chorus 6: trading ones, then both play the last four bars together
+const unison = ['[3 5 6 5 3 5 6 7]', '[9 7 6 5 3 2 1 0]', '[0 3 6 9 12 9 6 3]', '[7@8]']
+const onesLead = seq(
+  '[3 5 6 ~ 7 ~ ~ ~]', '~', '[5 6 7 ~ 9 ~ ~ ~]', '~',
+  '[7 9 10 ~ 12 ~ ~ ~]', '~', '[9 10 12 ~ 13 ~ ~ ~]', '~',
+  '[12 13 14 ~ 14 ~ ~ ~]', '~', '[14 12 10 9 7 ~ ~ ~]', '~', ...unison)
+const onesRhodes = seq(
+  '~', '[6 5 3 ~ 2 ~ ~ ~]', '~', '[7 6 5 ~ 3 ~ ~ ~]',
+  '~', '[10 9 7 ~ 6 ~ ~ ~]', '~', '[12 10 9 ~ 7 ~ ~ ~]',
+  '~', '[13 12 10 ~ 9 ~ ~ ~]', '~', '[9 7 6 5 3 ~ ~ ~]', ...unison)
+
+// ------------------------------------------------------------- RHYTHM -----
+// -- KICK -- 909, drives the sidechain on bass (1) and comp (2)
+const kick = kickV(arrange(
+    [48, "x*4"],        // intro + groove
+    [16, "~"],          // break 1
+    [32, "x*4"],        // head
+    [16, "~"],          // break 2
+    [48, "x*4"],        // solo choruses 1-3
+    [16, "x ~ ~ ~"],    // stop-time: downbeat hit only
+    [64, "x*4"],        // chorus 4-6 + head out
+    [12, "x*4"],        // tag
+    [8, "<x ~ ~ ~ ~ ~ ~ ~>"],   // final hit, then ring-out
+  ))
+  .orbit(0)
+  .duckorbit("1:2").duckattack(.01).duckdepth(.7)
+  .gain(.58)
+
+// -- BASS -- Goa rolling 16ths parked on Sa, a fifth at the end of every
+// other bar; hits only on the downbeat in stop-time and the final hit
+const roll = "<[[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 0 0]] [[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 -3 -3]]>"
+const bass = arrange(
+    [8, "~"],
+    [40, roll],          // intro second half + groove
+    [16, "~"],           // break 1
+    [32, roll],          // head
+    [16, "~"],           // break 2
+    [48, roll],          // choruses 1-3
+    [16, "0 ~ ~ ~"],     // stop-time
+    [64, roll],          // choruses 4-6 + head out
+    [12, roll],          // tag
+    [8, "<0 ~ ~ ~ ~ ~ ~ ~>"],    // final hit
+  )
+  .n().scale("D2:dorian")
+  .add(note(keyShift))
+  .s("sawtooth")
+  .lpf(arrange(
+    [64, sine.range(380, 650).slow(16)],
+    [32, sine.range(420, 750).slow(16)],  // head: a touch brighter
+    [16, "400"],
+    [128, sine.range(480, 900).slow(16)], // solos + head out: brightest
+    [20, "600"],
+  )).lpq(4)
+  .decay(.1).sustain(0).release(.03)
+  .distort(.2).postgain(.8)
+  .orbit(1)
+  .gain(.55)
+
+// -- CYMBALS -- jazz ride (spang-a-lang) + hi-hat chick on 2 and 4 + a quiet
+// Goa offbeat open hat; chick alone in stop-time; crash on the final hit
+const ride = rideV("x ~ ~ ~ x ~ ~ x x ~ ~ ~ x ~ ~ x")
+  .gain("[.14 0 0 0 .11 0 0 .08 .14 0 0 0 .11 0 0 .08]").pan(.85)
+const chick = hatV("~ x ~ x", .045).gain(.11).pan(.15)
+const kit = stack(ride, chick, hatV("[~ x]*4", .3).clip(.4).gain(.05))
+const cymbals = arrange(
+    [8, ride],                                           // intro: ride alone
+    [40, kit],
+    [16, "~"],                                           // break 1
+    [32, kit],                                           // head
+    [16, "~"],                                           // break 2
+    [48, kit],                                           // choruses 1-3
+    [16, chick],                                         // stop-time: time-keeping only
+    [64, kit],                                           // choruses 4-6 + head out
+    [12, kit],                                           // tag
+    [8, crashV("<x ~ ~ ~ ~ ~ ~ ~>").gain(.3)],   // final hit
+  ).orbit(5)
+
+// -- FILLS -- snare fill into the head, the solos and chorus 4
+// (one cycle of syncopated 8ths, one of rising 16ths)
+const fillA = snareV("[~ ~ x ~ ~ x ~ x]").gain(.2)
+const fillB = snareV("x*16")
+  .gain("[.1 .12 .14 .16 .18 .2 .22 .24 .26 .28 .3 .32 .34 .36 .38 .42]")
+const fills = arrange(
+    [62, "~"], [1, fillA], [1, fillB],   // into the head
+    [46, "~"], [1, fillA], [1, fillB],   // into solo chorus 1
+    [62, "~"], [1, fillA], [1, fillB],   // out of stop-time into Eb
+    [84, "~"],
+  ).pan(saw.range(.15, .85)).orbit(6) // each fill sweeps left -> right
+
+// --------------------------------------------------------------- RHODES ---
+// -- COMP -- quartal voicings. Charleston / anticipations; held chords in the
+// breaks; short stabs in stop-time; lays out while the Rhodes takes a turn
+// in the trades. Dotted-8th delay fills the gaps.
+const changes = note(mini(form))
+const comping = changes.struct("<[x ~ ~ x ~ ~ ~ ~] [~ ~ ~ x ~ ~ ~ x] [x ~ ~ x ~ ~ ~ ~] [~ ~ x ~ ~ ~ ~ x]>").clip(.9)
+const sparse  = changes.struct("<x ~ x ~>").clip(.9)
+const held    = changes.struct("x").clip(.9)
+const stab    = changes.struct("x ~ ~ ~").clip(.25)
+const tagComp = note(mini('<' + A + '>')).struct("<[x ~ ~ x ~ ~ ~ ~] [~ ~ ~ x ~ ~ ~ x]>").clip(.9)
+const comp = arrange(
+    [16, sparse],                                               // intro
+    [16, comping],                                              // groove A
+    [16, comping.mask("<1 1 1 1 ~ ~ ~ ~>")],                    // groove B: fours
+    [16, held],                                                 // break 1
+    [32, comping],                                              // head
+    [16, held],                                                 // break 2
+    [16, comping],                                              // chorus 1
+    [16, comping.mask("<1 1 1 1 ~ ~ ~ ~>")],                    // chorus 2: fours
+    [16, comping],                                              // chorus 3
+    [16, stab],                                                 // stop-time
+    [16, comping],                                              // chorus 4 (Eb)
+    [16, comping.mask("<1 1 ~ ~>")],                            // chorus 5: twos
+    [16, comping.mask("<1 ~ 1 ~ 1 ~ 1 ~ 1 ~ 1 ~ ~ ~ ~ ~>")],     // chorus 6: ones, out for the unison
+    [16, comping],                                              // head out
+    [12, tagComp],                                              // tag (I I IV IV)
+    [8, "~"],                                                   // (final voicing below)
+  )
+const compFinal = arrange([252, "~"], [8, note(mini('[' + I + ' ~ ~ ~]')).slow(8).clip(1)]) // final So What voicing: held 2 cycles, then rings out
+const compAll = stack(epV(comp.transpose(keyShift)), epV(compFinal, 4))
+  .delay(.35).delaytime(.321).delayfeedback(.4)
+  .room(.45)
+  .pan(sine.range(.12, .88).slow(16))   // drifts across the field once per form
+  .orbit(2)
+  .gain(.58)
+
+// -- RHODES MELODY -- trades with the lead, doubles the second head, solos
+// in break 2
+const rhodesMel = epV(arrange(
+    [32, "~"],
+    [16, n(grooveFoursRhodes).scale("D4:dorian")],   // groove B
+    [32, "~"],
+    [16, n(head).scale("D3:dorian")],                // second head, octave down
+    [16, n(rhodesBreak).scale("D4:dorian")],         // break 2
+    [16, "~"],
+    [16, n(fours2Rhodes).scale("D4:dorian")],        // chorus 2
+    [48, "~"],
+    [16, n(twosRhodes).scale("D4:dorian")],          // chorus 5
+    [16, n(onesRhodes).scale("D4:dorian")],          // chorus 6
+    [36, "~"],
+  ))
+  .delay(.35).delaytime(.321).delayfeedback(.4)
+  .room(.45)
+  .pan(.22)                             // left: the Rhodes side of the trades
+  .orbit(4)
+  .gain(.55)
+  .superimpose(x => x.late(HAAS).pan(.7).add(note(.06)).velocity(.55))  // Haas copy: width, not an echo
+  .superimpose(x => x.late(3 / 16).pan(.78).velocity(.3)) // echo, opposite side
+
+// ----------------------------------------------------------------- LEAD ---
+const lead = arrange(
+    [8, "~"],                 // intro
+    [8, tease],               //   tease
+    [16, grooveTheme],        // groove A
+    [16, grooveFoursLead],    // groove B
+    [16, alap],               // break 1
+    [16, head],               // head
+    [16, head],               //   head again (Rhodes doubles)
+    [16, "~"],                // break 2 (Rhodes solo)
+    [16, solo1],              // chorus 1
+    [16, fours2Lead],         // chorus 2
+    [16, solo3],              // chorus 3: double-time
+    [16, stopSolo],           // stop-time
+    [16, solo4],              // chorus 4: Eb, lyrical
+    [16, twosLead],           // chorus 5
+    [16, onesLead],           // chorus 6
+    [16, head],               // head out (lifted)
+    [12, tag],                // tag x3
+    [8, mini('[7 ~ ~ ~]').slow(8)], // final S', held 2 cycles, then releases
+  )
+  .n()
+  .scale("D4:dorian")
+  // Eb chorus (+1), then the Goa pitch-lift on the head out (+12)
+  .add(note(arrange([176, "0"], [16, "1"], [32, "0"], [16, "12"], [20, "0"])))
+  .s(arrange([176, "sawtooth"], [16, "square"], [68, "sawtooth"]))   // chorus 4 changes voice
+  .attack(.01).decay(.2).sustain(.6).release(arrange([252, "0.15"], [8, "3"]))
+  .lpf(arrange([160, "2400"], [16, "1800"], [16, "2000"], [68, "2400"])) // stop-time darker
+  .lpq(3)
+  .delay(.3).delaytime(.321)
+  .delayfeedback(arrange([160, "0.35"], [16, "0.5"], [76, "0.35"], [8, "0.55"])) // stop-time + final ring
+  .room(.5)
+  .pan(sine.range(.62, .82).slow(8))    // right: the lead's side, gently moving
+  .orbit(3)
+  .gain(arrange([176, "0.4"], [16, "0.25"], [68, "0.4"]))   // square runs hotter than saw
+  .superimpose(x => x.late(HAAS).pan(.3).add(note(.06)).velocity(.55))  // Haas copy: width, not an echo
+  .superimpose(x => x.late(3 / 16).pan(.22).velocity(.3)) // echo, opposite side
+
+// ---------------------------------------------------------- ATMOSPHERE --
+// The EP kit (13 Oct 2026, voiced from each raga). Sections: intro 16 |
+// grooves 32 | break 1 16 | head 32 | break 2 16 | choruses 1-3 48 |
+// stop-time 16 | chorus 4 (Eb) 16 | choruses 5-6 32 | head out 16 | tag 12 |
+// final hit + ring-out 8.
+
+// AIR -- a wide, dark supersaw on quartal dyads S+M and n+g, 8 cycles each,
+// slow attack and long tail, filter breathing; follows the band to Eb
+const air = note("<[d3,g3] [c3,f3]>/8")
+  .add(note(keyShift))
+  .s("supersaw").unison(5).spread(1).detune(.15)
+  .attack(3).release(5)
+  .lpf(sine.range(450, 1100).slow(16)).lpq(1)
+  .room(.8).roomsize(6)
+  .orbit(7)
+  .gain(arrange([16, ".14"], [32, ".06"], [16, ".15"], [32, ".05"], [16, ".15"], [48, ".05"], [16, ".1"], [16, ".06"], [32, ".05"], [16, ".05"], [12, ".08"], [8, ".16"]))
+
+// SHIMMER -- M D n D / n S' D M two octaves above the lead, plucked, through
+// a big room and a long dotted-8th delay, alternating left/right
+const shimmerLine = n("<[3 ~ 5 ~ 6 ~ 5 ~] ~ [6 ~ 7 ~ 5 ~ 3 ~] ~>")
+  .scale("D5:dorian")
+  .s("triangle").attack(.005).decay(.5).sustain(0).release(.3)
+  .pan("[.15 .85]*4")
+  .delay(.5).delaytime(.321).delayfeedback(.6)
+  .room(.9).roomsize(8)
+  .orbit(8)
+const shimmer = arrange(
+    [8, "~"], [8, shimmerLine],   // intro, second half
+    [32, "~"],
+    [16, shimmerLine],            // break 1
+    [32, "~"],
+    [16, shimmerLine],            // break 2
+    [48, "~"],
+    [16, shimmerLine],            // stop-time: in the gaps
+    [16, "~"], [32, "~"], [16, "~"], [12, "~"],
+    [8, shimmerLine],             // ring-out
+  ).gain(.14)
+
+// every voice 2 dB down: the raw render otherwise touches full scale in the loudest sections
+stack(kick, bass, cymbals, fills, compAll, rhodesMel, lead, air, shimmer).mul(gain(.8))

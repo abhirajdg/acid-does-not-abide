@@ -1,0 +1,267 @@
+// ============================================================================
+// TIVRA v4 -- raga Yaman, acid house x Goa (FULL ARRANGEMENT)
+// EP slot 2 of 5 (songs/EP-RAGA-CLOCK.md): early evening, the warm-up
+// ============================================================================
+//
+// The room after sundown. Yaman is the first raga of the night, and its one
+// altered note, tivra Ma (the raised 4th), is the whole colour of the track.
+// Acid house the Charanjit Singh way (Synthesizing: Ten Ragas To A Disco
+// Beat, 1982, has a Raga Yaman on 303 + 808): the 303 IS the lead, 808 drums,
+// no drops. The filter drives the arrangement, not new layers.
+//
+// THE DEVICE: the hook keeps climbing toward Ga and Ni (vadi, samvadi) and
+// never settles on them. It passes through them as single 16ths and turns
+// away; every phrase ends on Re or Dha, the notes that want to move. Peak 2
+// comes closest (Ga' and Ni' struck twice in a row) and still turns away.
+// The one resolution is the pakad cadence (N. R G R, N. R S) onto Sa, in the
+// outro. It's a warm-up, so it leaves the room wanting the next track.
+//
+// v4 (Abhiraj on v3, 14 Oct 2026: "the lead was doing too much ... we are
+// supposed to be a Goa trance-inspired electronic artist and that isn't
+// really coming out". Bhairav After Hours is the model. Measured: v3's 303
+// played in 92% of bars, a third of its notes on 16th offbeats, a new bar
+// almost every bar, and it was also the only bass):
+//   - each section's 303 line is now ONE 2-bar riff of 6-7 notes on the 8th
+//     grid, repeated through the section, the filter doing the evolving
+//     (hypnotic repetition, the Goa/acid way). The device stays: it reaches
+//     for Ga and Ni and turns away. Groove B is a dotted-8th riff (3+3+3+3+4)
+//   - a Goa bass under it, like Bhairav's: offbeat pulse in groove A,
+//     rolling 16ths on Sa in groove B and the peaks, ducked hard by the kick.
+//     The groove carries the track; the 303 sits back about 1.5 dB
+//
+// v3 (Abhiraj on v2, 13 Oct 2026: "sound great"; wants Goa/psy atmosphere
+// and a wider stereo field). Notes and arrangement unchanged:
+//   - EP atmosphere kit (same in all five tracks): `air`, a wide filtered
+//     supersaw on S+P / R+D, up front in the intro, mute, breakdown and
+//     outro, low under the grooves; `shimmer`, N. R G R and D N D P two
+//     octaves up (still never resting on Ga or Ni) through a big reverb and
+//     long delay, alternating L/R. No lasers here: this is the acid-house
+//     track, the Goa zaps are for the psy ones
+//   - width: the 303 sweeps wider and gets a mirrored echo, hats split wider
+//
+// v2 builds the full track around v1's 32-cycle section (groove, groove+,
+// mute, peak bars kept note-for-note). Every section gets its own 303
+// material, so the lead never sits on one loop (the Godhuli v3 lesson):
+//
+// SECTIONS (cycles @ 31 cpm; multiples of 4/8, house phrasing):
+//   intro       0-16   kick + offbeat hats; the 303 enters at 8 with
+//                      fragments of the hook (N. R, N. R G), filter shut
+//   groove A   16-48   clap in; v1's hook A/B (16), then A2/B2 reaching for
+//                      Ni from the upper octave (16); open hats at 32
+//   mute       48-56   kick out: v1's call/response through the delay
+//   groove B   56-88   the hook regrouped 3+3+3+3+4 against the four-on-
+//                      the-floor (N. R G | N. R G | N. R M# | G R . | ...);
+//                      rim on a 3-3-2; the filter wahs every 8 cycles
+//   breakdown  88-104  drums out but hats: the 303 alone in half time (8ths),
+//                      resonance highest, the filter climbing for 12 cycles;
+//                      an 808 snare roll (8ths, then 16ths) into the peak
+//   peak 1    104-120  v1's octave pairs (N./N R/R' G/G'), brightest filter
+//   peak 2    120-144  the closest approach: Ga' and Ni' struck twice, then
+//                      away; rim again, 808 shaker 16ths
+//   outro     144-160  the hook once more, then the pakad cadence onto Sa;
+//                      clap out at 144, kick out at 152, the filter closes
+//                      and the last Sa rings in the delay
+//   = 160 cycles = 5:09.7
+//
+// RAGA YAMAN (Kalyan thaat): S R G M# P D N == D lydian. Rooted on D (the
+// EP's one Sa). Vadi G, samvadi N. Ascent skips Sa and Pa (N. R G, M# D N);
+// descent may use Pa (N D P M# G R). Degrees are scale("D2:lydian"):
+//   -1=N.(C#2) 0=S 1=R 2=G 3=M# 4=P 5=D 6=N 7=S'(D3) 8=R' 9=G' 10=M#'
+//   12=D' 13=N'
+//
+// TEMPO: setcpm(31) x 4 = 124 BPM. Dotted 8th = 3/16 cycle = .363 s.
+// LAYERS (10): kick, clap, hats, rim, shaker, snare roll, bass, 303, air,
+//   shimmer.
+// ============================================================================
+
+setcpm(31) // 124 BPM
+
+// one-bar-per-cycle sequence from single-quoted bars
+const seq = (...bars) => mini('<' + bars.join(' ') + '>')
+
+// -- 303 BARS (16ths unless noted). Strong steps are 0, 4, 8, 12. --
+// intro fragments
+const f1  = '[-1 ~ 1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~]'          // N. R
+const f2  = '[-1 ~ 1 2 ~ 1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~]'          // N. R G R
+const f3  = '[-1 ~ 1 2 ~ 1 -1 ~ 1 ~ ~ ~ ~ ~ ~ ~]'         // N. R G R N. R
+// v1 (groove, groove+, mute, peak)
+const hA  = '[-1 ~ 1 2 ~ 1 -1 ~ 1 ~ 2 3 2 1 ~ ~]'        // N. R G, back, up to M#, falls to R
+const hB  = '[2 ~ 3 5 ~ 6 5 ~ 4 3 ~ 2 1 ~ ~ ~]'          // G M# D N, turns at N, D P M# G R
+const hA2 = '[-1 ~ 1 2 ~ 1 -1 ~ 1 ~ 2 3 5 6 ~ 5]'        // A, but the end reaches N and slips to D
+const hB2 = '[8 ~ 9 10 ~ 9 8 ~ 6 ~ 5 3 ~ 2 1 ~]'         // B from the upper octave: R' G' M#' down to R
+const call = '[-1 1 2 3 5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~]'         // call: half a bar, the echo answers
+const resp = '[~ ~ ~ ~ ~ ~ ~ ~ 6 5 3 2 1 ~ ~ ~]'         // response: N D M# G R
+const resp2 = '[~ ~ ~ ~ ~ ~ ~ ~ 6 5 4 3 [3@1 2@7] ~ 1 ~]' // with Pa, M# grazing into G
+const pA  = '[-1 ~ 6 ~ 1 ~ 8 ~ 2 ~ 9 ~ 3 2 1 ~]'         // octave pairs climbing: N./N R/R' G/G'
+const pB  = '[2 ~ 3 5 6 ~ 13 ~ 12 ~ 10 9 ~ 8 ~ ~]'       // up to N', tumbles to R'
+const cad = '[-1 ~ 1 2 1 ~ -1 ~ 1 ~ 0@6]'               // pakad: N. R G R, N. R S
+// groove B: groups of 3 against the 4/4 (3+3+3+3+4)
+const gB1 = '[-1 1 2 -1 1 2 -1 1 3 2 1 ~ 5 6 5 ~]'       // N.RG N.RG N.RM# GR. DND.
+const gB2 = '[1 2 3 1 2 3 1 2 5 3 2 ~ -1 ~ 1 ~]'         // RGM# RGM# RGD M#G. N. . R
+const gB3 = '[-1 1 2 -1 1 2 -1 1 3 2 1 ~ 6 8 6 5]'       // ends reaching R' over N, back to D
+const gB4 = '[3 5 6 3 5 6 3 5 8 6 5 ~ 3 ~ 1 ~]'          // M#DN x2, M#D R', N D, M# . R
+// breakdown: half time, 8 slots per bar
+const bd1 = '[-1 1 2 ~ 1 -1 1 ~]'                        // N. R G . R N. R
+const bd2 = '[2 3 5 6 ~ 5 4 3]'                          // G M# D N . D P M#
+const bd3 = '[-1 1 2 3 5 ~ 6 ~]'                         // climbs to N, and stops
+const bd4 = '[5 ~ 4 3 2 ~ 1 ~]'                          // D P M# G R
+// peak 2: the closest approach -- Ga' / Ni' struck twice, then away
+const pC  = '[-1 ~ 6 ~ 1 ~ 8 ~ 2 ~ 9 9 ~ 8 6 ~]'         // G' G', falls to R' N
+const pD  = '[5 6 ~ 13 13 ~ 12 10 ~ 9 ~ 8 6 ~ 5 ~]'      // N' N', D' M#' G' R' N D
+const cad2 = '[-1 ~ 1 2 ~ 1 ~ -1 ~ 1 ~ 0@5]'             // pakad, spaced out
+
+// v4: the riffs -- 6-7 notes on the 8th grid, each repeated through its section
+const tA  = '[-1 ~ 1 ~ 2 ~ 1 ~ ~ ~ -1 ~ 1 ~ ~ ~]'        // N. R G R . N. R
+const tB  = '[2 ~ 3 ~ 5 ~ 6 ~ ~ ~ 5 ~ 3 ~ 1 ~]'          // G M# D N . D M# R
+const tB2 = '[8 ~ 9 ~ 10 ~ 9 ~ ~ ~ 6 ~ 5 ~ ~ ~]'         // R' G' M#' G' . N D
+const dot1 = '[-1 ~ ~ 1 ~ ~ 2 ~ ~ 1 ~ ~ 3 ~ ~ ~]'        // dotted 8ths: N. R G R M#
+const dot2 = '[1 ~ ~ 2 ~ ~ 3 ~ ~ 5 ~ ~ 3 ~ 1 ~]'         //              R G M# D M# R
+
+// accents: downbeats loudest, offbeat 16ths softest
+const accent = "[1 .7 .85 .7]*4"
+// the 303 slide: steps 7 and 15 glide up from a tone below
+const slide = "[0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 2]"
+
+const acid = arrange(
+    [8, "~"],                                              // intro: drums alone
+    [8, n(seq(f1, f1, f2, f2, f1, f1, f2, f3))],           //   fragments
+    [16, n(seq(tA, tB))],                                  // groove A: one riff
+    [16, n(seq(tA, tB2))],                                 //   its answer moves up
+    [8, n(seq(call, resp))],                               // mute (v1 call/response)
+    [32, n(seq(dot1, dot2))],                              // groove B: dotted 8ths
+    [12, n(seq(bd1, bd3))],                                // breakdown: half time
+    [4, n(seq(call, tA))],                                 //   under the snare roll
+    [16, n(seq(pA, pB))],                                  // peak 1: octave pairs
+    [24, n(seq(pC, pD))],                                  // peak 2: the closest approach
+    [8, n(seq(tA, tB, tA, cad))],                          // outro
+    [8, n(seq(cad2, '~', cad2, '~', cad, '~', '~', '~'))], //   the cadence, then the echo
+  )
+  .scale("D2:lydian")
+  .s("sawtooth")
+  .velocity(accent)
+  .attack(.003).decay(.16).sustain(.25).release(.05)
+  .lpf(arrange(
+    [16, saw.range(250, 650).slow(16)],    // intro: shut
+    [16, saw.range(550, 1150).slow(16)],   // groove A: opening
+    [16, saw.range(1000, 2000).slow(16)],  //   wider
+    [8, sine.range(400, 2600).slow(4)],    // mute: sweeps on its own
+    [32, sine.range(700, 2400).slow(8)],   // groove B: a wah every 8
+    [12, saw.range(300, 2800).slow(12)],   // breakdown: one long climb
+    [4, saw.range(1500, 3000).slow(4)],    //   roll
+    [16, saw.range(1500, 3400).slow(8)],   // peak 1
+    [24, sine.range(1800, 4000).slow(4)],  // peak 2
+    [16, saw.range(2000, 300).slow(16)],   // outro: closes
+  ))
+  .lpq(arrange([16, "8"], [16, "9"], [16, "11"], [8, "14"], [32, "12"], [12, "16"], [4, "12"], [16, "11"], [24, "12"], [16, "9"]))
+  .lpenv(3).lpattack(.002).lpdecay(.12).lpsustain(0)  // per-note quack
+  .penv(slide).panchor(1).pdecay(.06)
+  .distort(arrange([16, ".2"], [16, ".25"], [16, ".3"], [8, ".4"], [32, ".35"], [16, ".4"], [16, ".4"], [24, ".45"], [16, ".3"])) // drive also tames the resonant spikes
+  .delay(arrange([16, ".25"], [32, ".18"], [8, ".45"], [32, ".2"], [12, ".5"], [4, ".3"], [40, ".22"], [16, ".4"]))
+  .delaytime(.363)
+  .delayfeedback(arrange([16, ".35"], [32, ".3"], [8, ".55"], [32, ".3"], [12, ".55"], [4, ".35"], [40, ".35"], [16, ".55"]))
+  .room(.2)
+  .pan(sine.range(.15, .85).slow(16))   // drifts across the field
+  .orbit(2)
+  .gain(arrange([16, "1.1"], [32, "1"], [8, ".95"], [32, "1"], [12, ".85"], [4, "1"], [16, ".95"], [24, ".9"], [16, "1.1"])) // lower where Q is highest; back ~1.5 dB over the bass
+  // mirrored echo: the 303 drifts one way, its echo the other
+  .superimpose(x => x.late(3 / 16).pan(sine.range(.85, .15).slow(16)).velocity(.25))
+
+// -- DRUMS: TR-808 --
+const kick = arrange([48, "bd*4"], [8, "~"], [32, "bd*4"], [16, "~"], [48, "bd*4"], [8, "~"])
+  .s().bank("RolandTR808")
+  .orbit(0)
+  .duckorbit("1:2").duckattack(.02).duckdepth(".8:.3")   // hard on the bass, light on the 303
+  .gain(.75)
+
+const clap = arrange([16, "~"], [32, "~ cp ~ cp"], [8, "~"], [32, "~ cp ~ cp"], [16, "~"], [40, "~ cp ~ cp"], [16, "~"])
+  .s().bank("RolandTR808").room(.3).gain(.5).pan(.6).orbit(3)
+
+const offbeat = s("[~ hh]*8").bank("RolandTR808").gain(.25).pan(.2)
+const closed = s("hh*16").bank("RolandTR808").gain("[.35 .18 .3 .18]*4").pan(.12)
+const open = s("[~ oh]*4").bank("RolandTR808").cut(1).gain(.3).pan(.88)
+const shaker = s("sh*16").bank("RolandTR808").gain("[.1 .18 .12 .2]*4").pan(sine.range(.3, .9).slow(4))
+const hats = arrange(
+    [16, offbeat],                       // intro
+    [16, closed],                        // groove A
+    [16, stack(closed, open)],           //   open hats in
+    [8, stack(closed, open)],            // mute
+    [32, stack(closed, open)],           // groove B
+    [12, closed],                        // breakdown: just the closed hats
+    [4, "~"],                            //   the roll alone
+    [16, stack(closed, open)],           // peak 1
+    [24, stack(closed, open, shaker)],   // peak 2: shaker
+    [8, closed],                         // outro
+    [8, "~"],
+  ).orbit(4)
+
+// rim on a 3-3-2 against the four-on-the-floor: groove B and peak 2
+const rim = arrange([64, "~"], [24, "rim(3,8)"], [32, "~"], [24, "rim(3,8)"], [16, "~"])
+  .s().bank("RolandTR808").gain(.45).pan(.3).orbit(4)
+
+// 808 snare roll into the peak (no noise risers): 8ths, then rising 16ths
+const roll = arrange(
+    [100, "~"],
+    [2, s("sd*8").gain(saw.range(.15, .3).slow(2))],
+    [2, s("sd*16").gain(saw.range(.25, .5).slow(2))],
+    [56, "~"],
+  ).bank("RolandTR808").pan(saw.range(.35, .65)).room(.2).orbit(3)
+
+// ---------------------------------------------------------- ATMOSPHERE --
+// The EP kit (13 Oct 2026, voiced from each raga). Sections: intro 16 |
+// groove A 32 | mute 8 | groove B 32 | breakdown 12 + roll 4 | peaks 40 |
+// outro 16.
+
+// AIR -- a wide, dark supersaw on two Yaman dyads (S+P, R+D), 8 cycles each,
+// slow attack, long tail, filter breathing. Never Ga or Ni: the pad doesn't
+// get to settle on them either. The breakdown's last 4 cycles swell under
+// the snare roll.
+const air = note("<[d3,a3] [e3,b3]>/8")
+  .s("supersaw").unison(5).spread(1).detune(.15)
+  .attack(3).release(5)
+  .lpf(arrange([100, sine.range(450, 1100).slow(16)], [4, saw.range(800, 3000).slow(4)], [56, sine.range(450, 1100).slow(16)]))
+  .lpq(1)
+  .room(.8).roomsize(6)
+  .orbit(7)
+  .gain(arrange([16, ".16"], [32, ".07"], [8, ".18"], [32, ".06"], [12, ".2"], [4, ".24"], [40, ".06"], [16, ".18"]))
+
+// SHIMMER -- N. R G R / D N D P two octaves above the 303, plucked, through
+// a big room and a long dotted-8th delay, alternating left/right
+const shimmerLine = n("<[-1 ~ 1 ~ 2 ~ 1 ~] ~ [5 ~ 6 ~ 5 ~ 4 ~] ~>")
+  .scale("D4:lydian")
+  .s("triangle").attack(.005).decay(.5).sustain(0).release(.3)
+  .pan("[.15 .85]*4")
+  .delay(.5).delaytime(.363).delayfeedback(.6)
+  .room(.9).roomsize(8)
+  .orbit(8)
+const shimmer = arrange(
+    [8, "~"], [8, shimmerLine],   // intro, second half
+    [32, "~"],
+    [8, shimmerLine],             // mute
+    [32, "~"],
+    [16, shimmerLine],            // breakdown + roll
+    [40, "~"],
+    [16, shimmerLine],            // outro
+  ).gain(.15)
+
+// -- BASS (v4) -- Goa, like Bhairav's: offbeat pulse in groove A, rolling
+// 16ths on Sa in groove B and the peaks; out for the mute and breakdown
+const pulseB = "[~ 0]*4"
+const rollB = "<[~ 0 0 0]*4 [[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 -1 0]]>"
+const bass = arrange(
+    [8, "~"], [8, pulseB],       // intro, second half
+    [32, pulseB],                // groove A
+    [8, "~"],                    // mute
+    [32, rollB],                 // groove B
+    [16, "~"],                   // breakdown + roll
+    [40, rollB],                 // peaks
+    [8, pulseB], [8, "~"],       // outro
+  )
+  .n().scale("D1:lydian")
+  .s("sawtooth")
+  .lpf(arrange([48, saw.range(280, 450).slow(48)], [8, "300"], [32, saw.range(320, 520).slow(32)], [16, "300"], [40, saw.range(380, 600).slow(40)], [16, "300"]))
+  .lpq(3)
+  .decay(.1).sustain(0).release(.03)
+  .orbit(1)
+  .gain(.55)
+
+stack(kick, clap, hats, rim, roll, bass, acid, air, shimmer)

@@ -24,6 +24,46 @@ The *komal Re* (Db) and *komal Dha* (Ab) are the soul of the raga. Over a 303 wi
 
 ---
 
+## Releases
+
+### Raga Clock (EP)
+
+One club night, sundown to pre-dawn: five ragas, one Sa (D), all written as code in Strudel.
+
+**1. Godhuli** - raag Marwa // psytrance // 142 bpm
+
+The cow-dust hour. Marwa has no Pa and a Sa it keeps avoiding: a 303 line and a soft triangle lead share its six notes and never touch Sa, until the second drop, where both land on it together on the downbeat.
+
+**To run:** paste [`releases/godhuli.strudel`](https://github.com/abhirajdg/acid-does-not-abide/blob/main/releases/godhuli.strudel) into [strudel.cc](https://strudel.cc) and hit play.
+
+**2. Tivra** - raag Yaman // acid house x goa // 124 bpm
+
+Named after Yaman's one altered note, the raised Ma. A 303 over 808 drums the way Charanjit Singh did it in 1982, a Goa bass rolling on Sa underneath. The riff climbs towards Ga and Ni and turns away every time; the only resolution is the cadence onto Sa at the very end.
+
+**To run:** paste [`releases/tivra.strudel`](https://github.com/abhirajdg/acid-does-not-abide/blob/main/releases/tivra.strudel) into [strudel.cc](https://strudel.cc) and hit play.
+
+**3. Kind of Bageshri** - raag Bageshri // jazz x goa // 140 bpm
+
+Bageshri's notes are the Dorian mode, the mode of "So What". Rhodes voicings in fourths over a Goa bass parked on Sa: a head, trades between the lead and the Rhodes, one chorus up a half step, a jazz tag to finish.
+
+**To run:** paste [`releases/kind-of-bageshri.strudel`](https://github.com/abhirajdg/acid-does-not-abide/blob/main/releases/kind-of-bageshri.strudel) into [strudel.cc](https://strudel.cc) and hit play.
+
+**4. Andolan** - raag Darbari Kanada // dark psytrance // 145 bpm
+
+The 2am peak. Darbari's mark is the andolan, a slow swing on komal Ga and komal Dha. The lead stays low and swings on those notes, and the acid filter swings at the same rate. Upper Sa arrives once, at the climax.
+
+**To run:** paste [`releases/andolan.strudel`](https://github.com/abhirajdg/acid-does-not-abide/blob/main/releases/andolan.strudel) into [strudel.cc](https://strudel.cc) and hit play.
+
+**5. Bhairav After Hours** - raag Bhairav // techno x goa // 136 bpm
+
+The hour before dawn. Komal Re and komal Dha, both swinging, inside Bhairav's own pakad phrases, over a rolling Goa bass and a drone on Sa and Pa. One long build, the Goa pitch-lift, then the room empties into the morning.
+
+**To run:** paste [`releases/bhairav-after-hours.strudel`](https://github.com/abhirajdg/acid-does-not-abide/blob/main/releases/bhairav-after-hours.strudel) into [strudel.cc](https://strudel.cc) and hit play.
+
+*Kind of Bageshri and Bhairav After Hours use no samples at all: their drums and electric piano are synthesised in the code.*
+
+---
+
 ## Daily archive
 
 [`daily/`](./daily) holds the short (~15-25s) patterns from the daily rotation — one `.strudel`

@@ -1,0 +1,350 @@
+// ============================================================================
+// ANDOLAN v4 -- raga Darbari Kanada, dark psytrance (FULL ARRANGEMENT)
+// EP slot 4 of 5 (songs/EP-RAGA-CLOCK.md): 2am, the peak of the night
+// ============================================================================
+//
+// Darbari is the deep-night raga: heavy, slow-burning, sung low. Its mark is
+// the andolan, a slow swing on komal Ga and komal Dha, and the whole track is
+// built on that swing:
+//   - the lead stays low (mandra and lower madhya) and reaches upper Sa only
+//     at the climax, once, at cycle 172
+//   - held Ga and Dha in the lead swing (the andolan), and the acid's filter
+//     LFO runs at the SAME rate: one pattern, `andolan`, drives both. Breaks
+//     swing once per cycle, drops twice, so the swing speeds up with the drums
+//
+// v4 (Abhiraj on v3, 14 Oct 2026: "the lead seems to be doing too much ...
+// we are supposed to be a Goa trance-inspired electronic artist and that
+// isn't really coming out"; hats a little loud. Bhairav After Hours is the
+// one that works, so v4 takes its template. Measured: Bhairav's lead is one
+// voice on the 8th-note grid, recombining a few phrases in 8-bar blocks,
+// over rolling bass and drums. v3 ran two melodic voices at once, the acid
+// active in 94% of bars and changing bar to bar):
+//   - the lead plays in 8-bar call/response blocks (two bars stated three
+//     times, then a turn), like Bhairav's pakad blocks: same phrases, far
+//     more repetition. The climax still saves S' for cycle 172
+//   - under the lead the acid thins to a sparse 3-3-2 pulse on Sa, about
+//     2 dB down and darker, so the lead is the one melodic voice; where the
+//     lead is out it is one hypnotic 2-bar riff per section, up front
+//   - hats about 3.5 dB down
+//
+// v3 (Abhiraj on v2, 13 Oct 2026: "sound great"; the lead would sound better
+// as a pulse; wants Goa/psy atmosphere and a wider stereo field). Notes and
+// arrangement unchanged:
+//   - lead on a PULSE wave (pw .35). Its pulse-width sweep runs at the
+//     andolan rate too, so the tone breathes with the swing on g and d
+//   - EP atmosphere kit (same in all five tracks): `air`, a wide filtered
+//     supersaw on S+P / R+P, up front in the intro, breaks and outro and low
+//     under the drops; `shimmer`, the g~ M R S / d n P phrases two octaves
+//     up through a big reverb and long delay, alternating L/R, with the same
+//     andolan; `zaps`, a Goa laser that dives two octaves onto Sa, ping-
+//     ponging L/R at the end of every 4th bar in the drops
+//   - width: the lead gets a Haas copy (12 ms, opposite side, +6 cents), the
+//     acid a mirrored echo (it sweeps one way, its echo the other), hats
+//     split wider. Kick and bass stay centred
+//
+// v2 builds the full track around v1's 32-cycle section (break 2 + climax,
+// kept note-for-note) and fixes a v1 bug: v1 built the acid's filter LFO
+// inside arrange(), where every section restarts time at 0, so in the climax
+// it read `andolan` from cycle 0 (one swing per cycle) while the lead swung
+// twice. v2 builds the LFO once on global time (`swing` below) and only
+// scales it per section, so the two really share one rate.
+//
+// SECTIONS (cycles @ 36.25 cpm):
+//   intro      0-16   kick + offbeat hat; bass at 8; the acid ticks, shut
+//   groove    16-48   16th hats; the acid fills in; at 32 the lead's first
+//                     entrance: alap fragments low, under the groove
+//   drop 1    48-96   lead goes rhythmic in the low octave (staccato);
+//                     72-96 call/response: lead calls in the first half of
+//                     the bar, the acid answers in the second
+//   break 1   96-112  no kick or bass: the acid alone, call/response into a
+//                     long delay; mridangam roll into drop 2
+//   drop 2   112-144  lead legato, climbing to d and n and always turning
+//                     back (d~ n P, M P g~): never S'. Acid on a Sa pedal
+//   break 2  144-160  v1: the alap, slow andolan; roll into the climax
+//   climax   160-176  v1: M P d~ n P ... P d~ n S' at 172, home to Sa
+//   outro    176-192  kick and bass to 184; g~ M R S one last time, alone
+//   = 192 cycles = 5:17.8
+//
+// RAGA DARBARI KANADA (Asavari thaat): S R g M P d n == D aeolian, rooted on
+// D (the EP's one Sa). Vadi R, samvadi P. Ga is ati-komal (a shade below
+// komal), approached from above and resolved down: g~ M R S. Dha resolves
+// through Ni to Pa: d~ n P. Descent is crooked: S' d~ n P, M P g~ M R S.
+// Degrees here: 0=S 1=R 2=g 3=M 4=P 5=d 6=n 7=S'  (-1=n. -2=d. -3=P. -4=M.)
+// darbari() maps degrees to notes; on g and d it flattens by .15 of a
+// semitone (ati-komal) and sets the swing depth. Swing rate comes from
+// `andolan` in cycles, times cps, so it is locked to the tempo.
+//
+// TEMPO: setcpm(36.25) x 4 = 145 BPM. Dotted 8th = 3/16 cycle = .310 s.
+// LAYERS (10): kick, bass, hats, fills, acid, lead (+ echo, Haas copy),
+//   air, shimmer, zaps.
+// ============================================================================
+
+setcpm(36.25) // 145 BPM
+const CPS = 36.25 / 60
+const HAAS = .012 * CPS   // 12 ms, in cycles
+
+const AEOLIAN = [0, 2, 3, 5, 7, 8, 10]
+const darbari = root => v => {
+  const o = Math.floor(v.n / 7), i = ((v.n % 7) + 7) % 7
+  const swing = i === 2 || i === 5             // komal Ga, komal Dha
+  const { n, ...rest } = v
+  return { ...rest, note: root + 12 * o + AEOLIAN[i] - (swing ? .15 : 0), vibmod: swing ? .3 : 0 }
+}
+const seq = (...bars) => mini('<' + bars.join(' ') + '>')
+
+// THE ANDOLAN: swings per cycle. 1 in the intro, groove and breaks, 2 in the
+// drops and the climax. The lead's vibrato and the acid's filter both read it.
+const andolan = arrange([48, "1"], [48, "2"], [16, "1"], [32, "2"], [16, "1"], [16, "2"], [16, "1"])
+// the filter LFO on global time (0..1); sections only set its range
+const swing = sine.fast(andolan)
+
+// -- LEAD BARS -- 8 slots per bar
+// alap (break 2, v1; fragments in the groove): each bar over 2 cycles
+const b1 = '[0@4 ~ -1 -2@2]'        // S, n. d.~
+const b2 = '[-2@3 -1 0@3 ~]'        // d.~ n. S
+const b3 = '[-1 0 1 2@5]'           // n. S R g~ (held, swinging)
+const b4 = '[2@2 3 1@2 0@2 ~]'      // g~ M R S -- Darbari's signature
+const b5 = '[-4 -3 -2@4 -1 -3]'     // M. P. d.~ n. P. -- d n P, low
+const b6 = '[-2@2 -1 -3@2 ~ -1 0]'  // d.~ n. P. . n. S
+const b7 = '[1@2 2@3 3 1 ~]'        // R g~ M R, left on Re
+const b8 = '[0@6 ~ ~]'              // S
+// drop 1: rhythmic, low octave
+const d1 = '[0 ~ -1 ~ -2@2 -1 0]'   // S n. d.~ n. S
+const d2 = '[-3 ~ -2@2 -1 -3 ~ ~]'  // P. d.~ n. P.
+const d3 = '[0 1 2@3 3 1 0]'        // S R g~ M R S
+const d4 = '[-4 -3 -2@3 -1 -3@2]'   // M. P. d.~ n. P.
+const d5 = '[-1 0 1@2 2@3 1]'       // n. S R g~ R
+const d6 = '[-2@2 -1 -3@2 -4 -3@2]' // d.~ n. P. M. P.
+// drop 1b: calls in the first half; the acid answers
+const e1 = '[0 -1 -2@2 ~ ~ ~ ~]'    // S n. d.~
+const e2 = '[1 2@2 0 ~ ~ ~ ~]'      // R g~ S
+const e3 = '[-3 -2@2 -1 ~ ~ ~ ~]'   // P. d.~ n.
+const e4 = '[2@2 3 1 ~ ~ ~ ~]'      // g~ M R
+const e5 = '[3 4 5@2 ~ ~ ~ ~]'      // M P d~
+// drop 2: legato, reaching d and n, always turning back
+const g1 = '[3 4 5@2 4 3 2@2]'      // M P d~ P M g~
+const g2 = '[3 1 0 -1 0@4]'         // M R S n. S
+const g3 = '[4 5@2 6 5@2 4 ~]'      // P d~ n d~ P
+const g4 = '[3 4 2@2 3 1 0@2]'      // M P g~ M R S
+const g5 = '[0 1 2@2 3 4 5 6]'      // S R g~ M P d n -- up to n...
+const g6 = '[5@2 6 4 3 4 2@2]'      // ...and back: d~ n P M P g~
+const g7 = '[3 1@2 0 -1 -2@2 -1]'   // M R S n. d.~ n.
+const g8 = '[0@8]'                  // S
+// climax (v1)
+const c1 = '[0 ~ -1 0 1 ~ 2@2]'     // S n. S R g~
+const c2 = '[3 ~ 1 ~ 0 -1 0@2]'     // M R S n. S
+const c3 = '[3 4 5@3 6 4 ~]'        // M P d~ n P
+const c4 = '[3 4 2@2 3 1 0@2]'      // M P g~ M R S
+const c5 = '[-1 0 1 2@2 3 4 5]'     // n. S R g~ M P d -- climbing
+const c6 = '[5@2 6 4 ~ 5 6 4]'      // d~ n P, d n P
+const c7 = '[4 5@2 6 7@4]'          // P d~ n S' -- the only upper Sa
+const c8 = '[7@2 5@2 6 4@3]'        // S' d~ n P
+const c9 = '[3 4 2@2 3 1 ~ 0]'      // M P g~ M R S
+const c10 = '[0@8]'                 // S
+
+const lead = arrange(
+    [32, "~"],                                                       // intro, groove
+    [16, n(seq(b1, b2, b5, b6)).slow(2)],                            //   first entrance
+    // 8-bar blocks: a call/response pair stated three times, then a turn
+    [24, n(seq(d1, d2, d1, d2, d1, d2, d3, d4,  d3, d4, d3, d4, d3, d4, d5, d6,  d1, d2, d1, d2, d1, d2, d3, d4))], // drop 1
+    [8, "~"],                                                        //   the acid alone
+    [16, n(seq(e1, e2, e1, e2, e1, e2, e5, e4))],                    //   calls (the acid answers)
+    [16, "~"],                                                       // break 1
+    [32, n(seq(g1, g2, g1, g2, g1, g2, g3, g4,  g3, g4, g3, g4, g5, g6, g7, g2))], // drop 2
+    [16, n(seq(b1, b2, b3, b4, b5, b6, b7, b8)).slow(2)],            // break 2 (v1)
+    [16, n(seq(c3, c4, c3, c4, c5, c6, c5, c6,  c3, c4, c5, c6, c7, c8, c9, c10))], // climax: S' at 172
+    [8, n(seq(c9, c10, c4, c10, c9, c10, c4, c10))],                 // outro
+    [4, n(seq(b4, b8)).slow(2)],                                     //   g~ M R S, alone
+    [4, "~"],
+  )
+  .withValue(darbari(50))   // Sa = D3
+  .vib(andolan.mul(CPS))    // swing rate in Hz; depth is 0 except on g and d
+  .s("pulse").pw(.35)
+  .pwrate(andolan.mul(CPS)).pwsweep(.15)   // the pulse width breathes at the andolan rate
+  .attack(.03)
+  // articulation per section: alap legato, drop 1 staccato, drop 2 legato
+  .decay(arrange([48, ".3"], [48, ".15"], [16, ".3"], [32, ".3"], [48, ".3"]))
+  .sustain(arrange([48, ".7"], [48, ".3"], [16, ".7"], [32, ".8"], [48, ".7"]))
+  .release(.35)
+  .lpf(arrange([48, "1000"], [48, "1400"], [16, "1100"], [32, "1600"], [16, "1100"], [16, "1800"], [16, "1100"])).lpq(3)
+  .distort(arrange([48, ".1"], [48, ".22"], [16, ".1"], [32, ".18"], [16, ".1"], [16, ".2"], [16, ".1"]))
+  .room(.35)
+  .pan(.7)
+  .orbit(3)
+  .gain(arrange([48, ".5"], [48, ".48"], [16, ".5"], [32, ".48"], [32, ".5"], [16, ".5"]))  // pulse runs hotter than the v2 saw
+  // Haas copy: 12 ms late, opposite side, 6 cents sharp -- width, not an echo
+  .superimpose(x => x.late(HAAS).pan(.3).add(note(.06)).velocity(.6))
+  // echo on the opposite side, a dotted 8th late
+  .superimpose(x => x.late(3 / 16).pan(.25).velocity(.3))
+
+// -- ACID BARS (16ths, D2) --
+const x1 = '[0 ~ 2 0 ~ 0 3 ~ 0 ~ 5 ~ 4 2 ~ 1]'    // S g S, S M, S d P g R
+const x2 = '[0 ~ 2 3 ~ 1 0 ~ -2 ~ -1 0 ~ 2 1 ~]'  // S g M R S, d. n. S g R
+const x3 = '[0 0 7 0 ~ 2 9 ~ 0 ~ 5 12 ~ 4 2 ~]'   // octave jabs: S/S' g/g' d/d'
+const x4 = '[0 ~ ~ ~ 2 ~ ~ ~ 3 ~ 1 ~ 0 ~ ~ ~]'    // sparse: S g M R S
+const x5 = '[~ ~ -2 ~ ~ ~ -1 ~ ~ ~ 0 ~ ~ ~ ~ ~]'  // sparse: d. n. S
+const s1 = '[0 ~ ~ ~ 2 ~ 0 ~ ~ ~ 3 ~ ~ ~ 1 ~]'    // groove: filling in
+const x6 = '[0 7 0 2 ~ 9 0 3 ~ 0 5 12 0 4 ~ 2]'   // busier jabs
+const x7 = '[0 0 2 0 3 0 5 0 6 0 5 0 3 2 1 ~]'    // Sa pedal: g M d n over S, back down
+// under the lead (v4): a sparse 3-3-2 pulse on Sa, so the lead is the one melodic voice
+const u1 = '[0 ~ ~ 0 ~ ~ 2 ~ 0 ~ ~ 0 ~ ~ 3 ~]'    // S . . S . . g . | S . . S . . M .
+const u2 = '[0 ~ ~ 0 ~ ~ 5 ~ 0 ~ ~ 0 ~ ~ 1 ~]'    // S . . S . . d . | S . . S . . R .
+// drop 1b: answers in the second half of the bar
+const y1 = '[~ ~ ~ ~ ~ ~ ~ ~ 0 2 3 2 1 ~ 0 ~]'    // S g M g R S
+const y2 = '[~ ~ ~ ~ ~ ~ ~ ~ 5 4 ~ 2 3 1 0 ~]'    // d P g M R S
+const y3 = '[~ ~ ~ ~ ~ ~ ~ ~ 7 5 6 4 3 2 1 0]'    // S' d n P M g R S
+// break 1: the acid alone, call and response
+const z1 = '[0 2 3 2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~]'    // call: S g M g
+const z2 = '[~ ~ ~ ~ ~ ~ ~ ~ 5 4 2 3 1 ~ 0 ~]'    // response: d P g M R S
+const z3 = '[-2 -1 0 ~ ~ ~ ~ ~ 2 ~ 3 1 ~ 0 ~ ~]'  // d. n. S, g M R S
+
+const acid = arrange(
+    [8, "~"],                                                  // intro
+    [8, n(seq(x4, x5))],
+    [16, n(seq(x4, s1, x4, s1, s1, x1, s1, x2))],              // groove: filling in
+    [16, n(seq(x1, x2))],
+    [24, n(seq(u1, u2))],                                      // drop 1: a pulse under the lead
+    [8, n(seq(x6, x3))],                                       //   the lead's gap: the acid steps up
+    [16, n(seq(y1, y2))],                                      //   answers
+    [16, n(seq(z1, z2, z1, z3))],                              // break 1: alone
+    [32, n(seq(u1, u2))],                                      // drop 2: a pulse under the lead
+    [16, n(seq(x4, x5))],                                      // break 2 (v1)
+    [16, n(seq(u2, u1))],                                      // climax: a pulse under the lead
+    [8, n(seq(x1, x2))],                                       // outro
+    [4, n(seq(x4, x5))],
+    [4, "~"],
+  )
+  .scale("D2:aeolian")
+  .s("sawtooth")
+  .attack(.003).decay(.13).sustain(0).release(.04)
+  // the filter swings at the andolan's rate: `swing` is global, only its
+  // range changes per section
+  .lpf(swing
+    .mul(arrange([16, "450"], [32, "1200"], [48, "1400"], [16, "1000"], [32, "1800"], [16, "800"], [16, "2000"], [16, "900"]))  // darker under the lead
+    .add(arrange([16, "250"], [32, "400"], [48, "500"], [16, "300"], [32, "600"], [16, "300"], [16, "500"], [16, "300"])))
+  .lpq(arrange([16, "10"], [32, "12"], [48, "13"], [16, "14"], [32, "14"], [16, "12"], [16, "14"], [16, "11"]))
+  .lpenv(2).lpdecay(.1).lpsustain(0)
+  .distort(arrange([16, ".15"], [32, ".2"], [48, ".28"], [16, ".25"], [32, ".35"], [16, ".2"], [16, ".32"], [16, ".2"]))
+  .delay(arrange([96, ".25"], [16, ".45"], [32, ".25"], [16, ".25"], [32, ".25"]))
+  .delaytime(.31)
+  .delayfeedback(arrange([16, ".4"], [80, ".3"], [16, ".6"], [32, ".3"], [16, ".5"], [16, ".3"], [16, ".45"]))
+  .pan(sine.range(.1, .9).slow(8))
+  .room(.25)
+  .orbit(2)
+  // back under the lead (drops, climax), forward where the lead is out
+  .gain(arrange([16, ".5"], [32, ".55"], [24, ".42"], [8, ".55"], [16, ".45"], [16, ".55"], [32, ".42"], [16, ".55"], [16, ".42"], [16, ".5"]))
+  // mirrored echo: the acid sweeps one way, its echo the other
+  .superimpose(x => x.late(3 / 16).pan(sine.range(.9, .1).slow(8)).velocity(.28))
+
+// -- KICK -- out for the breaks; ducks the bass hard (1), the acid lightly (2)
+const kick = arrange([96, "bd*4"], [16, "~"], [32, "bd*4"], [16, "~"], [24, "bd*4"], [8, "~"])
+  .s().bank("RolandTR909")
+  .orbit(0)
+  .duckorbit("1:2").duckattack(.01).duckdepth(".85:.35")
+  .gain(.56)
+
+// -- BASS -- psy rolling 16ths on Sa, D1; from drop 1, a low n. ends every 4th bar
+const roll = "[~ 0 0 0]*4"
+const rollN = "<[~ 0 0 0]*4 [~ 0 0 0]*4 [~ 0 0 0]*4 [[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 -1 0]]>"
+const bass = arrange(
+    [8, "~"],
+    [40, roll],     // intro (second half), groove
+    [48, rollN],    // drop 1
+    [16, "~"],      // break 1
+    [32, rollN],    // drop 2
+    [16, "~"],      // break 2
+    [16, rollN],    // climax
+    [8, roll],      // outro
+    [8, "~"],
+  )
+  .n().scale("D1:aeolian")
+  .s("sawtooth")
+  .lpf(arrange([48, saw.range(240, 420).slow(48)], [48, saw.range(280, 500).slow(48)], [16, "300"], [32, saw.range(300, 520).slow(32)], [16, "300"], [16, "520"], [16, saw.range(480, 260).slow(16)])).lpq(4)
+  .decay(.08).sustain(0).release(.02)
+  .orbit(1)
+  .gain(.66)
+
+// -- HATS --
+const closed = s("hh*16").bank("RolandTR909").hpf(7000).gain("[.09 .05 .08 .05]*4").pan(.88)
+const open = s("[~ oh]*4").bank("RolandTR909").clip(.5).gain(.11).pan(.12)
+const hats = arrange(
+    [16, open],                  // intro: offbeat only
+    [80, stack(closed, open)],   // groove, drop 1
+    [8, "~"],                    // break 1
+    [8, closed],                 //   closed hats build
+    [32, stack(closed, open)],   // drop 2
+    [8, "~"],                    // break 2
+    [8, closed],
+    [16, stack(closed, open)],   // climax
+    [8, stack(closed, open)],    // outro
+    [8, "~"],
+  ).orbit(4)
+
+// -- FILLS -- mridangam into each drop: rising 16ths; before drop 2 and the
+// climax, the low strokes first
+// the low strokes sound near G#, a tritone off Sa: tuned down to D
+const fillA = s("[mridangam_thom ~ mridangam_dhum ~]*2").speed(.707).gain(.3)
+const fillB = s("[mridangam_ta mridangam_ki mridangam_na mridangam_ki]*4")
+  .gain("[.12 .14 .16 .18 .2 .22 .24 .26 .28 .3 .32 .34 .36 .38 .4 .44]")
+const fills = arrange(
+    [47, "~"], [1, fillB],               // into drop 1
+    [62, "~"], [1, fillA], [1, fillB],   // into drop 2
+    [46, "~"], [1, fillA], [1, fillB],   // into the climax
+    [32, "~"],
+  ).hpf(120).pan(saw.range(.2, .8)).orbit(5)
+
+// ---------------------------------------------------------- ATMOSPHERE --
+// The EP kit (13 Oct 2026, same three layers in all five tracks, voiced from
+// each raga). Sections: intro 16 | groove 32 | drop 1 48 | break 1 16 |
+// drop 2 32 | break 2 16 | climax 16 | outro 16.
+
+// AIR -- a wide, dark supersaw on two raga dyads (S+P, R+P), 8 cycles each,
+// slow attack and long tail. Never one static tone: it moves every 8 cycles
+// and its filter breathes. Up front in the intro/breaks/outro, low under drops.
+const air = note("<[d3,a3] [e3,a3]>/8")
+  .s("supersaw").unison(5).spread(1).detune(.15)
+  .attack(3).release(5)
+  .lpf(sine.range(450, 1100).slow(16)).lpq(1)
+  .room(.8).roomsize(6)
+  .orbit(7)
+  .gain(arrange([16, ".16"], [32, ".1"], [48, ".06"], [16, ".2"], [32, ".06"], [16, ".18"], [16, ".07"], [16, ".18"]))
+
+// SHIMMER -- Darbari's two signature phrases (g~ M R S, d~ n P) two octaves
+// above the lead, plucked, through a big room and a long dotted-8th delay,
+// alternating left/right. darbari() gives it the same andolan on g and d.
+const shimmerLine = n("<[2@2 3 ~ 1 ~ 0 ~] ~ [5@2 6 ~ 4 ~ ~ ~] ~>")
+  .withValue(darbari(74))   // Sa = D5
+  .vib(andolan.mul(CPS))
+  .s("triangle").attack(.005).decay(.5).sustain(0).release(.3)
+  .pan("[.15 .85]*4")
+  .delay(.5).delaytime(.31).delayfeedback(.6)
+  .room(.9).roomsize(8)
+  .orbit(8)
+const shimmer = arrange(
+    [8, "~"], [8, shimmerLine],   // intro, second half
+    [32, "~"], [48, "~"],
+    [16, shimmerLine],            // break 1
+    [32, "~"],
+    [16, shimmerLine],            // break 2
+    [16, "~"],
+    [16, shimmerLine],            // outro
+  ).gain(.16)
+
+// ZAPS -- the Goa laser: a square that dives two octaves onto Sa, on the last
+// 8th of every 4th bar in the drops, ping-ponging left/right
+const zap = note("<~ ~ ~ [~ ~ ~ ~ ~ ~ ~ d4]>")
+  .s("square").penv(24).pdecay(.3)
+  .decay(.35).sustain(0).release(.1)
+  .lpf(3500)
+  .pan("<~ ~ ~ .1 ~ ~ ~ .9>")
+  .delay(.5).delaytime(.31).delayfeedback(.5)
+  .room(.5)
+  .orbit(9)
+const zaps = arrange(
+    [48, "~"], [48, zap],         // drop 1
+    [16, "~"], [32, zap],         // drop 2
+    [16, "~"], [16, zap],         // climax
+    [16, "~"],
+  ).gain(.14)
+
+stack(kick, bass, hats, fills, acid, lead, air, shimmer, zaps)

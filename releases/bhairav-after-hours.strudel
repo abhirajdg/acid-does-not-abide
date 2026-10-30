@@ -1,0 +1,332 @@
+// ============================================================================
+// BHAIRAV AFTER HOURS v4 (Brahma Muhurta) -- raga Bhairav, techno x Goa trance
+// RELEASE TITLE: "Bhairav After Hours" (renamed 5 Oct 2026; formerly Brahma Muhurta)
+// ============================================================================
+//
+// v2 = Abhiraj's v1 edits (sine lead, room .32, gain .6, open hat dropping its
+// last hit every 4th cycle) kept as-is, plus four genre moves, no new layers:
+//   1. clap roll (4ths -> 8ths -> 16ths) into both drops, under the riser --
+//      the trance snare-roll build, using the clap already in the track
+//   2. ride on offbeats for the lifted last 32 cycles of drop 2 -- the
+//      techno peak-time top end, so the climax lifts the drums with the lead
+//   3. bass filter opens slowly across each drop (techno's long build within
+//      a section); drop 2 starts brighter than drop 1 ended
+//   4. headroom: bass trimmed to .6
+//
+// Final pass (Abhiraj, 2 Oct 2026): kick back to .6, hats pulled down
+// (open .18, 16ths .16 on the downbeat), lead -> supersaw with longer
+// sustain/release and room .75.
+//
+// v4 (21 Oct 2026): DistroKid rejected the release after its content check matched this
+// track to another artist's recording ("Eastside Clap", DJ Dodger Stadium). Nothing here is
+// sampled from anyone, but the stock TR-909 hits (the clap above all, which carries the
+// rolls into both drops) are the only thing the track shares with other people's music, so
+// every drum is replaced by synthesis (kickV, clapV, hatV, rideV), level-matched to the 909
+// hits. Notes, form, roll rhythm, bass, lead and atmosphere are unchanged from v3.
+//
+// v3 (Abhiraj, 13 Oct 2026: wants Goa/psy atmosphere and a wider stereo
+// field across the EP; asked whether the tracks follow their ragas). A note
+// audit (every note the file plays) found the pitches right but Bhairav's
+// defining ornament missing: komal Re and komal Dha are andolit, a slow
+// swing, and 0 of 252 r/d notes in v2 moved. Otherwise notes kept:
+//   - ANDOLAN on r and d (lead + shimmer): two swings per cycle, depth .25
+//     of a semitone. The alap bars hold r and d long enough to hear it
+//     (A1/A2/B1/B2: same notes, r/d lengthened into the rests after them)
+//   - the white-noise risers are gone (Abhiraj, 5 Oct: "stop using the white
+//     noise"); the clap rolls stay, and a pitched pad swell (S P S', filter
+//     and level opening over 4 cycles) takes the riser's place
+//   - EP atmosphere kit (same in all five tracks): `air`, a wide filtered
+//     supersaw on S+P and r+d (samvadi + vadi), 8 cycles each; `shimmer`,
+//     G M d~ P / M r~ r S two octaves up through a big reverb and long delay,
+//     alternating L/R; `zaps`, a Goa laser diving onto Sa at the end of every
+//     8th bar in the drops
+//   - width: the lead's supersaw spread wider plus a Haas copy (12 ms,
+//     opposite side, +6 cents); hats and ride split L/R. Kick, bass and the
+//     drone stay centred
+//
+// Brahma muhurta is the pre-dawn hour Bhairav is meant to be played in. The
+// track is built as a night-club set that ends at that hour: techno supplies
+// the skeleton (four-on-the-floor, offbeat bass, long patient build), Goa
+// trance supplies the movement (rolling 16th bass, supersaw raga lead, a
+// pitch-lift for the climax). Raga supplies pitch only (10 Sep 2026 rule).
+//
+// SCALE: Bhairav S r G M P d N == tonal "gypsy" interval set (0,1,4,5,7,8,11),
+// same verified substitution as sets/bhairav-session-v1.strudel. Rooted on D.
+//   degrees: 0=S 1=r 2=G 3=M 4=P 5=d 6=N 7=S'   (8=r' 9=G' one octave up)
+// Vadi = Dha (5), samvadi = Re (1). Pakad: S r G M | r r S | G M P | M d N S'
+//
+// TEMPO: setcpm(34) x 4 beats/cycle = 136 BPM -- the seam between techno
+// (130) and Goa (138+).
+//
+// LEAD PHRASES (8 eighth-note steps per cycle, one phrase per cycle):
+//   P1 pakad statement   [0 1 2 3 ~ 1 1 0]   rise to M, fall back via r r S
+//   P2 response          [2 3 4 ~ 3 5 ~ 4]   answers from G, touches the vadi
+//   P3 tension           [3 5 6 7 ~ 6 5 ~]   climbs through Dha, N to S'
+//   P4 release           [0 1 1 ~ 3 2 1 0]   retrograde of the pakad
+// P2b/P3b/P4b are variations (different entry point, wider leap to G', lower
+// resolution). 8-cycle blocks L1-L4 recombine them: call/response (P1/P2),
+// tension -> release (P3 -> P4), motif + variation, never one loop repeated.
+//
+// SECTIONS (cycles @ 34 cpm): intro 16 | groove 32 | break 16 | drop 48 |
+//   break 8 | drop 48 (pitch-lift) | outro 16 = 184 cycles ~ 5:25
+//
+// LAYERS (10, each with one job): kick, hats, clap, bass, drone, lead, swell,
+//   air, shimmer, zaps.
+//   Percussion check: kick/hats/clap only where techno and Goa both carry a
+//   pulse; both breaks are alap (drone + lead + swell, no drums).
+//   Sidechain (MUSIC-KNOWLEDGE s10): kick ducks bass + drone hard and fast;
+//   the lead sits on its own orbit and is NOT ducked, it has to stay legible.
+// ============================================================================
+
+setcpm(34) // 136 BPM
+const CPS = 34 / 60
+const HAAS = .012 * CPS   // 12 ms, in cycles
+
+// -- SYNTHESISED KIT (v4, 21 Oct 2026) -- DistroKid's content check flagged the sampled
+// TR-909 hits in this track (the clap, matched to another artist's "Eastside Clap"), so
+// every drum here is now made in code: noise and sine voices voiced to match the 909 hits'
+// level and brightness. The notes, form and mix are unchanged from v3.
+// synthesised drum kit: no samples. Each voice takes a struct pattern ('x ~ x ~'); the track's own
+// .gain() sets the level, the inner balance is postgain so it is not overwritten.
+const kickV = p => stack(
+  note("a1").s("sine").struct(p).penv(40).pdecay(.03).attack(.0008).decay(.12).sustain(0).postgain(3.8),
+  s("white").struct(p).hpf(1500).lpf(6000).attack(.0005).decay(.014).sustain(0).postgain(1.3))
+const clapV = p => {
+  const burst = (t, d) => s("white").struct(p).late(t * CPS).bpf(950).bpq(1.3).attack(.0005).decay(d).sustain(0).postgain(5)
+  return stack(burst(0, .011), burst(.012, .011), burst(.024, .011), burst(.036, .11))
+}
+const snareV = p => stack(
+  note("d3").s("triangle").struct(p).penv(10).pdecay(.03).attack(.001).decay(.1).sustain(0).postgain(1.4),
+  s("white").struct(p).hpf(1200).lpf(9000).attack(.001).decay(.18).sustain(0).postgain(1.1))
+const hatV = (p, d) => stack(
+  s("white").struct(p).hpf(4800).lpf(10500).attack(.0005).decay(d).sustain(0).postgain(1.5),
+  note("[d6,g6,c7,f#7]").s("square").struct(p).hpf(4000).lpf(9000).attack(.0005).decay(d).sustain(0).postgain(.35))
+const rideV = p => stack(
+  note("[d5,e5,a#5,c#6]").s("square").struct(p).hpf(2500).lpf(8500).attack(.001).decay(.8).sustain(0).postgain(.55),
+  s("white").struct(p).hpf(5000).lpf(10000).attack(.001).decay(.55).sustain(0).postgain(1.1))
+const crashV = p => stack(
+  note("[d5,e5,a#5,c#6,f6]").s("square").struct(p).hpf(3000).lpf(9000).attack(.001).decay(1.5).sustain(0).postgain(.55),
+  s("white").struct(p).hpf(4000).lpf(10000).attack(.001).decay(1.3).sustain(0).postgain(1.4))
+
+// andolan on komal Re (1) and komal Dha (5): swing depth on those degrees
+// only, read before scale() turns degrees into notes
+const swingRD = v => { const i = ((v.n % 7) + 7) % 7; return { ...v, vibmod: (i === 1 || i === 5) ? .25 : 0 } }
+const ANDOLAN = 2 * CPS   // two swings per cycle, in Hz
+
+// -- KICK -- 909, drives the sidechain
+const kick = kickV(arrange(
+    [48, "x*4"],    // intro + groove
+    [16, "~"],      // break 1
+    [48, "x*4"],    // drop 1
+    [8, "~"],       // break 2
+    [56, "x*4"],    // drop 2 + first half of outro
+    [8, "~"],       // outro tail
+  ))
+  .orbit(0)
+  .duckorbit("1:2")
+  .duckattack(.01)
+  .duckdepth(.75)
+  .gain(.6)
+
+// -- HATS -- techno offbeat open hat first, Goa 16ths layered on in the drops
+const offbeatHat = hatV("~ x ~ x ~ x ~ <x x x ~>", .3).clip(.6).gain(.18).pan(.3)
+const driveHat = stack(
+  offbeatHat,
+  hatV("x*16", .045).gain("[.16 .14 .2 .14]*4").lpf(9000).pan(.75)
+)
+// peak-time: ride on the offbeats joins the drive hats while the lead is lifted
+const peakHat = stack(
+  driveHat,
+  rideV("~ x ~ x ~ x ~ x").gain(.16).pan(.85)
+)
+const hats = arrange(
+    [8, "~"],           // intro: kick alone first
+    [40, offbeatHat],   // rest of intro + groove
+    [16, "~"],          // break 1
+    [48, driveHat],     // drop 1
+    [8, "~"],           // break 2
+    [16, driveHat],     // drop 2, before the lift
+    [32, peakHat],      // drop 2, lifted
+    [8, offbeatHat],    // outro
+    [8, "~"],
+  )
+  .orbit(5)
+
+// -- CLAP -- backbeat on 2 and 4, enters halfway through the groove. The
+// last 4 cycles of each break turn it into an accelerating roll into the drop.
+const clap = arrange(
+    [32, "~"],
+    [16, clapV("~ x ~ x").gain(.4)],   // groove, second half
+    [12, "~"],                                            // break 1: alap, no drums
+    [2, clapV("x*4").gain(.18)],         // roll into drop 1
+    [1, clapV("x*8").gain(.24)],
+    [1, clapV("x*16").gain("[.2 .22 .24 .26 .28 .3 .32 .34 .36 .38 .4 .42 .44 .46 .48 .5]")],
+    [48, clapV("~ x ~ x").gain(.38)],  // drop 1
+    [4, "~"],                                             // break 2
+    [2, clapV("x*4").gain(.18)],         // roll into drop 2
+    [1, clapV("x*8").gain(.24)],
+    [1, clapV("x*16").gain("[.2 .22 .24 .26 .28 .3 .32 .34 .36 .38 .4 .42 .44 .46 .48 .5]")],
+    [48, clapV("~ x ~ x").gain(.38)],  // drop 2
+    [16, "~"],                                            // outro
+  )
+  .orbit(5)
+
+// -- BASS -- techno offbeat pulse -> Goa rolling 16ths. Stays on tonic/fifth
+// (D, A below); drop 2 adds octave jumps for movement. Degrees are relative to D2.
+const offbeatBass = "[~ 0]*4"
+const rollAFull = "<[[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 0 -3]] [[~ 0 0 0] [~ 0 0 0] [~ 0 0 0] [~ 0 0 0]]>"
+const rollBFull = "<[[~ 0 0 0] [~ 0 0 7] [~ 0 0 0] [~ -3 -3 0]] [[~ 0 0 0] [~ 0 0 0] [~ 0 0 7] [~ 0 0 -3]]>"
+const bass = arrange(
+    [24, "~"],             // intro + first 8 of groove
+    [16, offbeatBass],     // groove: techno pulse
+    [8, rollAFull],        // groove tail: rolling starts, signals the drop
+    [16, "~"],             // break 1
+    [48, rollAFull],       // drop 1
+    [8, "~"],              // break 2
+    [48, rollBFull],       // drop 2
+    [8, offbeatBass],      // outro: back to the techno pulse
+    [8, "~"],
+  )
+  .n()
+  .scale("D2:gypsy")
+  .sound("sawtooth")
+  // cutoff opens across each drop instead of sitting fixed at 380
+  .lpf(arrange(
+    [64, "380"],                          // intro, groove, break 1
+    [48, saw.range(340, 700).slow(48)],   // drop 1: slow open
+    [8, "380"],                           // break 2
+    [48, saw.range(450, 900).slow(48)],   // drop 2: starts brighter, opens further
+    [16, "380"],                          // outro
+  ))
+  .lpq(3)
+  .distort(.25).postgain(.8)
+  .decay(.12).sustain(.1).release(.03)
+  .orbit(1)
+  .gain(.6)
+
+// -- DRONE -- tanpura convention: S and P, whole track, ducked by the kick
+const drone = note("<d2 d2 a2 d2>/4")
+  .sound("sine")
+  .lpf(sine.range(300, 900).slow(16))
+  .gain(.24)
+  .room(.5)
+  .orbit(2)
+
+// -- LEAD -- the raga. Alap in groove/breaks, pakad blocks in the drops.
+const L1 = "<[0 1 2 3 ~ 1 1 0] [2 3 4 ~ 3 5 ~ 4] [0 1 2 3 ~ 1 1 0] [2 3 4 ~ 3 5 ~ 4] [0 1 2 3 ~ 1 1 0] [2 3 4 ~ 3 5 ~ 4] [3 5 6 7 ~ 6 5 ~] [0 1 1 ~ 3 2 1 0]>"
+const L2 = "<[0 1 2 3 ~ 1 1 0] [4 ~ 3 5 ~ 4 3 1] [3 5 6 7 ~ 6 5 ~] [0 1 1 ~ 3 2 1 0] [0 1 2 3 ~ 1 1 0] [4 ~ 3 5 ~ 4 3 1] [5 ~ 6 7 9 ~ 7 5] [3 2 1 ~ 1 0 ~ ~]>"
+const L3 = "<[0 1 2 3 ~ 1 1 0] [0 1 2 3 4 3 1 0] [2 3 4 ~ 3 5 ~ 4] [4 ~ 3 5 ~ 4 3 1] [3 5 6 7 ~ 6 5 ~] [5 ~ 6 7 9 ~ 7 5] [0 1 1 ~ 3 2 1 0] [3 2 1 ~ 1 0 ~ ~]>"
+const L4 = "<[3 5 6 7 ~ 6 5 ~] [5 ~ 6 7 9 ~ 7 5] [7 ~ 9 ~ 8 7 6 5] [6 5 3 ~ 5 3 1 ~] [0 1 2 3 ~ 1 1 0] [2 3 4 ~ 3 5 ~ 4] [3 2 1 ~ 1 0 ~ ~] [0 ~ ~ ~ ~ ~ ~ ~]>"
+// alap: sparse, held notes, long gaps -- unfolds S r G P, then climbs to the vadi
+const A1 = "<[0 ~ ~ ~ 1@4] [~ ~ 2 ~ ~ ~ 3 ~] [4 ~ ~ ~ 3 ~ 1@2] [~ ~ ~ ~ 0 ~ ~ ~]>"
+const A2 = "<[0 ~ 1 ~ 2 ~ 3 ~] [~ ~ 4 ~ ~ 5@3] [3 ~ ~ 1@2 1 ~ 0] [~ ~ ~ ~ ~ ~ ~ ~]>"
+const B1 = "<[0 ~ ~ 1@3 2 ~] [3 ~ ~ ~ 5@4] [~ 5@2 6 ~ 7 ~ ~] [6 ~ 5@2 3 ~ 1@2]>"
+const B2 = "<[7 ~ ~ ~ 5@4] [~ ~ 6 ~ 5@2 3 ~] [5@3 ~ 3 ~ 1@2] [~ ~ ~ ~ 0 ~ ~ ~]>"
+const O1 = "<[0 1 2 3 ~ 1 1 0] ~ [2 3 4 ~ 3 5 ~ 4] ~>"
+
+const lead = arrange(
+    [32, "~"],       // intro + first half of groove
+    [8, A1],         // groove: alap begins over the pulse
+    [8, A2],
+    [16, B1],        // break 1: full alap, the vadi arrives
+    [8, L1],         // drop 1
+    [8, L2],
+    [8, L1],
+    [8, L3],
+    [8, L2],
+    [8, L4],
+    [8, B2],         // break 2: alap again, shorter
+    [8, L1],         // drop 2 -- same material, lifted from cycle 16 on
+    [8, L3],
+    [8, L2],
+    [8, L4],
+    [8, L3],
+    [8, L4],
+    [8, O1],         // outro: pakad thins out
+    [8, "~"],
+  )
+  .n()
+  .withValue(swingRD)
+  .scale("D4:gypsy")
+  .vib(ANDOLAN)   // depth is 0 except on r and d
+  // Goa pitch-lift: drop 2 climbs a real octave for its last 32 cycles
+  .add(note(arrange([136, "0"], [32, "12"], [16, "0"])))
+  .sound("supersaw").spread(.9)
+  .attack(.005).decay(.14).sustain(.5).release(.23)
+  .lpf(sine.range(900, 3500).slow(16)).lpq(6)
+  .delay(.25).delayfeedback(.3)
+  .room(.75)
+  .pan(.62)
+  .orbit(3)
+  .gain(.52)
+  .superimpose(x => x.late(HAAS).pan(.38).add(note(.06)).velocity(.55))  // Haas copy: width, not an echo
+
+// -- SWELL -- replaces v2's white-noise riser: S P S' on a wide supersaw,
+// filter and level opening over the last 4 cycles of each break, under the
+// clap roll; the kick coming back is the release
+const swellNote = note("[d3,a3,d4]")
+  .s("supersaw").unison(5).spread(1).detune(.15)
+  .attack(.5).release(1.5)
+  .lpf(saw.range(400, 4500).slow(4)).lpq(2)
+  .gain(saw.range(.03, .3).slow(4))
+  .room(.6)
+const swell = arrange(
+    [60, "~"], [4, swellNote],    // into drop 1
+    [52, "~"], [4, swellNote],    // into drop 2
+    [64, "~"],
+  ).orbit(6)
+
+// ---------------------------------------------------------- ATMOSPHERE --
+// The EP kit (13 Oct 2026, voiced from each raga). Sections: intro 16 |
+// groove 32 | break 1 16 | drop 1 48 | break 2 8 | drop 2 48 | outro 16.
+
+// AIR -- a wide, dark supersaw on S+P and r+d (samvadi + vadi), 8 cycles
+// each, slow attack and long tail, filter breathing
+const air = note("<[d3,a3] [eb3,bb3]>/8")
+  .s("supersaw").unison(5).spread(1).detune(.15)
+  .attack(3).release(5)
+  .lpf(sine.range(450, 1100).slow(16)).lpq(1)
+  .room(.8).roomsize(6)
+  .orbit(7)
+  .gain(arrange([16, ".14"], [32, ".06"], [16, ".16"], [48, ".05"], [8, ".16"], [48, ".05"], [16, ".16"]))
+
+// SHIMMER -- G M d~ P / M r~ r S two octaves above the lead, plucked, through
+// a big room and a long dotted-8th delay, alternating left/right, with the
+// same andolan on r and d
+const shimmerLine = n("<[2 ~ 3 ~ 5@2 4 ~] ~ [3 ~ 1@2 1 ~ 0 ~] ~>")
+  .withValue(swingRD)
+  .scale("D6:gypsy")
+  .vib(ANDOLAN)
+  .s("triangle").attack(.005).decay(.6).sustain(0).release(.3)
+  .pan("[.15 .85]*4")
+  .delay(.5).delaytime(.331).delayfeedback(.6)
+  .room(.9).roomsize(8)
+  .orbit(8)
+const shimmer = arrange(
+    [8, "~"], [8, shimmerLine],   // intro, second half
+    [32, "~"],
+    [16, shimmerLine],            // break 1
+    [48, "~"],
+    [8, shimmerLine],             // break 2
+    [48, "~"],
+    [16, shimmerLine],            // outro
+  ).gain(.14)
+
+// ZAPS -- the Goa laser: a square diving two octaves onto Sa, on the last 8th
+// of every 8th bar in the drops, ping-ponging left/right
+const zap = note("<~ ~ ~ ~ ~ ~ ~ [~ ~ ~ ~ ~ ~ ~ d4]>")
+  .s("square").penv(24).pdecay(.3)
+  .decay(.35).sustain(0).release(.1)
+  .lpf(3500)
+  .pan("<~ ~ ~ ~ ~ ~ ~ .1 ~ ~ ~ ~ ~ ~ ~ .9>")
+  .delay(.5).delaytime(.331).delayfeedback(.5)
+  .room(.5)
+  .orbit(9)
+const zaps = arrange(
+    [64, "~"], [48, zap],         // drop 1
+    [8, "~"], [48, zap],          // drop 2
+    [16, "~"],
+  ).gain(.14)
+
+// every voice 2 dB down: the raw render otherwise touches full scale in the loudest sections
+stack(kick, hats, clap, bass, drone, lead, swell, air, shimmer, zaps).mul(gain(.8))
