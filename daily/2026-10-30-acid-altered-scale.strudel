@@ -1,0 +1,124 @@
+// ============================================================================
+// DAILY — 2026-10-30 (Friday): Acid / psychedelia free jam — the altered scale
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction: genre structure drives Friday, not raga performance form).
+// Checked every prior Friday before writing this one (MUSIC-KNOWLEDGE.md's
+// "don't template last cycle" rule): 08-28 harmonic minor / Goa bass-lead
+// split, three independently-drifting filter params. 09-04 whole tone /
+// Sound-on-Sound delay drone + wobble sub + phaser. 09-11 locrian /
+// duckorbit sidechain + psytrance bass + pad dyad. 09-18 natural minor /
+// single 303 + one slow lpf sweep. 09-25 phrygian dominant / half-time dub
+// + kick-locked wobble + Sound-on-Sound. 10-02 dorian / per-note FILTER
+// envelope (lpenv) under a slow lpf sweep, four-on-the-floor + clap. 10-09
+// minor pentatonic / per-note PITCH envelope (penv), choked hat pair. 10-16
+// major blues / automated BITCRUSH replacing the filter sweep, sparse rim.
+// 10-23 whole-half diminished / automated PHASER, kick only. Today picks a
+// scale none of those nine touched, and a device from a texture family none
+// of them did either (formant filtering, not pitch/filter/bitcrush/phase):
+//
+//   SCALE: C altered (aka super locrian / diminished whole tone — verified
+//   against tonaljs's own scale-type data this session, fetched from
+//   raw.githubusercontent.com/tonaljs/tonal since unpkg/jsdelivr are
+//   blocked in this cloud environment; same discipline as Bhairav's
+//   "gypsy" check). It's the 7th mode of melodic minor and THE jazz-
+//   improv "outside" scale — played over a dominant chord to build maximum
+//   tension before resolving down a half step, directly in the vocabulary
+//   of Abhiraj's Berklee jazz-improv training, not a decorative pick.
+//   Interval steps from root (half,whole,half,whole,whole,whole,whole):
+//   degrees 0=C 1=Db(b9) 2=Eb(#9) 3=E(nat.3) 4=Gb(tritone/#11) 5=Ab(b13)
+//   6=Bb(b7) 7=C' 8=Db'(b9 an octave up). -1 = Bb below tonic (the b7).
+//
+//   PRODUCTION — the new device is an automated VOWEL (formant) filter,
+//   `.vowel()`, verified against `knowledge-base/strudel/learn/effects.md`
+//   "## vowel" before use — a genuinely different texture family from the
+//   pitch/filter/bitcrush/phase devices the last four Fridays each
+//   introduced in turn. `lpf`/`lpq` stay FIXED (tone only, no sweep) so
+//   `.vowel("<a e i o u>")` alone carries the track's one slow arc, same
+//   "one new automated device replaces the sweep" choice 10-16/10-23 made.
+//   The vowel cycles every 5 cycles, the melody's call/response rotation
+//   every 4 — those periods don't share a common cycle inside this clip's
+//   12 cycles (LCM 20), so every phrase lands on a different vowel across
+//   the whole clip, a genuinely evolving combination rather than a loop.
+//   `pulse` is the lead's waveform — unused on a Friday yet, and formant
+//   filtering needs harmonically dense material to color, which a duty-
+//   cycle pulse wave gives it.
+//
+//   DRUMS: kick (drives the sidechain) + a sparse, reverbed open hat on
+//   just two of sixteen steps per cycle — no choke pair, no clap, no rim
+//   (all three already used on recent Fridays). Deliberately airy rather
+//   than busy: the formant-morphed lead is the thing meant to read as
+//   "voice-like," and a dry, filled top end would compete with that
+//   illusion rather than frame it (MUSIC-KNOWLEDGE.md §2's contrast point —
+//   a noisy, reverbed cymbal sits in its own timbre category against the
+//   sung-like lead).
+//
+// LEAD PHRASE — 16 steps/cycle, rotating <A B C D> every cycle across 12
+// cycles (3 full rounds), per MUSIC-QC-LOOP.md's real-leap/rest/development
+// checklist:
+//   A (call, states the   0 ~ 1 2 ~ 0 4 ~ 0 ~ 2 1 ~ 0 ~ ~  -- the altered
+//      b9/#9 cluster +                                        scale's own
+//      tritone leap):      tension cluster (b9, #9) then a leap to the
+//                          tritone (Gb, degree 4), each resolved to tonic.
+//   B (variation, shifted 3 ~ 4 5 ~ 3 7 ~ 3 ~ 5 4 ~ 3 ~ ~  -- A's shape
+//      up a major 3rd):     moved +3 degrees (C to E) -- same contour, new
+//                          center, ending on its own tonic (3) rather than
+//                          the piece's, so it reads as continuing, not
+//                          resolving.
+//   C (peak, octave-up b9 8 ~ 5 4 ~ 2 0 ~ 8 ~ 5 4 ~ 2 0 ~  -- leap to the
+//      leap, then          scale's sharpest tension note (Db an octave up,
+//      retrograde release): degree 8), then B's rising core (3 4 5 7) in
+//                          retrograde (7 5 4 3, written here from 5 down),
+//                          stated twice, each resolving to the true tonic.
+//   D (release, sparse):  0 ~ ~ ~ -1 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~  -- mostly rests;
+//                          the one non-tonic note is the b7 approached from
+//                          below the tonic, a classic half-step-adjacent
+//                          resolution figure for this scale.
+//
+// TEMPO: setcpm(33) with a bd*4 kick -> BPM = cpm * beats/cycle = 132, psy-
+// techno territory (MUSIC-KNOWLEDGE.md §12: the sub-genre runs 128-138).
+// CYCLES: 12. 12 * 60/33 = 21.8s.
+// ============================================================================
+
+setcpm(33)
+let CYCLES = 12
+
+// drums — kick (drives the sidechain) + a sparse, reverbed open hat on only
+// two of sixteen steps. No choke pair/clap/rim this week (all three used
+// recently): airy, not busy, so the formant-morphed lead stays the thing
+// the ear tracks as "voice-like" rather than competing with a filled top
+// end (see header).
+let drums = stack(
+  s("bd*4").bank("RolandTR909")
+    .duckorbit(2).duckattack(.03).duckdepth(.35)
+    .gain(.57),
+  s("~ ~ ~ oh ~ ~ ~ ~ ~ ~ ~ oh ~ ~ ~ ~").bank("RolandTR909")
+    .room(.55).roomsize(6).gain(.13),
+)
+
+let melody = n(`<
+  [0 ~ 1 2 ~ 0 4 ~ 0 ~ 2 1 ~ 0 ~ ~]
+  [3 ~ 4 5 ~ 3 7 ~ 3 ~ 5 4 ~ 3 ~ ~]
+  [8 ~ 5 4 ~ 2 0 ~ 8 ~ 5 4 ~ 2 0 ~]
+  [0 ~ ~ ~ -1 ~ 0 ~ ~ ~ ~ 0 ~ ~ ~ ~]
+>`).scale("C2:altered")
+
+// one 303-style voice, bass+lead duty. lpf/lpq stay FIXED (tone only, no
+// sweep) -- automated VOWEL alone carries the track's one slow arc this
+// week, cycling through a/e/i/o/u every 5 cycles against the melody's
+// 4-cycle rotation, so the two never repeat the same pairing inside this
+// 12-cycle clip. pulse gives the formant filter harmonically dense
+// material to color. Lightly ducked by the kick (orbit 2).
+let lead = melody
+  .sound("pulse")
+  .attack(.005).decay(.09).sustain(.07).release(.05)
+  .lpf(1600)
+  .lpq(6)
+  .vowel("<a e i o u>")
+  .distort(.16)
+  .pan(.55)
+  .gain(.33)
+  .orbit(2)
+
+stack(drums, lead)

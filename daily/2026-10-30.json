@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-30",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "ALTERED SCALE ACID",
+  "pattern_file": "daily/2026-10-30-acid-altered-scale.strudel",
+  "cycles": 12,
+  "target_duration_sec": 22,
+  "code_highlight_lines": [">`).scale(\"C2:altered\")", ".vowel(\"<a e i o u>\")"]
+}
