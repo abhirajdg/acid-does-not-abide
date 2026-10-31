@@ -1,0 +1,131 @@
+// ============================================================================
+// DAILY — 2026-10-31 (Saturday): Xenharmonic tuning experiment — 23edo
+// ============================================================================
+//
+// THE TUNING: 23 equal divisions of the octave, step = 1200/23 = 52.174c.
+// Checked by hand (not trusted blind) against the three low-limit intervals
+// every prior Saturday's edo was graded on:
+//   3/2  (701.96c, perfect 5th)   -> nearest steps 13 (678.26c, -23.7c) or
+//                                    14 (730.43c, +28.5c) — WORSE than any
+//                                    edo used so far this slot (17/19/31/15/
+//                                    24/22/13/11/16edo all beat 20c on this).
+//   5/4  (386.31c, major 3rd)     -> nearest steps 7 (365.22c, -21.1c) or
+//                                    8 (417.39c, +31.1c) — also both bad.
+//   9/8  (203.91c, major 2nd)     -> step 4 = 208.70c, ONLY +4.8c off — a
+//                                    genuinely good whole tone.
+//   6/5  (315.64c, minor 3rd)     -> step 6 = 313.04c, only -2.6c off —
+//                                    tighter than 12edo's own minor 3rd
+//                                    (+15.6c). The one real consonance this
+//                                    edo has to offer.
+// So 23edo is the first tuning on this slot with NO usable fifth and NO
+// usable major third — it cannot build a tertian triad that isn't visibly
+// sour. What it *can* do cleanly: stepwise melodic motion (the 2nd is
+// accurate) and a dark, minor-leaning color (the 3rd is MORE accurate than
+// 12edo's). That asymmetry — melody works, harmony doesn't — is this week's
+// structural idea, not a decoration on top of it.
+//
+// ARRANGEMENT: acid house, not because it's due for a rotation, but because
+// it is the one genre in this project's four (techno/psytrance/Goa trance/
+// acid house, CREATIVE-DIRECTION.md) whose core instrument — the TB-303 — is
+// monophonic by design. A tuning with no usable chord and a genre built
+// around a single mono voice solve each other: there is exactly ONE melodic/
+// bass voice here (MUSIC-KNOWLEDGE.md §12's "one melodic voice" rule, for
+// once not a choice but a consequence of the tuning itself), carrying both
+// the bassline and the lead the way a real 303 line does, over just kick +
+// closed hat — MUSIC-KNOWLEDGE.md §10 on acid house: "historically none at
+// all [sidechain] in earlier acid house... space carved by arrangement/EQ
+// rather than a compressor" — so no duckorbit here either; register alone
+// (the 303 sits an octave below the kick's fundamental) keeps them apart.
+// No chord/pad layer: this tuning genuinely cannot supply one honestly, and
+// forcing one in anyway would be exactly the autopilot orchestration
+// MUSIC-QC-LOOP.md's checklist warns against.
+//
+// SCALE DEGREES USED (all `.xen("23edo")` steps, base = one octave below the
+// xen() default 220Hz reference, i.e. BASE = -23, so the 303 sits ~110Hz):
+//   TONIC    BASE+0  = -23   (root, A2-ish)
+//   2ND      BASE+4  = -19   (the accurate whole tone, +4.8c)
+//   2ND-LOW  BASE+2  = -21   (the other, rougher step toward the 3rd)
+//   3RD      BASE+6  = -17   (the one real consonance, -2.6c minor 3rd)
+//   SOUR5    BASE+13 = -10   (the broken fifth — used AS a leap/tension
+//                             tone, its sourness is the point, not hidden)
+//   SUBMIN7  BASE+19 = -4    (step 19, +22.5c off 7/4 — an alien color tone)
+//   OCT      BASE+23 =  0    (tonic, one octave up — back at the 220Hz ref)
+//   OCT+3RD  BASE+29 =  6    (octave-up minor 3rd — the LIFT's top note)
+//
+// MELODY — six 8-step (8th-note) phrases, same call/response/retrograde/
+// peak-and-release structure every prior Saturday has used, now built so
+// every leap either lands on the one real consonance (3RD) or deliberately
+// exposes the broken one (SOUR5):
+//   demo (bare, no kit — the four color tones in ascending order):
+//                                       TONIC ~ 3RD ~ SOUR5 ~ SUBMIN7 ~
+//   A (call — leap straight to the broken 5th, then a stepwise descent
+//      through the three "good" scalar tones back toward the 3rd):
+//                                       TONIC ~ SOUR5 ~ 3RD 2ND 2ND-LOW ~
+//   B (response — climb the same scalar tones, leap OUT through the broken
+//      5th into the alien 7th, rest, resolve home to TONIC):
+//                                  2ND-LOW 2ND 3RD ~ SOUR5 SUBMIN7 ~ TONIC
+//   C (retrograde of A — literal reverse, the required QC-loop device):
+//                                  ~ 2ND-LOW 2ND 3RD ~ SOUR5 ~ TONIC
+//   D (peak & release — up through the broken 5th to the octave-up tonic
+//      and its own minor 3rd, then straight back down home):
+//                                       SOUR5 ~ OCT OCT+3RD ~ OCT SOUR5 TONIC
+//   LIFT (D transposed a full octave up — the Goa/psy pitch-lift climax,
+//      MUSIC-KNOWLEDGE.md §6, portable to acid house too):
+//                                       13 ~ 23 29 ~ 23 13 0
+// Order: demo, A B C D, A B C D, LIFT, D — 10 phrases across 10 cycles,
+// landing back on D (the release) same as the LIFT->D convention 10-24 used.
+// One 303 slide (MUSIC-KNOWLEDGE.md §17): the SOUR5->OCT jump in D/LIFT
+// glides (penv/pdecay) instead of re-triggering clean, so the broken fifth
+// audibly bends into the octave rather than just cutting to it.
+//
+// CYCLES: 10, setcpm(30), 4 beats/cycle = 120 BPM (acid house's low end,
+// 120-130 per MUSIC-QC-LOOP.md's tempo check). 10 * 60/30 = 20s.
+// ============================================================================
+
+setcpm(30)
+let CYCLES = 10
+
+stack(
+  // LEAD/BASS — the single 303 voice (see ARRANGEMENT above: this tuning
+  // cannot honestly supply a second, harmonically-compatible voice, so there
+  // isn't one). Sawtooth, per-note filter envelope (lpenv/lpattack/lpdecay)
+  // for the classic 303 "quack" on top of a slow resonant sweep whose period
+  // (6 cycles) nods to the one interval this edo actually gets right — the
+  // 6-step minor 3rd. One deliberate slide (penv/pdecay) on the SOUR5->OCT
+  // jump in the two climax phrases (D, LIFT) — MUSIC-KNOWLEDGE.md §17.
+  i(`<
+    [-23 ~ -17 ~ -10 ~ -4 ~]
+    [-23 ~ -10 ~ -17 -19 -21 ~]
+    [-21 -19 -17 ~ -10 -4 ~ -23]
+    [~ -21 -19 -17 ~ -10 ~ -23]
+    [-10 ~ 0 6 ~ 0 -10 -23]
+    [-23 ~ -10 ~ -17 -19 -21 ~]
+    [-21 -19 -17 ~ -10 -4 ~ -23]
+    [~ -21 -19 -17 ~ -10 ~ -23]
+    [13 ~ 23 29 ~ 23 13 0]
+    [-10 ~ 0 6 ~ 0 -10 -23]
+  >`).xen("23edo")
+    .sound("sawtooth")
+    .attack(.004).decay(.12).sustain(.08).release(.1)
+    .lpf(sine.range(400, 2200).slow(6)) // the 6-step minor 3rd sets the period
+    .lpq(14)
+    .lpa(.006).lpd(.1).lps(0).lpr(.08).lpenv(5)
+    .penv("<0 0 0 0 7 0 0 0 7 7>").pdecay(.09) // slide into the climax jumps
+    .sometimes(x => x.ply(2))
+    .gain(.5)
+    .room(.8),
+
+  // KICK — four-on-the-floor, acid house's minimal pulse. Silent on the bare
+  // demo cycle. No sidechain on the lead (see ARRANGEMENT — register
+  // separation, not a duck, keeps the 303 out of the kick's way, same as
+  // "historically none at all" acid house, MUSIC-KNOWLEDGE.md §10).
+  s("bd*4").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1>")
+    .gain(.75),
+
+  // HAT — closed 8ths, sitting well under the 303 (MUSIC-KNOWLEDGE.md §12's
+  // hat-gain note). Silent on the demo cycle too; the only other layer.
+  s("hh*8").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1>")
+    .gain(.16),
+)

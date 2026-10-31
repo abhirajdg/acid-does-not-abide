@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-31",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "23EDO",
+  "pattern_file": "daily/2026-10-31-xenharmonic-23edo.strudel",
+  "cycles": 10,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "s(\"bd*4\").bank(\"RolandTR909\")",
+    ".lpf(sine.range(400, 2200).slow(6)) // the 6-step minor 3rd sets the period"
+  ]
+}
