@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-01",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "VAN ECK SELF-ECHO",
+  "pattern_file": "daily/2026-11-01-wildcard-van-eck-self-echo.strudel",
+  "cycles": 6,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["setcpm(18)", ".lpf(\"<800 1900 1900 800 600 600>\")"]
+}

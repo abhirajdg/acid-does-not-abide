@@ -1,0 +1,96 @@
+// ============================================================================
+// DAILY — 2026-11-01 (Sunday): Wildcard — Van Eck's sequence echoes itself at
+// its own remembered distance
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY (checked against the ten prior Sundays' own devices,
+// per MUSIC-KNOWLEDGE.md's "don't template last cycle" rule, most recently
+// summarized in 10-25's header): solo retuning (08-23), externally-alternated
+// hocket (08-30/09-27), contrary motion (09-06), the fixed-lag canon family —
+// same/mirrored/crab (09-13/09-20/10-18), a rate transform (10-04), two
+// systems sharing one scale by coincidence (10-11), and a hocket whose split
+// came from the melody's own class membership (10-25). None of those ten is
+// a canon at a VARYING, data-derived lag — today is: this week's Thursday
+// (Van Eck's sequence, OEIS A181391) is already, by definition, a record of
+// "how many steps back did I last see this value" — so instead of reporting
+// that distance, the piece PERFORMS it: every nonzero term echoes its own
+// pitch again, that many steps later. A canon whose stagger is the data,
+// not a constant.
+//
+// THE SEQUENCE: reusing Thursday's own first 16 verified terms (not re-
+// derived — the same honest-reuse discipline 10-25 used for Saturday's
+// hexany ratios): 0 0 1 0 2 0 2 2 1 6 0 5 0 2 6 5.
+//
+// THE DERIVATION: LEAD plays these 16 terms in order as scale degrees, one
+// every 8th-note (positions 0,2,4,...,30 across two 16-step cycles, CALL
+// then RESPONSE). ECHO repeats a term's own pitch at (its position + its own
+// value) steps later — e.g. term i9=6 at position 18 echoes at position 24.
+// This flips Van Eck's backward-looking definition into a forward one (a
+// deliberate liberty, not a misreading of the sequence — the same kind of
+// well-reasoned creative mapping 10-25 applied to Kolakoski's 1s/2s). Terms
+// of 0 ("brand new, never seen before") get no echo: nothing to repeat. A
+// "far" memory (value >= 5, i.e. i9 and i11, the only two reaching that far
+// in this run) returns an octave up via scale-degree wrap-around (the same
+// mechanism Thursday's own file used for its degree-9 leap) — the longer the
+// memory, the higher it resurfaces. Two echoes (from i14, i15) would land
+// past the end of the stated material and are simply dropped — the piece
+// ends before every memory returns, same as Van Eck's sequence itself never
+// closes.
+//
+// STRUCTURE (6 cycles): CALL+RESPONSE state the derivation forward (cyc 0-1).
+// RETROGRADE (cyc 2-3, the required jazz-improv device) is a literal token-
+// array reverse of the full 32-step CALL+RESPONSE line — lead AND echo both
+// reversed together, so the echoes now arrive BEFORE the notes that would
+// have caused them, read backward. TAG (cyc 4) is a single held tonic with
+// no echo — Van Eck's own "0 always means a fresh start," the same close
+// Thursday's file used. SILENCE (cyc 5) is a full bar of rest: no further
+// memory to report.
+//
+// ARRANGEMENT (synth basics, MUSIC-KNOWLEDGE.md §2.5): LEAD is `sawtooth`,
+// Thursday's own lead timbre (deliberate continuity — this is Thursday's
+// material restated, not new material). ECHO is `sine` — soft, pure,
+// slightly slower attack/release and more room: a memory should sound
+// fainter and further away than the present moment, not identical to it
+// (MUSIC-KNOWLEDGE.md §2's contrast-for-legibility). ECHO sits off-center
+// (pan .75) against LEAD's center (pan .5) — "resurfacing from the side."
+// Where an echo lands on a step LEAD is also sounding, that's a real,
+// unauthored chord-let — incidental harmony from accumulated memory, never
+// an authored chord, the same "melody can, harmony can't" asymmetry
+// yesterday's 23edo file found in its tuning, found here instead in the
+// arrangement choice itself.
+//
+// NO DRUM LAYER (percussion check, asked explicitly per MUSIC-QC-LOOP.md):
+// Van Eck's sequence has no period — a record of aperiodic recurrence, same
+// reasoning Thursday's file and 10-22/10-29 already applied to this slot. A
+// kick/hat grid would impose a pulse the topic doesn't have.
+//
+// TEMPO: no genre/BPM mandate — this is a self-referential sequence device
+// with no drum layer, not a genre track (same exemption 10-25 and Thursday
+// took). setcpm(18), 4 beats/cycle = 72 BPM, chosen for clean duration math.
+// CYCLES: 6. 6 * 60/18 = 20.0s exactly.
+//
+// SCOPE NOTE: this is the cloud half of the pipeline (DAILY-PIPELINE.md) —
+// no render/listen happens here by design. The local step carries
+// MUSIC-QC-LOOP.md's render-and-listen pass against the checklist above.
+// ============================================================================
+
+setcpm(18)
+
+$lead: n("<[0 ~ 0 ~ 1 ~ 0 ~ 2 ~ 0 ~ 2 ~ 2 ~] [1 ~ 6 ~ 0 ~ 5 ~ 0 ~ 2 ~ 6 ~ 5 ~] [~ 5 ~ 6 ~ 2 ~ 0 ~ 5 ~ 0 ~ 6 ~ 1] [~ 2 ~ 2 ~ 0 ~ 2 ~ 0 ~ 1 ~ 0 ~ 0] [0] [~]>")
+  .scale("B:locrian")
+  .sound("sawtooth")
+  .attack(.01).decay(.12).sustain(.05).release(.15)
+  .lpf("<800 1900 1900 800 600 600>")
+  .lpq(2)
+  .gain(.4)
+  .pan(.5)
+
+$echo: n("<[~ ~ ~ ~ ~ 1 ~ ~ ~ ~ 2 ~ ~ ~ 2 ~] [2 1 ~ ~ ~ ~ ~ ~ 13 ~ ~ 12 2 ~ ~ ~] [~ ~ ~ 2 12 ~ ~ 13 ~ ~ ~ ~ ~ ~ 1 2] [~ 2 ~ ~ ~ 2 ~ ~ ~ ~ 1 ~ ~ ~ ~ ~] [~] [~]>")
+  .scale("B:locrian")
+  .sound("sine")
+  .attack(.02).decay(.3).sustain(.1).release(.4)
+  .lpf("<800 1900 1900 800 600 600>")
+  .lpq(1)
+  .gain(.22)
+  .pan(.75)
+  .room(3)
