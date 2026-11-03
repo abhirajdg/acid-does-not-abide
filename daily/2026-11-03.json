@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-03",
+  "weekday": "Tuesday",
+  "topic": "carnatic-melakarta",
+  "topic_label": "MELAKARTA 8",
+  "pattern_file": "daily/2026-11-03-carnatic-melakarta-8.strudel",
+  "cycles": 28,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    ".scale(\"C:phrygian\")",
+    ".euclidRot(2, 8, 2)"
+  ]
+}
