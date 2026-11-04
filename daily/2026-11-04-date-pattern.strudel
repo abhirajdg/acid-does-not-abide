@@ -1,0 +1,140 @@
+// ============================================================================
+// DAILY — 2026-11-04 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-11-04 -- day 4, month 11 (November), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Recent Wednesdays each found a different relationship between day and
+//   month: a digit sequence (08-26), clock rates (09-02), a hocket when
+//   day==month (09-09), coprime grid-lengths (09-16), per-token Euclidean
+//   flutters (09-23), a GCD-reduced polyrhythm (09-30), day/month fed into
+//   euclid(7,10) (10-07), binary bits compared (10-14), the Euclidean
+//   algorithm's own quotient/remainder steps (10-21), and a perfect-number
+//   vs. deficient-number divisor-sum contrast (10-28). Today's day (4) and
+//   month (11) are ALSO coprime, like several of those -- but the pair has
+//   its own, more specific property none of those used: 4 = 2x2 = 2^2 is a
+//   PERFECT SQUARE (the smallest one that admits a genuine 2-row-by-2-column
+//   grid), while 11 is PRIME -- it has no factorisation at all besides
+//   1x11, so nothing about it can be arranged into equal groups. Squareness
+//   (groupable into a grid two ways) versus primality (ungroupable, full
+//   stop) is a structural contrast none of the prior GCD/ratio/binary/
+//   divisor-sum devices made -- those compared SUMS or BITS; this compares
+//   whether a number FACTORS into equal parts at all.
+//
+//   A genuine coincidence specific to today, used as the anchor: day (4)
+//   mod 7 = 4, and month (11) mod 7 = 4 as well -- the SAME residue. Every
+//   prior Wednesday using this project's day/month-mod-7 mapping landed on
+//   two different anchor tones (tonic vs degree 3, etc.); today day and
+//   month share one. So DAY and MONTH both anchor on scale degree 4 here --
+//   convergence instead of contrast on the anchor tone, with the squareness/
+//   primality split carrying the actual structural contrast instead.
+//
+//   DAY (the perfect square, 4 = 2x2): built as a literal 2-row-by-2-column
+//   grid of four 2-note cells, each cell opening on the shared anchor
+//   (degree 4) before diverging up or down:
+//     A = "4 7"   B = "10 7"      (row 0)
+//     C = "2 4"   D = "-1 4"      (row 1)
+//   CALL reads the grid row-major (A B, rest, C D) -- the "normal" reading
+//   order. VARIATION reads the SAME grid column-major (A C, rest, B D) --
+//   a literal matrix transpose, swapping rows for columns, which is only a
+//   non-trivial, legible operation because the grid is square (a 2x2
+//   transpose has real content; a 1x4 "grid" wouldn't). RESPONSE is CALL's
+//   exact full-token retrograde (the whole 9-step bar reversed) -- a third,
+//   independent device (true retrograde) alongside the transpose, giving
+//   this day two distinct motif-and-variation operations instead of one.
+//
+//   MONTH (the prime, 11): because 11 has no non-trivial factors, its
+//   phrase is written as ONE continuous, never-internally-grouped run of
+//   exactly 11 tokens -- no brackets, no equal subdivision, in direct
+//   contrast to DAY's doubly-groupable grid. Deliberately NOT length-matched
+//   to DAY's 9-step bar (several prior Wednesdays synced both bars to the
+//   same step count; doing that here would force 11's irreducible run into
+//   an arbitrary shared length and erase the whole point). M1 is the base
+//   11-token run, opening on the shared anchor; M2 is M1's full retrograde
+//   (reversal preserves indivisibility -- a reversed prime-length run is
+//   still irreducible); M3 is M1 cyclically rotated by 1 step -- a fact
+//   that only reads cleanly because 11 is prime: a 1-step rotation of a
+//   prime-length sequence can never align with a shorter repeating unit,
+//   unlike rotating a composite-length run (4, 8, 28...) which can expose
+//   smaller sub-periods. The three MONTH phrases cycle in their own
+//   <...> alternator, independently of DAY's.
+//
+//   CYCLES = 25 = day-digit-sum (4) + month (11) + year-digit-sum
+//   (2+0+2+6=10). setcpm(75) x 25 cycles / 60 = 20s.
+//
+// Scale: D minor -- fresh for this slot (recent Wednesdays used E, G, C, B,
+// and F minor); the squareness/primality contrast is the idea, not the mode.
+// D minor's own fifth (A) is scale degree 4 -- so the shared day/month
+// anchor tone this week is literally the drone's own fifth, not a separate
+// coincidence layered on top of the tanpura convention.
+//
+// NO DRUM KIT, deliberately, not by default: the grid-transpose/retrograde
+// structure on DAY and the irreducible single-strand run on MONTH ARE this
+// piece's audible rhythm, read straight off today's own day/month factor
+// structure -- a metric kit underneath would just restate a pulse that's
+// already there, the reflexive-percussion failure MUSIC-QC-LOOP.md flags.
+//
+// Instrumentation, a fresh pairing from the last two Wednesdays (pulse+
+// triangle on 10-28, square+sawtooth on 10-21), chosen for what each
+// number IS rather than habit: DAY (sawtooth) gets a synth basic with a
+// full, unbroken harmonic series -- fitting the grid that uses all four of
+// its cells, nothing missing, the "complete" voice. MONTH (pulse) gets a
+// narrower, hollower synth basic -- its thinner harmonic content fits the
+// single unbroken strand that cannot be split into parts. DRONE stays
+// `sine` -- tanpura convention, tonic and fifth, no automation (§2.5, §3
+// of MUSIC-KNOWLEDGE.md). Only DAY carries the acid taste layer (light
+// distortion + filter sweep); the sweep period (2 cycles) is sqrt(4) --
+// day's own square root, tying the one automated parameter back to the
+// squareness device itself rather than a number borrowed from month or a
+// generic GCD.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(75)
+let CYCLES = 25 // day-digit-sum (4) + month (11) + year-digit-sum (10)
+
+stack(
+  // DAY -- the perfect square (4 = 2x2), anchored on the shared residue
+  // (4 mod 7 = 4). Four 2-note cells (A,B top row; C,D bottom row) read
+  // three ways: CALL is the grid row-major; RESPONSE is CALL's exact full
+  // retrograde (reversed token-for-token); VARIATION is the SAME grid
+  // read column-major -- a literal matrix transpose, legible only because
+  // the grid is square.
+  n("<[4 7 10 7 ~ 2 4 -1 4] [4 -1 4 2 ~ 7 10 7 4] [4 7 2 4 ~ 10 7 -1 4]>")
+    .scale("D:minor")
+    .sound("sawtooth")
+    .attack(.006).decay(.11).sustain(0).release(.05)
+    .distort(.15) // acid taste layer, kept light so the grid/retrograde stays legible
+    .lpf(sine.range(500, 2400).slow(2)) // sweep period = sqrt(4) = day's own square root
+    .gain(.32)
+    .pan(.68)
+    .room(1.1),
+
+  // MONTH -- the prime (11), irreducible: one continuous 11-token run,
+  // never internally grouped, deliberately a different length from DAY's
+  // 9-step bar (forcing it to match would erase the point). M1 is the base
+  // run; M2 is M1's full retrograde (still irreducible, reversed); M3 is
+  // M1 rotated by one step -- a rotation that can't expose a shorter
+  // sub-period precisely because 11 is prime.
+  n("<[4 ~ 7 2 10 4 -1 7 4 2 4] [4 2 4 7 -1 4 10 2 7 ~ 4] [4 4 ~ 7 2 10 4 -1 7 4 2]>")
+    .scale("D:minor")
+    .sound("pulse")
+    .attack(.04).decay(.3).sustain(.15).release(.9)
+    .gain(.27)
+    .pan(.32)
+    .room(2.6),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full piece with
+  // no automation (the one moving filter this week lives on DAY instead).
+  // D minor's fifth (A) is scale degree 4 -- the same tone DAY and MONTH
+  // both anchor on this week.
+  note("[d2,a2]/25")
+    .sound("sine")
+    .attack(1.4).release(2)
+    .gain(.22)
+    .pan(.5)
+    .room(3.2)
+)
