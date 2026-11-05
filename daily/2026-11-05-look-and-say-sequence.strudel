@@ -1,0 +1,72 @@
+// ============================================================================
+// DAILY — 2026-11-05 (Thursday): Pure math sequence — the look-and-say
+// sequence ("audioactive decay", OEIS A005150)
+// ============================================================================
+//
+// THE SEQUENCE: a(1) = 1. Each later term describes the RUN-LENGTHS of the
+// digits in the term before it: "1" has one run of one '1' -> "11". "11" has
+// one run of two '1's -> "21". Verified by hand, term by term:
+//   a(1)=1  a(2)=11  a(3)=21  a(4)=1211  a(5)=111221  a(6)=312211
+//
+// CONWAY'S COSMOLOGICAL THEOREM: for this sequence, no digit greater than 3
+// ever appears, however far you iterate it. Terms 1-5 above only ever contain
+// 1s and 2s — term 6 is the first time a '3' shows up at all (its very first
+// digit). That fact drives this piece's ending (see CODA below).
+//
+// PITCH + RHYTHM, both read straight off the digits — no transform:
+// each RUN in a term becomes one melodic cell. The run's DIGIT (1, 2, or 3)
+// picks the scale degree, skipping by thirds (0, 2, 4) so the sequence's own
+// 3-digit alphabet literally traces out a triad. The run's COUNT becomes how
+// many times that pitch actually repeats (`!count`) — "two 1s" is heard as
+// two quick notes, not one note held twice as long. A "~" closes every
+// generation, pacing the piece like reading the terms aloud with a breath
+// between each one.
+//
+// Generation-by-generation (runs used to build the NEXT term):
+//   step1 (1->11):      run(1,'1')                  -> one note
+//   step2 (11->21):     run(2,'1')                  -> doubled note
+//   step3 (21->1211):   run(1,'2') run(1,'1')        -> leap up, resolve
+//   step4 (1211->111221): run(1,'1') run(1,'2') run(2,'1') -> restate+vary
+//   step5 (111221->312211): run(3,'1') run(2,'2') run(1,'1') -> climax
+//   CODA: term 6 opens on its brand-new '3' (scale degree 4, the 5th) —
+//   the piece ends there, unresolved, because the real sequence doesn't
+//   resolve either: it just keeps growing.
+//
+// JAZZ-IMPROV DEVICES: step3 is call (leap to the tension tone, degree 2)
+// and response (resolve to the tonic). Step4 is motif-and-variation on
+// step3's own material, extended by the doubled tonic. Step5 intensifies
+// both ideas (triple tonic, double tension tone) into the climax, then the
+// coda is a deliberately unresolved arrival — anchoring every step on the
+// tonic (degree 0) as the anchor tone, with degree 2 as the recurring
+// tension, the way a vadi/samvadi pair anchors a raga phrase.
+//
+// ARRANGEMENT: ONE voice only, square wave (sharp/abrasive timbre,
+// MUSIC-KNOWLEDGE.md §1 — "power, action, intensity", fitting a sequence
+// literally called "audioactive decay"). No separate drone: the voice's own
+// delay feedback IS the growth metaphor — each term is generated FROM the
+// previous one, so delayfeedback climbs generation by generation (the sound
+// quite literally feeding on its own past), the same way each look-and-say
+// term is generated from reading the one before it. NO DRUM LAYER: this
+// topic has no metric pulse to track (it's a growth process, not a beat) —
+// the "count" each run carries already gets its own audible outlet as a
+// repeated note in the melody itself, so a kick/hat grid would just be
+// redundant filler (see MUSIC-QC-LOOP.md's percussion-as-default warning).
+//
+// TEMPO: setcpm(20), 4 beats/cycle = 80 BPM (contemplative, not a dance
+// tempo — this piece has no pulse to serve). CYCLES: 6.
+// 6 x 60 / 20 = 18s.
+// ============================================================================
+
+setcpm(20)
+
+$lead: n("<[0 ~] [[0!2] ~] [2 0 ~] [0 2 [0!2] ~] [[0!3] [2!2] 0 ~] [~ 4]>")
+  .scale("A:phrygian")
+  .sound("square")
+  .attack(.005).decay(.08).sustain(.1).release(.12)
+  .lpf("<700 800 950 1150 1500 1000>")
+  .lpq(4)
+  .delaytime(.18)
+  .delayfeedback("<0.08 0.12 0.18 0.26 0.38 0.22>")
+  .delay(.35)
+  .room(.4)
+  .gain(.5)

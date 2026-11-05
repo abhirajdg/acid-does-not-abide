@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-05",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "AUDIOACTIVE DECAY",
+  "pattern_file": "daily/2026-11-05-look-and-say-sequence.strudel",
+  "cycles": 6,
+  "target_duration_sec": 18,
+  "code_highlight_lines": [
+    "$lead: n(\"<[0 ~] [[0!2] ~] [2 0 ~] [0 2 [0!2] ~] [[0!3] [2!2] 0 ~] [~ 4]>\")",
+    ".delayfeedback(\"<0.08 0.12 0.18 0.26 0.38 0.22>\")"
+  ]
+}
