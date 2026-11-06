@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-06",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "BEBOP ACID",
+  "pattern_file": "daily/2026-11-06-acid-bebop-dominant.strudel",
+  "cycles": 12,
+  "target_duration_sec": 23,
+  "code_highlight_lines": [">`).scale(\"G2:bebop\")", ".penv(slideAmt).pdecay(.085)"]
+}

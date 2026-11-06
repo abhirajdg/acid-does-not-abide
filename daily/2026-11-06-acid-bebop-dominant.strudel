@@ -1,0 +1,132 @@
+// ============================================================================
+// DAILY — 2026-11-06 (Friday): Acid / psychedelia free jam — the bebop lick
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction). Checked the last Friday before writing this one: 10-30 used
+// C altered/super-locrian, one square->pulse 303 (bass+lead combined),
+// RolandTR909 kick+hat samples, and an automated VOWEL filter as the one
+// slow arc. Today changes the scale, drops the sample bank, and uses a
+// device MUSIC-KNOWLEDGE.md §17 flagged as real but under-used:
+//
+//   SCALE: G bebop (verified against tonaljs's own scale-type source,
+//   raw.githubusercontent.com/tonaljs/tonal, packages/scale-type/data.ts,
+//   same discipline as Bhairav's "gypsy" check and 10-30's "altered" check):
+//   "1P 2M 3M 4P 5P 6M 7m 7M" = G A B C D E F F#. This is the jazz "bebop
+//   dominant" scale -- a Mixolydian mode with one chromatic passing tone
+//   (the major 7th) added between the b7 and the root, specifically so that
+//   playing straight through the scale lands chord tones (root, 3rd, 5th)
+//   ON THE BEAT rather than between beats. Directly in Abhiraj's Berklee
+//   jazz-improv vocabulary, not a decorative pick -- see §17's own "we're
+//   not using enough slides to make it stand out" note below. Degrees:
+//   0=G 1=A 2=B 3=C 4=D 5=E 6=F(b7) 7=F#(maj7 passing) 8=G' 12=D' (a 12th
+//   above root, this week's one big leap). -1 = F# a step below the root.
+//
+//   PRODUCTION -- the new device is a real 303 SLIDE (MUSIC-KNOWLEDGE.md
+//   §17, "we're not using enough slides... to make it stand out"), not the
+//   generic per-note pitch envelope 10-09 already tried (which bent EVERY
+//   note up from a fixed interval). Verified against `knowledge-base/
+//   strudel/learn/effects.md`'s own penv/pdecay entries before use: a slide
+//   sets `penv` = (previous note - this note) in semitones and `pdecay` =
+//   the glide time, with no gap before the slid note, so it starts at the
+//   previous note's pitch and bends into its own. Applied ONLY on the
+//   scale's own b7->maj7->root turn (F->F#->G, each step a semitone, penv
+//   -1 both times, pdecay .085 -- riff-slide speed per §17) -- i.e. the
+//   slide literally traces the chromatic resolution that makes this scale
+//   "bebop" in the first place, not a decoration bolted on separately.
+//
+//   DRUMS -- no sample bank this time (MUSIC-KNOWLEDGE.md §19, added 2 Nov:
+//   strudel.cc's RolandTR808/909 banks are stock samples that have gotten
+//   tracks fingerprint-matched; every prior Friday called one). Kick is
+//   synthesised the way the 808/909 actually work -- a sine with a fast
+//   pitch drop plus a short noise click -- tuned to G1, this track's own
+//   tonic. No hats/clap: the week's two real changes (no sample bank, a
+//   true slide) need a clean line to be heard against, and MUSIC-QC-LOOP.md
+//   is explicit that a drum layer needs its own justification, not habit --
+//   kick + one 303 voice is itself a real, minimal acid-house convention
+//   (many early 303 records are exactly that), not a missing layer.
+//
+// LEAD PHRASE -- 16 steps/cycle, rotating <A B C D> every cycle across 12
+// cycles (3 full rounds), the recurring b7-maj7-root lick used as the one
+// motif that ties the arc together (MUSIC-QC-LOOP.md's jazz-improv-device
+// checklist item):
+//   A (call, states the    0 ~ 4 ~ 0 1 2 3 4 5 6 7 8 ~ ~ ~  -- leap to the
+//      vocabulary straight):                                   5th, then the
+//                          actual bebop run start-to-finish, the lick
+//                          (6 7 8) embedded inside it, landing the beat.
+//   B (develop, retrograde  4 ~ 8 ~ 7 6 5 4 3 2 1 0 -1 ~ ~ ~  -- leap up a
+//      + withheld            4th, then A's run backwards (a true retrograde),
+//      resolution):          but stops a half-step SHORT of the root (-1,
+//                          F# below G) -- the lick withheld, tension open.
+//   C (peak, big leap +    8 ~ 12 ~ 6 7 8 ~ 6 7 8 ~ 4 ~ 0 ~  -- the open
+//      insistent lick):      tension from B resolves with a big leap to the
+//                          12th (this week's widest interval), then the
+//                          lick stated TWICE in a row (worrying the
+//                          resolution) before releasing down to the 5th
+//                          and home.
+//   D (release, sparse):   0 ~ ~ ~ ~ ~ 6 7 8 ~ ~ ~ ~ ~ ~ ~  -- mostly rests;
+//                          the lick once more, quietly, then silence.
+//
+// FX -- lpf/lpq/distort stay FIXED (this week's one slow arc is the delay,
+// not the filter, per §10's "fewer independently-drifting knobs at once"):
+// delayfeedback ramps from .3 to .82 across all 12 cycles on a one-way
+// `saw` signal (not a cyclic sine), swelling toward near self-oscillation
+// over the whole clip the way MUSIC-KNOWLEDGE.md §18 describes Goa trance
+// using delay feedback as an FX-instrument, rather than snapping back
+// mid-clip -- a second, slower timescale under the 4-cycle phrase rotation.
+//
+// TEMPO: setcpm(31) with a kick*4 -> BPM = 31*4 = 124, acid-house territory
+// (MUSIC-QC-LOOP.md: 120-130). CYCLES: 12. 12*60/31 = 23.2s.
+// ============================================================================
+
+setcpm(31)
+let CYCLES = 12
+
+// kick -- synthesised (MUSIC-KNOWLEDGE.md §19), not a sample bank: a sine
+// with a fast pitch drop plus a short noise click, tuned to G1 (this
+// track's tonic). Drives the sidechain on the lead's orbit.
+let kick = stack(
+  note("g1").s("sine").struct("x*4")
+    .penv(24).pdecay(.035)
+    .attack(.0008).decay(.18).sustain(0).postgain(3.5),
+  s("white").struct("x*4")
+    .hpf(1500).lpf(6000).attack(.0005).decay(.012).sustain(0).postgain(1.2),
+)
+  .duckorbit(2).duckattack(.03).duckdepth(.32)
+  .gain(.5)
+
+// the bebop-lick motif (b7 -> maj7 -> root, each a semitone) recurs across
+// all four phrases; this pattern carries ONLY the slide amount (in
+// semitones, penv) at the exact steps where that motif falls, 0 everywhere
+// else. Same 4-way rotation and 16-step grid as the melody below, so the
+// two line up step-for-step.
+let slideAmt = `<
+  [0 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0]
+  [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+  [0 0 0 0 0 -1 -1 0 0 -1 -1 0 0 0 0 0]
+  [0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 0]
+>`
+
+let melody = n(`<
+  [0 ~ 4 ~ 0 1 2 3 4 5 6 7 8 ~ ~ ~]
+  [4 ~ 8 ~ 7 6 5 4 3 2 1 0 -1 ~ ~ ~]
+  [8 ~ 12 ~ 6 7 8 ~ 6 7 8 ~ 4 ~ 0 ~]
+  [0 ~ ~ ~ ~ ~ 6 7 8 ~ ~ ~ ~ ~ ~ ~]
+>`).scale("G2:bebop")
+
+// one 303-style voice, bass+lead duty (an unaccompanied single line is
+// itself the honest choice for a bebop phrase -- that's how the vocabulary
+// is actually played). lpf/lpq/distort fixed; delayfeedback is the one
+// slow arc this week (see header). Lightly ducked by the kick.
+let lead = melody
+  .sound("square")
+  .attack(.005).decay(.1).sustain(.05).release(.04)
+  .lpf(2000).lpq(5)
+  .penv(slideAmt).pdecay(.085)
+  .distort(.18)
+  .delay(.35).delaytime(.1875).delayfeedback(saw.range(.3, .82).slow(CYCLES))
+  .pan(.5)
+  .gain(.34)
+  .orbit(2)
+
+stack(kick, lead)
