@@ -1,0 +1,143 @@
+// ============================================================================
+// DAILY — 2026-11-07 (Saturday): Xenharmonic tuning experiment — Bohlen-Pierce
+// ============================================================================
+//
+// THE TUNING: Bohlen-Pierce, 13 equal divisions NOT of the octave (2/1) but
+// of the TRITAVE (3/1, 1901.96c) — step = 1901.955/13 = 146.30c. Checked by
+// hand against the scale's own cited consonances (Mathews/Pierce 1988),
+// comparing each just ratio to the nearest 13-step approximation:
+//   5/3  (884.36c, BP's primary "fifth")   -> step 6  (877.83c, -6.5c)
+//   7/3  (1466.87c, BP's "tenth")          -> step 10 (1463.04c, -3.8c)
+//   7/5  (582.51c, BP's "third")           -> step 4  (585.22c, +2.7c)
+//   9/7  (435.08c, BP's "second")          -> step 3  (438.91c, +3.8c)
+//   9/5  (1017.60c, BP's "sixth")          -> step 7  (1024.13c, +6.5c)
+//   3/1  (the tritave itself)              -> step 13, EXACT
+// Unlike every edo tried on this slot (17/19/31/15/24/22/13/11/16/23), BP has
+// a real triad: 3:5:7 normalized to 1:5/3:7/3 lands on steps {0, 6, 10}
+// almost exactly. That's the structural idea this week — not "which interval
+// is sour" (last week's 23edo question) but "this tuning is the first one
+// on this slot that can honestly hold a chord, because it isn't built to
+// approximate the 12edo intervals it's missing — it has its own." And since
+// it never resolves at 2/1, the natural "big" register jump is a TRITAVE
+// (x3), not an octave (x2) — used below as the climax device in place of
+// the usual octave pitch-lift (MUSIC-KNOWLEDGE.md §6).
+//
+// ARRANGEMENT: full-on psytrance (CREATIVE-DIRECTION.md's four genres;
+// MUSIC-KNOWLEDGE.md §12's 2026 research — 2026 full-on releases cluster at
+// 145-147 BPM, rolling KBBB bass, dark pads, minor-leaning). Chosen because
+// full-on's pad-under-arp texture is the one genre convention this project's
+// Saturday slot hasn't yet been ABLE to use honestly — every prior edo here
+// lacked a usable triad to put in a pad (hexany had its own just-intonation
+// chord instead, dub techno; this is BP's own). The triad {0,6,10} is a
+// genuine pad, held and filtered, not decoration. Lead is a BP-scale phrase
+// (call/response/retrograde/climax, not a generative arp) over a rolling
+// sub-bass parked on the tonic (occasionally the "fifth", per MUSIC-
+// KNOWLEDGE.md §6's Goa/psy bass convention). Four-on-the-floor kick + 8th
+// hats + offbeat open hat ARE full-on's identity (same justification 16edo's
+// psy-techno used for its kit) — not autopilot percussion; a psy pad/arp
+// with no metric pulse under it would be the wrong default here, the
+// opposite failure from MUSIC-QC-LOOP.md's alapana/hocket cases.
+//
+// SCALE DEGREES (all `.xen(RATIOS)` steps; RATIOS[n] = 3^(n/13), explicit
+// array so no octave-wraparound assumption is needed for any degree used):
+//   TONIC   0    STEP1  1    NINTH7  3    THIRD  4
+//   FIFTH   6    SIXTH  7    TENTH  10    TRITAVE 13  (= tonic, x3 up)
+//   +13 versions (14,16,17,19,20,23,26) are the same color tones one
+//   tritave up; 26 (= 3^2 = 9/1) is the "second tritave" — the one moment
+//   this piece touches it, the true peak.
+//   HOME TRIAD = [0,6,10] (~3:5:7).  UP TRIAD = [13,19,23] (same shape, +13).
+//
+// MELODY — demo, then call(A)/response(B)/retrograde-of-A(C)/climax(D),
+// repeated once, then LIFT (the tritave pitch-lift, touching the 9/1 peak)
+// and a final D that resolves all the way home:
+//   demo: TONIC ~ THIRD ~ FIFTH ~ TENTH ~        (presents the triad tones)
+//   A (call):      TONIC ~ FIFTH ~ TENTH ~ SIXTH ~
+//   B (response):  SIXTH ~ TENTH FIFTH NINTH7 STEP1 ~ TONIC
+//   C (retrograde of A, literal reverse):  ~ SIXTH ~ TENTH ~ FIFTH ~ TONIC
+//   D (peak & release): FIFTH ~ TRITAVE TRITAVE+THIRD ~ TRITAVE FIFTH TONIC
+//   LIFT (tritave-up climax, touches the second tritave=9/1, resolves home):
+//     TRITAVE+FIFTH ~ 2ND-TRITAVE ~ TRITAVE+FIFTH TRITAVE ~ TONIC
+// Order: demo, A B C D, A B C D, LIFT, D — 11 phrases, 11 cycles.
+//
+// CYCLES: 11, setcpm(36), 4 beats/cycle = 144 BPM (just under 2026 full-on's
+// 145-147 cluster, MUSIC-KNOWLEDGE.md §12 — well inside the genre's range).
+// 11 * 60/36 = 18.3s.
+// ============================================================================
+
+setcpm(36)
+let CYCLES = 11
+
+// Bohlen-Pierce 13-tone equal division of the tritave: ratio(n) = 3^(n/13).
+// Covers two full tritaves (n=0..26) so every degree below indexes directly,
+// with no reliance on xen()'s default octave-repeat assumption.
+let RATIOS = [
+  1.0, 1.088182, 1.184141, 1.288561, 1.402189, 1.525837, 1.660389, 1.806806,
+  1.966134, 2.139512, 2.328179, 2.533483, 2.756891, 3.0, 3.264547, 3.552422,
+  3.865682, 4.206567, 4.577511, 4.981167, 5.420417, 5.898402, 6.418536,
+  6.984537, 7.600449, 8.270673, 9.0,
+]
+
+stack(
+  // LEAD — the BP phrase. Sawtooth, per-note filter envelope for brightness
+  // (full-on's arp wants edge, not acid's quack), slow filter LFO drifting
+  // over the whole 11 cycles so the lead itself evolves, on top of the real
+  // phrase (MUSIC-QC-LOOP.md: automation modulates a phrase, isn't one).
+  i(`<
+    [0 ~ 4 ~ 6 ~ 10 ~]
+    [0 ~ 6 ~ 10 ~ 7 ~]
+    [7 ~ 10 6 3 1 ~ 0]
+    [~ 7 ~ 10 ~ 6 ~ 0]
+    [6 ~ 13 17 ~ 13 6 0]
+    [0 ~ 6 ~ 10 ~ 7 ~]
+    [7 ~ 10 6 3 1 ~ 0]
+    [~ 7 ~ 10 ~ 6 ~ 0]
+    [6 ~ 13 17 ~ 13 6 0]
+    [19 ~ 26 ~ 19 13 ~ 0]
+    [6 ~ 13 17 ~ 13 6 0]
+  >`).xen(RATIOS) // Bohlen-Pierce: ratio = 3^(n/13), repeats at 3/1 (tritave), not 2/1
+    .sound("sawtooth")
+    .attack(.005).decay(.14).sustain(.1).release(.12)
+    .lpf(sine.range(500, 2600).slow(9))
+    .lpq(10)
+    .lpa(.005).lpd(.09).lps(0).lpr(.06).lpenv(4)
+    .gain(.55)
+    .pan(.62),
+
+  // PAD — the triad this tuning actually has, held one chord per cycle.
+  // Shifts to the tritave-up triad under the two climax (D) phrases and the
+  // LIFT, following the lead's own climb rather than wandering independently.
+  i(`<
+    [0,6,10] [0,6,10] [0,6,10] [0,6,10] [13,19,23]
+    [0,6,10] [0,6,10] [0,6,10] [13,19,23] [13,19,23] [0,6,10]
+  >`).xen(RATIOS)
+    .sound("supersaw")
+    .attack(1.4).decay(1).sustain(.6).release(2)
+    .lpf(900).lpq(2)
+    .room(.85).roomsize(6)
+    .gain(.16)
+    .pan(.38),
+
+  // SUB-BASS — rolling 8ths, parked on the tonic; jumps to the FIFTH under
+  // the D climaxes and to the TRITAVE itself only under LIFT (Goa/psy bass
+  // convention, MUSIC-KNOWLEDGE.md §6: "mostly parked on the tonic,
+  // occasionally the fifth").
+  i("<0!8 0!8 0!8 0!8 6!8 0!8 0!8 0!8 6!8 13!8 0!8>").xen(RATIOS)
+    .sound("sine")
+    .attack(.01).decay(.1).sustain(.3).release(.08)
+    .gain(.4),
+
+  // KICK — four-on-the-floor. Full-on's identity runs on this pulse (same
+  // justification 16edo/psy-techno used); silent on the bare demo cycle.
+  s("bd*4").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.8),
+
+  // HATS — closed 8ths under everything, offbeat open hat for the psy
+  // "tschick." Both silent on the demo cycle.
+  s("hh*8").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.13),
+  s("~ oh ~ oh ~ oh ~ oh").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.12),
+)
