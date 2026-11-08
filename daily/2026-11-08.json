@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-08",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "KALYAN CONTRAFACT",
+  "pattern_file": "daily/2026-11-08-wildcard-kalyan-bebop-contrafact.strudel",
+  "cycles": 8,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "let contrafact = n(`<~ ~ [${A}] [${B}] [${C}] [${D}] ~ ~>`)",
+    ".scale(\"D:lydian\")"
+  ]
+}

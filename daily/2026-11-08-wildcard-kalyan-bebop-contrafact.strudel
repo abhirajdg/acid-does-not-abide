@@ -1,0 +1,165 @@
+// ============================================================================
+// DAILY — 2026-11-08 (Sunday): Wildcard — a contrafact of Friday's bebop lick,
+// played in Monday's Kalyan
+// ============================================================================
+//
+// WHY THIS, SPECIFICALLY (checked against all eleven prior Sundays before
+// writing a note of this, per MUSIC-KNOWLEDGE.md's "don't template last
+// cycle" rule): solo retuning (08-23), two kinds of externally-driven hocket
+// (08-30, 09-27), two independent voices in contrary motion (09-06), the
+// canon family — same/inverted/mirrored lag (09-13/09-20/10-18), a rate
+// transform (10-04), two independently-derived systems sharing one scale
+// (10-11), a derivation-chosen hocket partition (10-25), a canon at a
+// varying data-derived lag (11-01). None of those eleven takes a FIXED
+// scale-degree sequence and reads it through a SECOND scale — today does:
+// a jazz contrafact (Abhiraj's own Berklee vocabulary, cited already in
+// 11-06's header) is normally "new melody, same chord changes." Strudel's
+// patterns don't carry chord changes, but they do carry the one thing a
+// contrafact actually needs: a fixed sequence of scale-degree numbers.
+// Reading 11-06's four bebop-lick phrases — verbatim, unedited — through
+// Kalyan's lydian instead of G bebop is a literal, honest contrafact: same
+// abstract "chart," two different scales, two different tunes.
+//
+// THE BORROWED MATERIAL (11-06's own four 16-step phrases, token-for-token,
+// not re-derived): A = "0 ~ 4 ~ 0 1 2 3 4 5 6 7 8 ~ ~ ~", B = "4 ~ 8 ~ 7 6 5
+// 4 3 2 1 0 -1 ~ ~ ~", C = "8 ~ 12 ~ 6 7 8 ~ 6 7 8 ~ 4 ~ 0 ~", D = "0 ~ ~ ~
+// ~ ~ 6 7 8 ~ ~ ~ ~ ~ ~ ~". 11-06's own shape reading still applies: A
+// states the vocabulary straight, B is A's retrograde withheld a half-step
+// short of home, C is the peak (big leap, the lick repeated twice), D is
+// the sparse release.
+//
+// THE TWO SCALES: "G2:bebop" (11-06's own register, unchanged) for the
+// QUOTE, "D:lydian" (11-02's own tonic/register for Kalyan, unchanged) for
+// the CONTRAFACT. Bebop is an 8-tone scale (Mixolydian + one chromatic
+// passing tone); lydian is a plain 7-tone diatonic scale — so the SAME
+// degree number lands on a different scale step in each, and degree 8 (A's
+// landing note) means "one scale-step past the octave" in one and "a whole
+// step past it" in the other. That mismatch is exactly what makes this a
+// real contrafact rather than a transposition: the numbers are identical,
+// the intervals they produce are not.
+//
+// WHAT CARRIES OVER FOR FREE: Kalyan's vadi/samvadi are Ga (degree 2) and
+// Ni (degree 6) (11-02's own theory notes). Checked by hand against the
+// four borrowed phrases, not assumed: degree 2 (vadi) falls mid-run in A
+// (position 6) and B (position 9); degree 6 (samvadi) anchors every one of
+// C's three lick repetitions (positions 4, 8, 10) and D's lone lick
+// (position 6). 11-06's "insistent lick repeated twice" at the bebop
+// phrase's peak becomes, read through Kalyan, an insistent return to the
+// raga's own samvadi at the contrafact's peak — a real structural-tone
+// anchoring (MUSIC-QC-LOOP.md's jazz-improv checklist item), inherited from
+// the borrowed numbers, not engineered to land there.
+//
+// STRUCTURE (8 cycles, 16 steps/cycle, matching both source phrases' grid):
+//   QUOTE (cyc 0-1) — A then B, G2:bebop, 11-06's own square-wave timbre:
+//     state what's being borrowed before transforming it.
+//   CONTRAFACT (cyc 2-5) — A, B, C, D in order, now D:lydian, Kalyan's own
+//     plucked-synth timbre: the same four phrases, Kalyan's tune.
+//   MERGE (cyc 6) — phrase D (the sparsest, 5 of 16 steps sound) in BOTH
+//     scales at once, panned apart: the stereo-duel device (MUSIC-
+//     KNOWLEDGE.md §7), legible here because D leaves room for both.
+//   TAG (cyc 7) — Kalyan's own Sa-Ga-Pa (degrees 0,2,4, tonic + vadi +
+//     the 5th) struck once and left to ring over the drone, then silence.
+//
+// ARRANGEMENT (synth basics throughout, MUSIC-KNOWLEDGE.md §2.5 — this is a
+// theory-driven day by content even though it's the wildcard slot): QUOTE
+// keeps 11-06's own square + fixed lpf/lpq (a different week's device
+// shouldn't be re-decorated to look new). CONTRAFACT is `sawtooth`, fast
+// attack/short decay — the plucked-lead shape §2.5 specifies for raga
+// material, with lpf tracking each phrase's own role (darker on A's open
+// statement, brightest on C's peak, closing down on D). DRONE is `sine` on
+// Kalyan's own Sa+Pa (tanpura convention, MUSIC-KNOWLEDGE.md §3), present
+// only under the raga material (cyc 2-7) — nothing sits under the bebop
+// QUOTE, which stays 11-06's own bare world. No slide automation is
+// reused from 11-06: lydian's actual step sizes at the analogous positions
+// aren't semitones, so copying 11-06's exact penv amounts would be an
+// arbitrary chromatic bend with no raga basis, not an honest reuse.
+//
+// NO DRUM LAYER (percussion check, asked explicitly per MUSIC-QC-LOOP.md):
+// this piece's point is a side-by-side comparison of two melodies over one
+// fixed number sequence — an analytical/chamber device, not a genre dance
+// track (contrast 11-06's own kick+303, which this file deliberately does
+// not reuse). A kick grid would compete with, not clarify, the comparison.
+//
+// TEMPO: no genre/BPM mandate — a comparative device, not a drum-driven
+// genre track (same exemption 10-25 and 11-01 took for this slot).
+// setcpm(24), chosen for clean duration math. CYCLES: 8.
+// 8 * 60/24 = 20.0s exactly.
+//
+// SCOPE NOTE: this is the cloud half of the pipeline (DAILY-PIPELINE.md) —
+// no render/listen happens here by design. The local step carries
+// MUSIC-QC-LOOP.md's render-and-listen pass against the checklist above.
+// ============================================================================
+
+setcpm(24)
+
+// 11-06's own four 16-step phrases, token-for-token.
+let A = "0 ~ 4 ~ 0 1 2 3 4 5 6 7 8 ~ ~ ~"
+let B = "4 ~ 8 ~ 7 6 5 4 3 2 1 0 -1 ~ ~ ~"
+let C = "8 ~ 12 ~ 6 7 8 ~ 6 7 8 ~ 4 ~ 0 ~"
+let D = "0 ~ ~ ~ ~ ~ 6 7 8 ~ ~ ~ ~ ~ ~ ~"
+
+// QUOTE — cyc 0-1 only. 11-06's own scale, register, and timbre, unedited:
+// state the borrowed material before transforming it.
+let quote = n(`<[${A}] [${B}] ~ ~ ~ ~ ~ ~>`)
+  .scale("G2:bebop")
+  .sound("square")
+  .attack(.005).decay(.1).sustain(.05).release(.04)
+  .lpf(1800).lpq(5)
+  .distort(.15)
+  .pan(.5)
+  .gain(.32)
+
+// CONTRAFACT — cyc 2-5. The identical token strings, now read through
+// Kalyan's own verified scale (11-02's "D:lydian", same tonic/register).
+// Plucked synth-basics lead (MUSIC-KNOWLEDGE.md §2.5): sawtooth, fast
+// attack, short decay. lpf tracks each phrase's role in the arc.
+let contrafact = n(`<~ ~ [${A}] [${B}] [${C}] [${D}] ~ ~>`)
+  .scale("D:lydian")
+  .sound("sawtooth")
+  .attack(.008).decay(.16).sustain(.08).release(.22)
+  .lpf("<1400 1400 1400 1700 2200 1200 1200 1200>")
+  .lpq(3)
+  .pan(.5)
+  .gain(.36)
+
+// MERGE — cyc 6. Phrase D, the sparsest (5 of 16 steps sound), in both
+// scales at once, panned apart — the stereo-duel device (MUSIC-
+// KNOWLEDGE.md §7), legible here because D leaves room for both voices.
+let mergeBebop = n(`<~ ~ ~ ~ ~ ~ [${D}] ~>`)
+  .scale("G2:bebop")
+  .sound("square")
+  .attack(.005).decay(.1).sustain(.05).release(.04)
+  .lpf(1800).lpq(5)
+  .pan(.22)
+  .gain(.22)
+
+let mergeKalyan = n(`<~ ~ ~ ~ ~ ~ [${D}] ~>`)
+  .scale("D:lydian")
+  .sound("sawtooth")
+  .attack(.008).decay(.16).sustain(.08).release(.22)
+  .lpf(1700).lpq(3)
+  .pan(.78)
+  .gain(.3)
+
+// TAG — cyc 7. Kalyan's own Sa-Ga-Pa (tonic, vadi, the 5th), struck once
+// and left to ring, then silence.
+let tag = n(`<~ ~ ~ ~ ~ ~ ~ [0,2,4]>`)
+  .scale("D:lydian")
+  .sound("sawtooth")
+  .attack(.02).decay(.4).sustain(.3).release(1.2)
+  .lpf(1600).lpq(2)
+  .pan(.5)
+  .gain(.3)
+
+// DRONE — tanpura convention (MUSIC-KNOWLEDGE.md §3), Kalyan's own Sa+Pa,
+// sine, only under the raga material (cyc 2-7). Nothing sits under the
+// bebop QUOTE, which stays 11-06's own bare world.
+let drone = n(`<~ ~ [0,4] [0,4] [0,4] [0,4] [0,4] [0,4]>`)
+  .scale("D:lydian")
+  .sound("sine")
+  .attack(1.6).release(2.2)
+  .gain(.14)
+  .room(3)
+  .pan(.5)
+
+stack(quote, contrafact, mergeBebop, mergeKalyan, tag, drone)
