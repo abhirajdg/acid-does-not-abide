@@ -1,0 +1,89 @@
+// ============================================================================
+// DAILY — 2026-11-09 (Monday): Hindustani raga of the day — RAGA BHAIRAVI
+// ============================================================================
+// Weekly rotation slot: Monday = one of the 10 parent thaats. Lap two
+// continues the order lap one logged (Kalyan 08-24/11-02, Bhairavi 08-31,
+// Khamaj 09-07, Bhairav/22-shruti 09-14, Kafi 09-21, Todi 09-28, Marwa
+// 10-05, Poorvi 10-12, Asavari 10-19, Bilawal 10-26). Bhairavi is 10 Mondays
+// clear of the avoided window (the last 4-6 were Marwa/Todi/Poorvi/Asavari/
+// Bilawal/Kalyan) — safe to revisit, and this is a genuine fresh take, not a
+// repost of 08-31's file (see ARRANGEMENT below for what's actually
+// different this time).
+//
+// THEORY NOTES:
+// Bhairavi's swaras: S r g M P d n  (komal Re/Ga/Dha/Ni; shuddh Ma)
+//   -> semitone offsets from tonic: 0, 1, 3, 5, 7, 8, 10 — the exact interval
+//      set of Western "phrygian" (verified against tonaljs's own scale-type
+//      data, same discipline as every thaat file here), no substitution
+//      needed.
+//   -> tonic kept at E, same pitch 08-31 used for this raga specifically
+//      (per-raga tonic continuity, the same convention 11-02's Kalyan/D note
+//      documented).
+//   -> degree map in "E:phrygian": 0=S(E) 1=r(F) 2=g(G) 3=M(A) 4=P(B) 5=d(C)
+//      6=n(D) 7=S'(E5)
+//   -> vadi (dominant) = Ma = degree 3, samvadi (sub-dominant) = Sa = degree 0
+//
+// MELODY — four alternating phrases, a fresh composition (not 08-31's
+// phrases reused), with real leaps up to a full octave, deliberate rests,
+// and a call -> climax/resolve -> retrograde -> variation arc:
+//   A (CALL): S ~ ~ M ~ P n ~        n: 0 ~ ~ 3 ~ 4 6 ~
+//     -> leap of a fourth (S->M) straight to the vadi, then a third (P->n),
+//        left open on the komal Ni — unresolved tension.
+//   B (RESPONSE, resolves): n S' ~ P M ~ r S   n: 6 7 ~ 4 3 ~ 1 0
+//     -> continues from A's open Ni up to the octave peak, then descends in
+//        a fourth and a third back down to rest fully on Sa (samvadi) — the
+//        one phrase that resolves.
+//   C (retrograde of A — the required jazz-improv device, literal reverse
+//     of A's full event list including its rests): ~ n P ~ M ~ ~ S
+//     n: ~ 6 4 ~ 3 ~ ~ 0
+//   D (variation of A — motif-and-variation, the second required device):
+//     S S' ~ M P ~ n M     n: 0 7 ~ 3 4 ~ 6 3
+//     -> opens with a literal octave leap (S->S', scale-degree wrap-around),
+//        falls a fifth to the vadi, steps to Pa, leaps a third and a fourth
+//        back down, closing open on the vadi rather than the tonic — keeps
+//        the rotation into A feeling unresolved rather than finished.
+//   rotation <A B C D>, 16 cycles = 4 full statements.
+//
+// ARRANGEMENT — one voice, not two: instead of this project's usual separate
+// sine tanpura-drone + lead (every prior raga Monday, including 08-31's own
+// Bhairavi), the "Sound on Sound" technique from MUSIC-KNOWLEDGE.md §7
+// (Gilmour's self-built drone from the lead's own signal via a long feedback
+// delay — noted there as "not applied yet" on a raga day) is used here: a
+// long, high-feedback delay on the lead itself lets its own notes ring and
+// stack into a sustained wash underneath whatever plays next, functioning as
+// the drone without a second patch. One voice and its own echo, rather than
+// two separate timbres — fits Bhairavi's intimate, closing-recital character
+// (the most spacious, least ornamented of the 10 thaats) better than adding
+// a second sustained pad would. Triangle wave (soft/pure per
+// MUSIC-KNOWLEDGE.md §1 — not supersaw, which both Kalyan 11-02 and this
+// same raga 08-31 already used) for a plaintive, sung character; a gentle
+// vib()/vibmod() (andolan-style pitch sway, the idiomatic Hindustani
+// ornament on komal swaras — MUSIC-KNOWLEDGE.md §11) stands in for a filter-
+// resonance sweep this time, tied to the raga's own ornament vocabulary
+// rather than a generic automation target.
+//
+// PERCUSSION CHECK (asked explicitly, per MUSIC-QC-LOOP.md): no drum layer.
+// Bhairavi is the devotional closing raga of a recital, traditionally the
+// most unmetered and spacious of the 10 thaats — the same reasoning 11-02's
+// Kalyan used to go without a kit, doubly true here since there's no
+// separate drone layer either for a kick to sit against.
+//
+// This is a DAILY quick clip, not a flagship set — one continuous pattern,
+// no alap/jor/jhala arc. setcpm(45) * 16 cycles = 21.3s (60/45 = 1.33s/cycle).
+// ============================================================================
+
+setcpm(45)
+let CYCLES = 16 // 16 * 60/45 = 21.3s
+
+n("<[0 ~ ~ 3 ~ 4 6 ~] [6 7 ~ 4 3 ~ 1 0] [~ 6 4 ~ 3 ~ ~ 0] [0 7 ~ 3 4 ~ 6 3]>")
+  .scale("E:phrygian")
+  .sound("triangle")
+  .attack(.02).decay(.25).sustain(.35).release(.5)
+  .cutoff(1600)
+  .vib(4.5).vibmod(.2) // andolan-style pitch sway, see ARRANGEMENT above
+  .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+  .gain(.42)
+  .room(3.5)
+  .delay(.6).delaytime(.667).delayfeedback(.78) // the "drone": the lead's
+  // own notes ring on through a long, high-feedback half-cycle delay and
+  // stack into a sustained wash — see ARRANGEMENT above

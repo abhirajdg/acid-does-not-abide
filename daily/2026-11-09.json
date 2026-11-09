@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-09",
+  "weekday": "Monday",
+  "topic": "hindustani-raga",
+  "topic_label": "RAGA BHAIRAVI",
+  "pattern_file": "daily/2026-11-09-hindustani-bhairavi.strudel",
+  "cycles": 16,
+  "target_duration_sec": 21,
+  "code_highlight_lines": [
+    "n(\"<[0 ~ ~ 3 ~ 4 6 ~] [6 7 ~ 4 3 ~ 1 0] [~ 6 4 ~ 3 ~ ~ 0] [0 7 ~ 3 4 ~ 6 3]>\")",
+    ".vib(4.5).vibmod(.2) // andolan-style pitch sway, see ARRANGEMENT above"
+  ]
+}
