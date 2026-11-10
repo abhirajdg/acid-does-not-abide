@@ -1,0 +1,131 @@
+// ============================================================================
+// DAILY — 2026-11-10 (Tuesday) — Carnatic melakarta math
+// Melakarta #64: Vachaspati
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (same chakra/position scheme every Tuesday has used —
+// 08-25's #22 through 11-03's #8): chakra = ceil(N/6), position = N-6*(chakra-1).
+// For N=64: chakra = ceil(64/6) = 11 ("Nakha" chakra) -> chakra > 6 means
+// PRATI Ma (M2). Ri-Ga combo index = ((chakra-1) mod 6)+1 = ((10) mod 6)+1 = 5
+// -> R2 G3 (chatushruti Ri, antara Ga). position = 64 - 6*10 = 4 -> Dha-Ni
+// combo #4 of its own 6-combo cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3
+// 6=D3N3) -> D2 N2 (chatushruti Dha, kaisiki Ni).
+// melakarta 64 = S R2 G3 M2 P D2 N2. Semitones (S=0 R2=2 G3=4 M2=6 P=7 D2=9
+// N2=10): 0 2 4 6 7 9 10.
+//
+// WESTERN SCALE MATCH — verified this session against tonaljs's own
+// scale-type data (the same discipline sets/bhairav-session-v1.strudel used
+// to confirm "gypsy" for Bhairav): `Scale.get('C lydian dominant')` returns
+// intervals 1P 2M 3M 4A 5P 6M 7m = exactly 0 2 4 6 7 9 10, digit for digit —
+// no guessing needed. Also aliased "overtone" in tonaljs (it approximates
+// the acoustic overtone series) — first M2 (prati Ma) melakarta in this
+// series to land cleanly on a named 7-tone Western mode; 09-01's #20 and
+// 09-08's #57 (both M2) didn't match one. Strudel scale names can't contain
+// spaces (mini-notation would split them) — per knowledge-base/strudel/
+// learn/tonal.md, spaces become colons: `.scale("Bb:lydian:dominant")`.
+//
+// KATAPAYADI CROSS-CHECK: first two consonants of "VAchaspati" are V, C
+// (वाचस्पति — वा=vā, च=ca). Katapayadi table: V -> row 4 (gha/dha/bha/va),
+// C -> row 6 (ca/ta/sha). Digits in name order (4, 6) -> REVERSE to get the
+// melakarta number: 64. Matches the chakra/position math above independently.
+//
+// THE MATH DRIVING TODAY'S PATTERN — four distinct derived numbers, each
+// given its own audible job (richer than most prior Tuesdays, which usually
+// picked two or three):
+//   - N's own two digits (6, 4) -> phrase lengths. Call = 6 steps, response
+//     = 4 steps: the melakarta number itself generates the melody's
+//     structure, not an arbitrary substitute (the point of this slot).
+//   - chakra (11) -> stereo pan LFO period, 11 cycles — a fresh device for
+//     this slot (no prior melakarta Tuesday has automated pan).
+//   - the Dha-Ni combo index / position (4) -> lead filter sweep period, 4
+//     cycles. (Coincidentally also N's ones-digit here — not a general
+//     rule, just where #64 happened to land: 6*10=60 is a multiple of ten.)
+//   - the Ri-Ga combo index (5) -> delay time, a fifth-note subdivision
+//     (1/5) — a fresh fraction (11-03 used an eighth, drawn straight from N).
+//
+// ARRANGEMENT — compared directly against 11-03's Hanumatodi (the most
+// recent prior Tuesday): that file used a 2-voice register-separated
+// tonic+Pa drone, a sawtooth lead, and euclidRot for its number-driven
+// accent. Today changes all three, driven by what's actually distinctive
+// about THIS melakarta rather than reused by default:
+//   drone:  a 3-voice HARMONIC STACK (tonic, Pa, and the scale's own sharp-4
+//           color tone) instead of 2-voice tonic+Pa — chosen because this
+//           scale's Western name IS "the overtone scale" (its intervals
+//           approximate the natural harmonic series), so stacking tonic/
+//           fifth/sharp-4 makes the drone itself read as that harmonic
+//           stack rather than the usual plain tambura dyad. Still plain
+//           sine (MUSIC-KNOWLEDGE.md §2.5), still slow attack/release.
+//   lead:   square/pulse (synth-basic), not sawtooth — a different
+//           harmonic-content class (MUSIC-KNOWLEDGE.md §1), hollower and
+//           more open, matching lydian dominant's brighter #4/b7 color
+//           against last week's starker, all-minor phrygian.
+//   accent: a stereo pan LFO (chakra) instead of a euclid-gated drone pluck
+//           — the number drives space this time, not a rhythmic gate.
+//   No percussion: a Carnatic alapana-style exposition over a drone has no
+//   metric kit (MUSIC-QC-LOOP.md's autopilot-percussion lesson, and the
+//   standing rule every melakarta Tuesday so far has kept).
+//
+// MELODY — four phrases (call / response-with-resolution / drop-with-
+// anticipation / motif-variation), anchored on S and P, built around this
+// scale's own color tones: the sharp 4 (degree 3, M2) and flat 7 (degree 6,
+// N2) that distinguish lydian dominant from a plain major scale:
+//   A (call, 6 steps — N's tens digit): tonic, leap a fifth to Pa, step to
+//     the sharp-4 tension tone, leap up a third into the flat-7:
+//                                          0 ~ 4 3 ~ 6
+//   B (response, 4 steps — N's ones digit; call-and-response + tension-
+//     >release device): descend stepwise from the flat-7 through Dha and
+//     the sharp-4, then LEAP DOWN A TRITONE to resolve onto the tonic — the
+//     scale's own defining interval used as the resolution itself:
+//                                          6 5 3 0
+//   C (the drop, 6 steps; sets up anticipation): octave leap down to the
+//     flat-7, step down to Pa, rest, then a big leap down onto the leading
+//     tone from below (degree -1, the flat-7 of the octave below) — left
+//     hanging, unresolved:
+//                                          7 ~ 6 4 ~ -1
+//   D (motif-and-variation of A, 4 steps; resolves C's hanging leading
+//     tone): the same opening fifth-leap-then-step as A, but condensed and
+//     closed with the same tritone-resolution idiom B used, landing home:
+//                                          0 4 3 0
+//
+// CYCLES = 24. setcpm(80) -> 24 * 60/80 = 18.0s, six clean passes of the
+// 4-phrase rotation (A/B/C/D). No tala implied (no drum layer to check a
+// genre BPM against) — cpm here just paces the phrase slots for legibility,
+// same reasoning 11-03 used.
+// ============================================================================
+
+setcpm(80)
+let CYCLES = 24 // 24 * 60/80 = 18.0s; six clean passes of the 4-phrase melody
+
+stack(
+  // DRONE — harmonic-stack tambura: tonic (Bb1), Pa (F2), and the scale's
+  // own sharp-4 overtone color (E3) sustained together — see ARRANGEMENT
+  // above for why this differs from a plain tonic+Pa dyad this time.
+  note("<[bb1,f2,e3]>/4")
+    .sound("sine")
+    .gain(.25)
+    .attack(2.5).release(3.2)
+    .room(4.5)
+    .pan(sine.range(0.15, 0.85).slow(11)), // chakra (11) -> pan LFO period
+
+  // MELODY — see MELODY note above. Real leaps (a fifth, thirds, a
+  // tritone, a leap onto a leading tone from below), rests, call-and-
+  // response (A/B), tension->release (B and C/D), and motif-and-variation
+  // (D vs A) as the required jazz-improv devices.
+  n(`<
+    0 ~ 4 3 ~ 6
+    6 5 3 0
+    7 ~ 6 4 ~ -1
+    0 4 3 0
+  >`)
+    .scale("Bb:lydian:dominant")
+    .sound("square")
+    .attack(.008).decay(.12).sustain(.14).release(.2)
+    .lpf(sine.range(500, 2400).slow(4)) // Dha-Ni idx / position (4) -> sweep period
+    .lpq(4)
+    .rarely(x => x.add(note(12))) // improv hook: occasional octave leap
+    .gain(.42)
+    .room(2.2)
+    .delay(.2)
+    .delaytime(1/5) // Ri-Ga combo index (5) -> a fifth-note delay subdivision
+    .delayfeedback(.22)
+)
