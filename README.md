@@ -100,12 +100,9 @@ Bong Lebowski is the intersection of all of this.
 
 ## Coming
 
-Not yet built — this is the actual pre-production for each: the raga's theory, how it maps onto
-the alap → jor → jhala arc, and which Strudel tools do the work. Written to be checked against,
-not just read — if a scale claim below turns out wrong once it's actually running in strudel.cc,
-that's a bug report, not a vibe.
+Raga Yaman (built as *Tivra*) and Raga Darbari Kannada (built as *Andolan*) are now in the Raga Clock EP above. Raga Todi is not built yet. Each section below is the pre-production its track was checked against: the raga's theory, how it maps onto the alap → jor → jhala arc, and which Strudel tools do the work. Written to be checked against, not just read. If a scale claim below turns out wrong once it's actually running in strudel.cc, that's a bug report, not a vibe.
 
-### Raga Yaman
+### Raga Yaman (built as *Tivra*)
 
 **S R G M̌ P D N** — Kalyan thaat, sampurna-sampurna (all seven swaras, both directions). Every note shuddha except Madhyam, which is tivra (M̌, sharp fourth). That single raised Ma is the entire identity of the raga — drop it back to shuddha and you're playing Bilawal.
 
@@ -123,7 +120,7 @@ Vadi Ga, samvadi Ni. Aroha: N. R G M̌ D N S. (note the approach to Sa from the 
 
 ---
 
-### Raga Darbari Kannada
+### Raga Darbari Kannada (built as *Andolan*)
 
 **S R g M P d n** — Asavari thaat. Gandhar, Dhaivat and Nishad are komal; Re, Ma, Pa shuddha. The komal Ga and komal Dha are additionally described as *ati-komal* — pitched slightly lower than a standard komal interval — and both carry a slow, heavy andolan (oscillation) that is not ornamental but structural: sing or play them straight and it stops being Darbari.
 
