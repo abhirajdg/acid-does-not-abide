@@ -1,0 +1,132 @@
+// ============================================================================
+// DAILY — 2026-11-11 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-11-11 -- day 11, month 11 (November), year 2026.
+//
+// THE DERIVATION:
+//   Every prior Wednesday this project has written found a relationship
+//   BETWEEN day and month (a shared residue, a GCD, a prime-vs-square
+//   contrast, a quotient/remainder walk...). Today there is no "between" --
+//   day and month are not merely related, they are the SAME NUMBER: 11 and
+//   11. That collapses the usual two-voice "day drives one line, month
+//   drives another" model this slot has used all autumn: writing two
+//   separate 11-derived voices today would just be the same material typed
+//   out twice for no musical reason. The honest response to day == month is
+//   ONE voice, stated twice -- literally, as a canon (a round): the same
+//   phrase entering a second time, offset, so it is heard in dialogue with
+//   itself. That is also new to this slot -- prior Wednesdays used hocket
+//   (interleaving, 09-09) or a written-out retrograde/rotation as a second,
+//   DIFFERENT phrase; a canon is imitation of the SAME phrase in time,
+//   which is the only device that actually represents "11 and 11" rather
+//   than "a number and a related number."
+//
+//   11 is also prime (no factors to split it into, so the earlier device
+//   this slot used for primality -- one ungrouped run, see 11-04's MONTH)
+//   is sitting right there to reuse -- but it was used LAST Wednesday, on
+//   this exact number, so repeating it verbatim this week would be the
+//   same failure mode as copying last week's arrangement with new pitches
+//   (see MUSIC-KNOWLEDGE.md's 29 Aug entry). Instead: 11 is also a
+//   PALINDROME (reads the same both ways, like the date "11-11" itself,
+//   and like the digit pair "1 1" that spells both the day and the month).
+//   So the phrase itself is built as a literal musical palindrome -- 11
+//   tokens, symmetric around the centre token -- rather than writing a
+//   second, separate retrograde phrase the way 10-28 and 11-04 both did.
+//   Its own retrograde IS itself; no second phrase is needed to show that,
+//   which is the point.
+//
+//   CANON DISTANCE: the second voice enters 1/11 of a cycle behind the
+//   first -- the canon's own timing is drawn from the number the whole
+//   piece is about, not a round fraction chosen for convenience.
+//
+//   TEMPO: setcpm(66) x CYCLES(22) -- both multiples of 11 (66 = 6x11,
+//   22 = 2x11), so the piece's duration itself carries the day/month
+//   number, not just its pitch content. 22 x 60 / 66 = 20s exactly.
+//
+// PHRASE (11 tokens, palindromic around the centre, position 6):
+//   0  3  ~  7  4  [9]  4  7  ~  3  0
+//   tonic→third→(rest)→fifth→third→PEAK(ninth)→third→fifth→(rest)→third→tonic
+//   Real leaps (third, fourth-to-fifth, up to the ninth), two deliberate
+//   rests either side of centre, a single rise-peak-fall-return arc, and
+//   the tonic anchoring both ends -- the palindrome shape itself doubling
+//   as the alap-style "leave and return to Sa" arc. Three register/width
+//   variants alternate across cycles for phrase development over time
+//   (the shape stays symmetric -- only the interval widths/octave change):
+//   WIDE opens the arc to a minor sixth at the centre instead of a ninth.
+//   HIGH is the base phrase transposed up an octave.
+//
+// ARRANGEMENT:
+//   Two voices only (the canon pair) plus the drone -- no third/fourth
+//   layer, because the whole idea this week is ONE phrase, not several.
+//   LEAD (dux): square -- a repunit's own "simplest repeating unit"
+//   character, hollow and plain, fitting a number written as the same
+//   digit twice. Light acid taste (lpf sweep, period = 11 cycles -- the
+//   day/month number itself, not a borrowed one -- plus gentle distort)
+//   gives the derived number its audible outlet in automation rather than
+//   in a drum layer. Panned hard left.
+//   ECHO (comes): the identical phrase, same alternator, entering 1/11
+//   cycle late -- triangle, softer and rounder than the dux's square, so
+//   the two read as one idea imitating itself rather than two competing
+//   leads (contrast of timbre keeping the overlap legible, MUSIC-
+//   KNOWLEDGE.md §2). Panned hard right -- the Pink Floyd stereo-duel
+//   device, apt here because the two sides really ARE the same material.
+//   DRONE -- tanpura convention, tonic/fifth, sine, no automation, held
+//   for the full 22 cycles.
+//
+//   NO DRUM KIT, deliberately: a canon's own staggered entries are already
+//   the audible rhythm this piece has to offer, and the 11-cycle filter
+//   sweep already gives the derived number a home in automation -- adding
+//   a kick/hat grid on top would just restate a pulse this piece doesn't
+//   have and doesn't need (MUSIC-QC-LOOP.md's reflexive-percussion note).
+//
+// Scale: C natural minor -- fresh for this slot (recent Wednesdays used
+// F, B, C(sharp?), E and D minor); chosen only because it sits the phrase's
+// widest leap (the ninth at the peak) in a comfortable register for both
+// square and triangle without clipping the top of either voice's range.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(66) // 6 x 11
+let CYCLES = 22 // 2 x 11 -- 22 x 60 / 66 = 20s
+
+// The 11-token palindrome, three register/width variants (symmetric in all three):
+const BASE = "0 3 ~ 7 4 9 4 7 ~ 3 0"
+const WIDE = "0 3 ~ 7 5 8 5 7 ~ 3 0"
+const HIGH = "12 15 ~ 19 16 21 16 19 ~ 15 12"
+const PHRASE = `<[${BASE}] [${WIDE}] [${HIGH}] [${BASE}]>`
+
+stack(
+  // LEAD (dux) -- the phrase stated straight. Square = repunit's plain,
+  // hollow "same digit twice" character.
+  n(PHRASE)
+    .scale("C:minor")
+    .sound("square")
+    .attack(.008).decay(.2).sustain(.05).release(.12)
+    .distort(.14)
+    .lpf(sine.range(450, 2000).slow(11)) // sweep period = 11, the day/month number itself
+    .gain(.3)
+    .pan(.1)
+    .room(1.4),
+
+  // ECHO (comes) -- the identical phrase, same alternator, entering 1/11
+  // cycle behind the dux: the canon distance is the day/month number.
+  n(PHRASE)
+    .scale("C:minor")
+    .sound("triangle")
+    .late(1 / 11)
+    .attack(.03).decay(.35).sustain(.1).release(.6)
+    .gain(.22)
+    .pan(.9)
+    .room(2.4),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the whole piece,
+  // no automation (the one moving parameter this week lives on the lead).
+  note("[c2,g2]/22")
+    .sound("sine")
+    .attack(1.3).release(2)
+    .gain(.2)
+    .pan(.5)
+    .room(3)
+)

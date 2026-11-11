@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-11",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "11 . 11 . 2026",
+  "pattern_file": "daily/2026-11-11-date-pattern.strudel",
+  "cycles": 22,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["const PHRASE = `<[${BASE}] [${WIDE}] [${HIGH}] [${BASE}]>`", ".late(1 / 11)"]
+}
