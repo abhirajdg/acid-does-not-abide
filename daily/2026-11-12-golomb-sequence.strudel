@@ -1,0 +1,84 @@
+// ============================================================================
+// DAILY — 2026-11-12 (Thursday): Pure math sequence — Golomb's self-describing
+// sequence (OEIS A001462, "the sequence that describes itself")
+// ============================================================================
+//
+// THE SEQUENCE: a(1) = 1. a(n) = the number of times n occurs in the
+// sequence itself. That single rule generates every term — verified against
+// the OEIS entry, not invented: a(1)=1, a(2)=2, a(3)=2, a(4)=3, a(5)=3,
+// a(6)=4, a(7)=4. Expanded, that reads: the value 1 appears once, 2 appears
+// twice, 3 appears twice, 4 appears three times, 5 appears three times,
+// 6 appears four times, 7 appears four times:
+//   1, 2,2, 3,3, 4,4,4, 5,5,5, 6,6,6,6, 7,7,7,7
+//
+// PITCH + RHYTHM, read straight off that structure, no transform: each VALUE
+// n (1..7) becomes scale degree n-1, and the COUNT a(n) — how many times
+// that value legally occurs — becomes the literal `!count` repeat on that
+// note. "6 appears four times" is heard as the 6th-degree note struck four
+// times in a row, not described in a comment — the self-reference is the
+// rhythm. One Golomb value per cycle (7 cycles total), so the piece is
+// structured exactly like reading the sequence's own run-length groups
+// aloud, one group per breath.
+//
+// JAZZ-IMPROV DEVICE — anchoring + arc: degree 0 (cycle 1, a single struck
+// tonic) is the anchor/vadi the piece departs from and never returns to —
+// deliberately, because the real sequence never resets either, it only
+// grows. Each cycle both steps up by scale degree AND adds a repeat (1,2,2,
+// 3,3,4,4), so pitch-rise and rhythmic-density-rise climb together: a single
+// accelerating arc, not a repeated loop, which is the phrase development
+// this topic asks for (contrast the flat "one loop restated" failure mode
+// in MUSIC-QC-LOOP.md).
+//
+// ARRANGEMENT — two voices, each stating a DIFFERENT half of the same
+// self-reference, because that's literally what the sequence is about (a
+// value, and a count of that value):
+//   - $lead (sawtooth): states the VALUE as pitch and the COUNT as repeat-
+//     strikes, per cycle, as above. Bright/digital timbre (MUSIC-KNOWLEDGE.md
+//     §1 — sawtooth = full harmonic series, "edge" — fitting a sequence
+//     defined by counting, not a melodic topic).
+//   - $drone (sine, soft): one long tone per cycle on the tonic, but its
+//     lowpass cutoff climbs in 7 discrete steps, one per cycle — it is
+//     literally counting "which number n we're currently on" while the lead
+//     counts "how many times n occurs". Sine chosen deliberately against
+//     the lead's sawtooth: pure vs. edgy, so the two self-describing halves
+//     stay perceptually separate instead of fusing into one blended voice
+//     (MUSIC-KNOWLEDGE.md §2, contrast not blend).
+// This is a different arrangement idea from last Thursday's piece
+// (2026-11-05, look-and-say): that one was a single growing-delay voice;
+// this one is two voices in deliberate contrast, picked because THIS
+// sequence's defining property is a pair (value, count-of-value), not a
+// single generative growth process.
+//
+// NO DRUM LAYER: a counting sequence has no inherent metric pulse to track
+// — it is not a beat, it's an index. The thing that "needs an audible
+// outlet" here (the count a(n)) already gets one, directly, as the lead's
+// own repeat-strikes; reaching for a kick/hat grid on top would just
+// duplicate that information in a different register (see the 09-08/09-09
+// percussion-as-default warning in MUSIC-QC-LOOP.md).
+//
+// TEMPO: setcpm(20) -> one cycle = 3s. CYCLES: 7 (one per Golomb group).
+// 7 * 60 / 20 = 21s.
+// ============================================================================
+
+setcpm(20)
+
+$lead: n("<0 [1!2] [2!2] [3!3] [4!3] [5!4] [6!4]>")
+  .scale("C:dorian")
+  .sound("sawtooth")
+  .attack(.005).decay(.09).sustain(.08).release(.12)
+  .lpf("<900 1100 1300 1600 2000 2500 3200>")
+  .lpq(6)
+  .delaytime(.12)
+  .delayfeedback(.25)
+  .delay(.3)
+  .room(.3)
+  .gain(.45)
+
+$drone: n("0")
+  .scale("C:dorian")
+  .sound("sine")
+  .attack(.3).decay(.2).sustain(.7).release(1.2)
+  .lpf("<450 600 780 1000 1300 1650 2100>")
+  .lpq(2)
+  .gain(.28)
+  .room(.5)
