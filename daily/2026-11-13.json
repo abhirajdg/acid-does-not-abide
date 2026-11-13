@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-13",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "HUNGARIAN DUEL",
+  "pattern_file": "daily/2026-11-13-acid-hungarian-duel.strudel",
+  "cycles": 12,
+  "target_duration_sec": 23,
+  "code_highlight_lines": [">`).scale(\"D2:hungarian:minor\")", ".lpq(saw.range(6, 22).slow(CYCLES))"]
+}

@@ -1,0 +1,121 @@
+// ============================================================================
+// DAILY — 2026-11-13 (Friday): Acid / psychedelia free jam — the Floyd duel
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction). Checked the last two Fridays before writing this one: 10-30
+// used C altered / an automated VOWEL filter on one centered lead; 11-06 used
+// G bebop / a real 303 slide on one centered lead, delay-feedback as the one
+// slow arc. Neither used more than one melodic voice, and neither panned
+// anything off-center. Today picks a scale none of the last ten Fridays
+// touched, and a device MUSIC-KNOWLEDGE.md §7 flagged explicitly as "not
+// applied yet" to a daily pattern:
+//
+//   SCALE: D Hungarian minor (verified against tonaljs's own scale-type
+//   source, raw.githubusercontent.com/tonaljs/tonal, packages/scale-type/
+//   data.ts: "1P 2M 3m 4A 5P 6m 7M" — same discipline as Bhairav's "gypsy"
+//   check). Natural minor with a raised 4th AND raised 7th, giving it TWO
+//   augmented-second gaps (F-G# and Bb-C#) — a genuinely exotic, unstable
+//   scale distinct from the double-harmonic-major Bhairav already uses.
+//   Degrees: 0=D 1=E 2=F 3=G#(aug4, the scale's own tension/pivot tone) 4=A
+//   5=Bb 6=C# 7=D'. 10=G#' (octave above the aug4), 11=A' (octave above 5th).
+//
+//   PRODUCTION — a real stereo "duel" (MUSIC-KNOWLEDGE.md §7, the Pink Floyd
+//   "Shine On" technique: two voices panned hard left/right, playing
+//   opposing patterns and octaves against each other — noted there as a
+//   real device never yet tried on a daily pattern, only on a weekly set).
+//   Two voices, two octaves apart, two contrasting timbres (§2's
+//   blend/contrast point): a LOW call (square, sharp/abrasive, hard left)
+//   and a HIGH response (supersaw, thick/lush, hard right) trading phrases
+//   in each other's rests — true call-and-response (MUSIC-QC-LOOP.md's
+//   jazz-improv-device checklist item), anchored on the tonic and the
+//   aug-4th as structural tones. At the phrase-C peak the two voices
+//   deliberately COLLIDE — L hits the octave-up aug4 (10) the same step R
+//   hits the octave-up 5th (11), a semitone clash, the tension→release
+//   device resolving in the sparse phrase D that follows.
+//
+//   One slow arc only (§10's "fewer independently-drifting knobs"): R's
+//   resonance (lpq) ramps 6->22 across all 12 cycles on a one-way `saw`
+//   signal, not a cyclic sine — the duel itself sharpens as the clip runs.
+//   L's lpf/lpq/distort stay fixed; R has no distortion at all (it reads as
+//   the cleaner "guitar" voice of the pair, L as the dirtier 303 voice).
+//
+//   DRUMS — kick only, synthesised (MUSIC-KNOWLEDGE.md §19: no
+//   RolandTR808/909 sample bank), a sine with a fast pitch drop plus a short
+//   noise click, tuned to D1 (this track's tonic). No hats/clap/rim: the
+//   stereo image IS this week's rhythmic/textural interest, and a filled
+//   top end would compete with the spatial duel instead of framing it —
+//   exactly the "smooth, placed, distinct panned sounds, not loud/shrill"
+//   correction logged in §18. MUSIC-QC-LOOP.md's percussion check applies
+//   here deliberately: a busy hat layer has no job this voice pair doesn't
+//   already have.
+//
+// LEAD PHRASES — 16 steps/cycle, rotating <A B C D> every cycle across 12
+// cycles (3 full rounds):
+//   A (call states the tonic + its own tritone, the aug4; response answers
+//     descending from an octave above, landing the resolution on tonic).
+//   B (A transposed up one degree — same contour, new center, per the
+//     "variation, shifted" device used on recent Fridays).
+//   C (peak — call leaps to the octave-up aug4 (10), response leaps to the
+//     octave-up 5th (11) on the SAME step: the duel's one real collision).
+//   D (release — call states tonic once and falls silent; response echoes
+//     it quietly, an octave up, near the very end. Tension resolved.)
+//
+// TEMPO: setcpm(32) with a kick*4 -> BPM = 32*4 = 128, acid house territory
+// (MUSIC-QC-LOOP.md: 120-130). CYCLES: 12. 12*60/32 = 22.5s.
+// ============================================================================
+
+setcpm(32)
+let CYCLES = 12
+
+// kick — synthesised (MUSIC-KNOWLEDGE.md §19), not a sample bank: a sine
+// with a fast pitch drop plus a short noise click, tuned to D1, this
+// track's tonic. Drives the sidechain on both leads' shared orbit.
+let kick = stack(
+  note("d1").s("sine").struct("x*4")
+    .penv(26).pdecay(.035)
+    .attack(.0008).decay(.17).sustain(0).postgain(3.5),
+  s("white").struct("x*4")
+    .hpf(1500).lpf(6000).attack(.0005).decay(.012).sustain(0).postgain(1.2),
+)
+  .duckorbit(2).duckattack(.03).duckdepth(.3)
+  .gain(.55)
+
+// LOW call — square, hard left, fixed filter/resonance/distort (the dirtier
+// 303 voice of the pair). States the tonic and the scale's own tritone
+// (aug4), leaps to the octave in A/B, collides with the response at the
+// octave-up aug4 (10) in C, then falls silent in D.
+let callL = n(`<
+  [0 ~ 3 ~ 6 7 ~ 4 ~ ~ ~ ~ ~ ~ ~ ~]
+  [1 ~ 4 ~ 7 8 ~ 5 ~ ~ ~ ~ ~ ~ ~ ~]
+  [0 ~ 7 ~ 10 ~ 7 4 ~ ~ ~ ~ ~ ~ ~ ~]
+  [0 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~]
+>`).scale("D2:hungarian:minor")
+  .sound("square")
+  .attack(.004).decay(.09).sustain(.04).release(.03)
+  .lpf(900).lpq(10)
+  .distort(.22)
+  .pan(.06)
+  .gain(.32)
+  .orbit(2)
+
+// HIGH response — supersaw, hard right, two octaves above the call (the
+// cleaner "guitar" voice of the duel, no distortion). Answers in the call's
+// rests, descending back to tonic in A/B, collides at the octave-up 5th
+// (11) in C, then echoes the tonic once, quietly, near the end of D. lpq is
+// this week's one slow arc: a one-way ramp across the whole clip.
+let responseR = n(`<
+  [~ ~ ~ ~ ~ ~ ~ ~ 7 6 4 3 ~ 0 ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~ 8 7 5 4 ~ 1 ~ ~]
+  [~ ~ ~ ~ 11 ~ ~ ~ 10 7 4 ~ 0 ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 0 ~ ~]
+>`).scale("D4:hungarian:minor")
+  .sound("supersaw")
+  .attack(.006).decay(.12).sustain(.06).release(.08)
+  .lpf(2600)
+  .lpq(saw.range(6, 22).slow(CYCLES))
+  .pan(.94)
+  .gain(.30)
+  .orbit(2)
+
+stack(kick, callL, responseR)
