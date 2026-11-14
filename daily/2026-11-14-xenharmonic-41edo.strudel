@@ -1,0 +1,139 @@
+// ============================================================================
+// DAILY — 2026-11-14 (Saturday): Xenharmonic tuning experiment — 41EDO
+// ============================================================================
+//
+// THE TUNING: 41 equal divisions of the octave, step = 1200/41 = 29.268c.
+// Checked by hand against the low-limit ratios every prior Saturday's edo was
+// graded on (12 EDOs + hexany + Bohlen-Pierce tried on this slot so far):
+//   3/2  (701.96c, 5th)   -> step 24 (702.44c, +0.48c)  — the MOST accurate
+//                            fifth of any edo tried here (17/19/31/15/24/22/
+//                            13/11/16/23edo all missed it by several cents;
+//                            23edo's broken 5th was the low point two weeks
+//                            ago).
+//   4/3  (498.04c, 4th)   -> step 17 (497.56c, -0.48c)  — equally excellent.
+//   7/4  (968.83c, h7th)  -> step 33 (965.85c, -2.97c)  — a real septimal
+//                            seventh, usable as a color tone.
+//   7/5  (582.51c, 7-tri) -> step 20 (585.37c, +2.85c)  — also clean.
+//   9/8  (203.91c, 2nd)   -> step 7  (204.88c, +0.97c)  — near-pure whole tone.
+//   5/4  (386.31c, M3)    -> step 13 (380.49c, -5.83c)  — only middling; the
+//                            one simple consonance this edo does NOT nail.
+// So 41edo is the first tuning on this slot where the FIFTH and FOURTH are
+// essentially perfect (sub-cent), opening up real harmony again after 23edo's
+// broken 5th two weeks ago — but the plain major third is still a few cents
+// off, so the honest chord here isn't a triad, it's the septimal otonal
+// TETRAD 4:5:6:7 (steps 0,13,24,33) — the "5" leg carries the one imperfect
+// interval, the "7" leg is a genuine septimal color most listeners have never
+// consciously heard in tune. That tetrad, not a plain major chord, is this
+// week's structural idea.
+//
+// ARRANGEMENT: Goa trance (CREATIVE-DIRECTION.md's four genres; MUSIC-
+// KNOWLEDGE.md §6/§18). Chosen because this is the first edo on this slot
+// with a usable, sustained chord to put under a Goa arp (every prior edo here
+// either had no triad at all, or — Bohlen-Pierce last week — a triad but in
+// full-on's bright-arp idiom). Two separate voices, not one busy line (§6):
+// a rolling 16th sub-bass, mostly parked on the TONIC and occasionally the
+// 5TH, under a melodic lead built from the tetrad plus two passing color
+// tones (the near-pure 2ND and the 15/8-ish major-7th), riding over the held
+// tetrad pad. Per §18's concrete Goa sound: the lead is two saws a few cents
+// apart (not one voice, not BP's single bright saw) through a resonant
+// filter with fast attack/short decay/low sustain; the pad drifts on a slow
+// filter LFO rather than sitting static; delay feedback swells toward the
+// LIFT rather than staying constant (§18: "delay feedback swelling to near
+// self-oscillation before a drop"). Four-on-the-floor kick + 8th hats + an
+// offbeat open hat carry Goa/psy's pulse — this genre's identity runs on that
+// pulse the same way 16edo's psy-techno and Bohlen-Pierce's full-on did; a
+// Goa arp+pad with no kit under it would be the wrong default here.
+//
+// SCALE DEGREES (all `.xen("41edo")` steps, repeats at the octave = 41):
+//   TONIC 0   2ND 7   M3-imperfect 13   4TH 17   5TH 24   h7(7/4) 33
+//   M7(15/8) 37   OCT 41   OCT+M3 54   OCT+5TH 65   OCT+h7 74   2-OCT 82
+//   TETRAD (home) = [0,13,24,33] (4:5:6:7).  UP-TETRAD = [41,54,65,74].
+//
+// MELODY — demo, then call(A)/response(B)/retrograde-of-A(C)/climax(D),
+// repeated once, then LIFT (octave pitch-lift climax, touching 2 octaves up)
+// and a final D that resolves all the way home:
+//   demo: TONIC ~ M3 ~ 5TH ~ h7 ~                 (presents the tetrad tones)
+//   A (call):      TONIC ~ 5TH ~ h7 ~ 4TH ~
+//   B (response):  4TH h7 5TH M3 2ND ~ M7 ~ TONIC
+//   C (retrograde of A, literal reverse):  ~ 4TH ~ h7 ~ 5TH ~ TONIC
+//   D (peak & release): 5TH ~ OCT OCT+M3 ~ OCT 5TH TONIC
+//   LIFT (octave-up climax, touches the 2-octave peak, resolves home):
+//     OCT+5TH ~ 2-OCT ~ OCT+5TH OCT ~ TONIC
+// Order: demo, A B C D, A B C D, LIFT, D — 11 phrases, 11 cycles.
+//
+// CYCLES: 11, setcpm(35), 4 beats/cycle = 140 BPM (Goa/psy's 131-147 range,
+// MUSIC-KNOWLEDGE.md §12). 11 * 60/35 = 18.9s.
+// ============================================================================
+
+setcpm(35)
+let CYCLES = 11
+
+stack(
+  // LEAD — the tetrad phrase plus two passing color tones (2ND, M7). Two
+  // detuned saws (MUSIC-KNOWLEDGE.md §18's Goa arp recipe: "two saws detuned
+  // 5-15 cents... fast attack, medium decay, low sustain") through a
+  // resonant filter with a per-note envelope, not one bright voice like last
+  // week's full-on arp.
+  i(`<
+    [0 ~ 13 ~ 24 ~ 33 ~]
+    [0 ~ 24 ~ 33 ~ 17 ~]
+    [17 ~ 33 24 13 7 ~ 37]
+    [~ 17 ~ 33 ~ 24 ~ 0]
+    [24 ~ 41 54 ~ 41 24 0]
+    [0 ~ 24 ~ 33 ~ 17 ~]
+    [17 ~ 33 24 13 7 ~ 37]
+    [~ 17 ~ 33 ~ 24 ~ 0]
+    [24 ~ 41 54 ~ 41 24 0]
+    [65 ~ 82 ~ 65 41 ~ 0]
+    [24 ~ 41 54 ~ 41 24 0]
+  >`).xen("41edo")
+    .superimpose(x => x.add(note(.08)))
+    .sound("sawtooth")
+    .attack(.006).decay(.11).sustain(.08).release(.1)
+    .lpf(900).lpq(12)
+    .lpa(.005).lpd(.08).lps(.05).lpr(.07).lpenv(4.5)
+    .delay(.28).delaytime(.1875)
+    .delayfeedback(sine.range(.2, .55).slow(11))
+    .gain(.42)
+    .pan(.58),
+
+  // PAD — the home tetrad (4:5:6:7), the one real chord this tuning gives
+  // this slot its first usable sustained harmony since 23edo had none. Slow
+  // filter LFO (PWM-ish drift, §18) instead of a static cutoff. Shifts to
+  // the up-tetrad under the D climaxes and LIFT, following the lead's climb.
+  i(`<
+    [0,13,24,33] [0,13,24,33] [0,13,24,33] [0,13,24,33] [41,54,65,74]
+    [0,13,24,33] [0,13,24,33] [0,13,24,33] [41,54,65,74] [41,54,65,74]
+    [0,13,24,33]
+  >`).xen("41edo")
+    .sound("sawtooth")
+    .attack(1.6).decay(1).sustain(.6).release(2.2)
+    .lpf(sine.range(500, 1100).slow(13))
+    .lpq(3)
+    .room(.75).roomsize(5)
+    .gain(.14)
+    .pan(.42),
+
+  // SUB-BASS — rolling 16ths, Goa's continuous-bass identity (MUSIC-
+  // KNOWLEDGE.md §6: "rolling... mostly parked on the tonic, occasionally
+  // the fifth"), not full-on's spaced 8ths last week. Jumps to the 5TH under
+  // the D climaxes and the OCT itself only under LIFT.
+  i("<0!16 0!16 0!16 0!16 24!16 0!16 0!16 0!16 24!16 41!16 0!16>").xen("41edo")
+    .sound("sine")
+    .attack(.008).decay(.09).sustain(.25).release(.06)
+    .gain(.4),
+
+  // KICK — four-on-the-floor, Goa/psy's pulse. Silent on the bare demo cycle.
+  s("bd*4").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.8),
+
+  // HATS — closed 8ths, offbeat open hat for Goa's top-end lift. Both
+  // silent on the demo cycle too.
+  s("hh*8").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.12),
+  s("~ oh ~ oh ~ oh ~ oh").bank("RolandTR909")
+    .mask("<0 1 1 1 1 1 1 1 1 1 1>")
+    .gain(.11),
+)
