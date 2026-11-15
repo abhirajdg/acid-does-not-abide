@@ -1,0 +1,158 @@
+// ============================================================================
+// DAILY — 2026-11-15 (Sunday): Wildcard — Vachaspati meets Hungarian minor,
+// two traditions, one shared color tone
+// ============================================================================
+//
+// WHY THIS (checked against this week + recent Sundays before writing a
+// note): 10-11 proved two SYSTEMS landing on the IDENTICAL scale (Kalyan =
+// Kalyani, both lydian); 11-08 read one FIXED degree sequence through two
+// DIFFERENT scales (a jazz contrafact). Neither is what's distinctive this
+// week. This week's own Tuesday (daily/2026-11-10-carnatic-melakarta-64.
+// strudel, Vachaspati = lydian dominant, semitones 0 2 4 6 7 9 10) and
+// Friday (daily/2026-11-13-acid-hungarian-duel.strudel, D Hungarian minor,
+// semitones 0 2 3 6 7 8 11) are two UNRELATED scales from two unrelated
+// traditions (South Indian melakarta combinatorics; Eastern European folk
+// modal theory) that happen to share exactly one structural feature: both
+// put their raised-4th/tritone color tone (semitone 6) at scale DEGREE 3,
+// and both share Sa (degree 0) and Pa (degree 4, semitone 7). Put both on
+// the same tonic (C, fresh for this slot — not reused from either source
+// file) and degree 3 in each is the literal same pitch, F#, not just an
+// analogous one. That's today's device: not convergence of a whole scale,
+// not one sequence through two lenses, but two genuinely different
+// melodic languages that collide on one real, shared note.
+//
+// THE SHARED TONE, verified by hand from this week's own two headers (not
+// re-derived): on tonic C —
+//   Vachaspati (C:lydian:dominant):    0=C 1=D 2=E  3=F# 4=G 5=A  6=Bb 7=C'
+//   Hungarian minor (C:hungarian:minor): 0=C 1=D 2=Eb 3=F# 4=G 5=Ab 6=B  7=C'
+// Degrees 0, 1, and 4 (C, D, G) are identical in both scales already —
+// the shared ground under everything. Degree 3 (F#) is each scale's own
+// exotic tension tone (Vachaspati's prati-Ma/sharp-4; Hungarian minor's
+// augmented 4th, reached via its signature augmented-second gap, degree
+// 2->3, the same 3-semitone leap Friday's header names) — same number,
+// same actual pitch, opposite harmonic context (major/dominant-flavoured
+// vs. minor-with-raised-7th). That's the collision this piece makes
+// audible.
+//
+// STRUCTURE (10 cycles, 8 steps/cycle):
+//   0 — drone alone.
+//   1 — V (Vachaspati) CALL: states Sa, Pa, the sharp-4, the flat-7.
+//   2 — H (Hungarian) RESPONSE: states Sa, the minor-3, the aug-4 (via its
+//       own augmented-second leap), the major-7 — same call/response
+//       device, answered in the OTHER tradition's vocabulary.
+//   3 — V VARIATION (motif-and-variation of cycle 1: same opening fifth-leap
+//       contour, now reaching the octave before falling back through the
+//       flat-7 to the tension tone).
+//   4 — H VARIATION (motif-and-variation of cycle 2: same opening third,
+//       now a wide major-7 leap, then the aug-4 gap crossed in both
+//       directions).
+//   5 — COLLISION: V and H both play, independently, each approaching
+//       degree 3 by its own idiom (V falls a third from the flat-7; H
+//       crosses its own signature augmented-second gap from the minor-3)
+//       — and land on it on the SAME step. Unlike Friday's duel (two
+//       voices colliding a semitone apart for dissonance), this is true
+//       pitch unison: two traditions independently arriving at the exact
+//       same note.
+//   6 — COLLISION, lifted an octave (the same two approach-and-land shapes,
+//       transposed +7 degrees) — a pitch-lift climax, Goa trance's own
+//       device (MUSIC-KNOWLEDGE.md §6, used on Saturday's pattern) reused
+//       here for a different end: not a dance-track peak, but pushing the
+//       convergence to its most audible register.
+//   7 — RESOLVE: V and H play the IDENTICAL two-note figure (Pa, then Sa)
+//       — the full convergence, not just one shared color tone anymore.
+//   8 — TAG: both strike the unison tonic once and let it ring.
+//   9 — drone alone, tail.
+//
+// ARRANGEMENT — contrast in timbre (MUSIC-KNOWLEDGE.md §2), a combination
+// not tried elsewhere this week (square appeared Tue/Wed/Fri, sawtooth
+// Thu/Sat, supersaw Fri — triangle+pulse is the one pairing left unused):
+//   V (Vachaspati) — triangle, soft/pure (MUSIC-KNOWLEDGE.md §1), slower
+//     attack/release, a sung/alapana character. Panned left.
+//   H (Hungarian) — pulse, sharper/reedier (fiddle-like edge suiting the
+//     folk source), faster attack/shorter decay. Panned right.
+//   Both share ONE slow filter arc (saw.range(...).slow(CYCLES), the §10
+//   "fewer independently-drifting knobs" rule) rather than two separate
+//   automations — the SAME brightening curve drives both voices, so the
+//   filter itself narrates "two things converging," not just two
+//   decorations. Darkest in the solo cycles, brightest at the collision
+//   and its octave lift, settling back down through the resolve/tag.
+//   DRONE — tanpura convention (MUSIC-KNOWLEDGE.md §3), sine, tonic+fifth
+//     (C2/G2) — the one interval both traditions share everywhere, held
+//     the whole 10 cycles including the intro/tail, no automation.
+//
+// NO DRUM LAYER (percussion check, MUSIC-QC-LOOP.md): this is a comparative/
+// dialogue piece between two melodic languages, not a genre dance track —
+// the same exemption 10-11 and 11-08 took on this slot for the same reason.
+// A kit would compete with, not clarify, the one-note collision this piece
+// exists to make audible.
+//
+// TEMPO: no genre/BPM mandate (comparative device, not drum-driven — same
+// exemption as above). setcpm(30). CYCLES: 10. 10 * 60/30 = 20.0s.
+// ============================================================================
+
+setcpm(30)
+let CYCLES = 10
+
+// V — Vachaspati (lydian dominant), one bar per cycle, rest where silent.
+let V = `<
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [0 ~ 4 ~ 3 ~ 6 ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [0 4 7 ~ 6 4 3 ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [0 4 ~ 6 ~ ~ 3 ~]
+  [7 11 ~ 13 ~ ~ 10 ~]
+  [4 ~ 0 ~ ~ ~ ~ ~]
+  [0 ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+>`
+
+// H — Hungarian minor, same slot structure, silent where V solos and vice
+// versa, together from cycle 5 (the collision) onward.
+let H = `<
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [0 ~ 2 ~ 3 ~ 6 ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [0 2 6 ~ 3 2 5 ~]
+  [0 6 ~ 2 ~ ~ 3 ~]
+  [7 13 ~ 9 ~ ~ 10 ~]
+  [4 ~ 0 ~ ~ ~ ~ ~]
+  [0 ~ ~ ~ ~ ~ ~ ~]
+  [~ ~ ~ ~ ~ ~ ~ ~]
+>`
+
+let sharedFilter = saw.range(700, 2400).slow(CYCLES) // one curve, both voices
+
+stack(
+  // DRONE — tanpura convention, tonic+fifth, the one interval shared by
+  // both scales everywhere. Held the full 10 cycles, no automation.
+  note("[c2,g2]/10")
+    .sound("sine")
+    .attack(2).release(2.6)
+    .gain(.2)
+    .room(4)
+    .pan(.5),
+
+  // V — Vachaspati voice. Triangle, soft/pure, sung character.
+  n(V)
+    .scale("C3:lydian:dominant")
+    .sound("triangle")
+    .attack(.02).decay(.22).sustain(.22).release(.35)
+    .lpf(sharedFilter)
+    .lpq(3)
+    .gain(.36)
+    .pan(.25)
+    .room(2.2),
+
+  // H — Hungarian minor voice. Pulse, reedier, folk-fiddle edge.
+  n(H)
+    .scale("C3:hungarian:minor")
+    .sound("pulse")
+    .attack(.006).decay(.14).sustain(.08).release(.12)
+    .lpf(sharedFilter)
+    .lpq(8)
+    .gain(.34)
+    .pan(.75)
+    .room(1.6)
+)

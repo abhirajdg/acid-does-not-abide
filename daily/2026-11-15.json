@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-15",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "SHARED TRITONE",
+  "pattern_file": "daily/2026-11-15-wildcard-vachaspati-hungarian-tritone.strudel",
+  "cycles": 10,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    ".scale(\"C3:lydian:dominant\")",
+    ".scale(\"C3:hungarian:minor\")"
+  ]
+}
