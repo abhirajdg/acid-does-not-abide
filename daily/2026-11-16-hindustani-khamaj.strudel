@@ -1,0 +1,129 @@
+// ============================================================================
+// DAILY — 2026-11-16 (Monday): Hindustani raga of the day — RAGA KHAMAJ
+// ============================================================================
+// Weekly rotation slot: Monday = one of the 10 parent thaats. Lap two
+// continues the order lap one logged (Kalyan 08-24/11-02, Bhairavi 08-31/
+// 11-09, Khamaj 09-07, Bhairav/22-shruti 09-14, Kafi 09-21, Todi 09-28,
+// Marwa 10-05, Poorvi 10-12, Asavari 10-19, Bilawal 10-26). Khamaj next, 10
+// Mondays clear of the last-4-6 window (Poorvi/Asavari/Bilawal/Kalyan/
+// Bhairavi) — safe to revisit. This is a genuine rewrite of 09-07's file,
+// not a repost — see ARRANGEMENT below for exactly what changes and why.
+//
+// THEORY NOTES (restated briefly, already verified 09-07):
+// Khamaj's swaras: S R G M P D n (komal Ni only) -> semitone offsets
+// 0,2,4,5,7,9,10 -- the exact interval set of Western "mixolydian", no
+// substitution needed. Tonic kept at G, the same pitch 09-07 used for this
+// raga specifically (per-raga tonic continuity, same convention 11-02/11-09
+// documented for Kalyan/D and Bhairavi/E).
+//   -> degree map in "G:mixolydian": 0=S(G) 1=R(A) 2=G(B) 3=M(C) 4=P(D)
+//      5=D(E) 6=n(F) 7=S'(G5)
+//   -> vadi = Ga = degree 2, samvadi = Ni = degree 6 (same pair 09-07 used).
+//
+// MELODY -- a genuinely different structural device from 09-07's single
+// rotating lead: two voices in CALL-AND-RESPONSE (sawal-jawab), the
+// dialogic, conversational character thumri/Khamaj is actually known for,
+// rather than one line with a drone underneath. Each 4-cycle statement
+// trades the caller role between the voices:
+//   cycle 1: V1 CALLS (S ~ G P, rest) -> V2 ANSWERS in the gap V1 left
+//            (rest, then n S' ~ n -- touches samvadi, peaks at the octave,
+//            back to samvadi).
+//   cycle 2: V1 CALLS again, a VARIATION of cycle 1 (S G P, same rising
+//            shape, rest removed -- tighter) -> V2 ANSWERS with the literal
+//            RETROGRADE of its own cycle-1 answer (n ~ S' n, reversing
+//            [6 7 ~ 6] to [6 ~ 7 6]) -- the required retrograde device,
+//            applied to the response voice's own motif.
+//   cycle 3: roles reverse -- V2 CALLS (n P n S', leaping around the
+//            samvadi up to the octave) -> V1 ANSWERS in the gap, anchored
+//            on the vadi (G ~ P G).
+//   cycle 4: V2 CALLS again, the literal RETROGRADE of its own cycle-3 call
+//            (reversing [6 4 6 7] to [7 6 4 6]) -> V1 ANSWERS and gives the
+//            statement its one full resolution, landing on Sa (P G ~ S).
+//   Two jazz-improv devices present: call-and-response (the whole texture)
+//   and retrograde (each voice's second turn mirrors its own first turn).
+//   <...> 4-element rotation x4 = 16 cycles = 4 full statements.
+//
+// ARRANGEMENT -- not drone+lead (09-07, and every other raga Monday so
+// far): two co-equal voices in dialogue, panned apart (V1 left .3, V2
+// right .7) so the trade genuinely reads as two parties talking, not one
+// line panned center. V1 = square (reedy, harmonium-like -- the
+// accompanying voice in a real thumri bol-banav exchange), fast attack/
+// short decay. V2 = triangle (softer, sung character, the answering
+// vocal), slower attack/longer release so its replies feel like they're
+// completing V1's thought rather than matching its attack. Both synth
+// basics per MUSIC-KNOWLEDGE.md §2.5, no gm_sitar/gm_voice_oohs. Cutoff on
+// each voice is stepped to its own CALL/ANSWER role across the 4 cycles
+// (V1 brighter while calling, duskier while answering; V2 the mirror) --
+// automation tied to which voice is speaking, not an independent sweep.
+// V2 carries a short, modest delay (echo as a texture on the reply, not
+// the long-feedback "echo as drone" substitute 11-09's Bhairavi used --
+// a different device, kept deliberately small here since this file still
+// runs a real drone underneath). Drone: sine on S/P (g2/d3, tanpura
+// convention, low and understated so the two dialoguing voices stay the
+// foreground, unlike 09-07's more prominent swelling drone).
+//
+// PERCUSSION CHECK (asked explicitly, per MUSIC-QC-LOOP.md): yes, a layer,
+// same honest reasoning 09-07 used -- Khamaj is the thumri/dadra thaat,
+// genuinely danced to, not an alap-style exposition. But a DIFFERENT tala
+// this time, not a repeat of 09-07's 8-matra keherwa: DADRA (6 matras, two
+// 3-beat vibhags -- Dha Dhi Na | Dha Tu Na), the tala most specifically
+// named for the light-classical "dadra" genre Khamaj compositions live in.
+// Written as its own 6-step grid against the melody's 8-step grid, so the
+// two naturally interlock in a real 6-against-8 laya weave rather than
+// lining up with the melody 1:1 -- a genuine rhythmic choice, not filler.
+// swing(3) (not 09-07's swing(4)) fits dadra's 3-beat vibhag, not
+// keherwa's 4+4.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc. setcpm(44) * 16 cycles = 21.8s (60/44 = 1.36s/cycle).
+// ============================================================================
+
+setcpm(44)
+let CYCLES = 16 // 16 * 60/44 = 21.8s
+
+stack(
+  // drone: tonic + fifth (S and P), sine -- purest waveform, tanpura
+  // convention, see ARRANGEMENT above. Kept low/understated this time.
+  note("<g2 d3>/4")
+    .sound("sine")
+    .gain(.16)
+    .room(3)
+    .attack(1.5).release(2.5),
+
+  // VOICE 1 -- square, reedy/harmonium-like. Calls on cycles 1-2, answers
+  // on cycles 3-4 (see MELODY above). Cutoff brighter while calling.
+  n("<[0 ~ 2 4 ~ ~ ~ ~] [0 2 4 ~ ~ ~ ~ ~] [~ ~ ~ ~ 2 ~ 4 2] [~ ~ ~ ~ 4 2 ~ 0]>")
+    .scale("G:mixolydian")
+    .sound("square")
+    .attack(.015).decay(.18).sustain(.25).release(.2)
+    .cutoff("<2200 2200 1200 1200>").resonance(7)
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.4)
+    .pan(.3)
+    .room(2),
+
+  // VOICE 2 -- triangle, softer sung answering character. Answers on
+  // cycles 1-2 (its cycle-2 answer is the literal retrograde of its
+  // cycle-1 answer), calls on cycles 3-4 (cycle-4 call is the retrograde
+  // of its cycle-3 call) -- see MELODY above. Cutoff brighter while
+  // calling, the mirror of V1's.
+  n("<[~ ~ ~ ~ 6 7 ~ 6] [~ ~ ~ ~ 6 ~ 7 6] [6 4 6 7 ~ ~ ~ ~] [7 6 4 6 ~ ~ ~ ~]>")
+    .scale("G:mixolydian")
+    .sound("triangle")
+    .attack(.03).decay(.3).sustain(.3).release(.4)
+    .cutoff("<1200 1200 2200 2200>").resonance(4)
+    .sometimes(x => x.ply(2)) // <- improv hook: occasional ornament
+    .gain(.38)
+    .pan(.7)
+    .room(2.5)
+    .delay(.22).delaytime(.3).delayfeedback(.35), // modest reply-echo, NOT
+    // the long-feedback drone-substitute 11-09's Bhairavi used
+
+  // rhythm: literal DADRA tala (6 matras, Dha Dhi Na | Dha Tu Na), not
+  // 09-07's keherwa -- see ARRANGEMENT above. 6-step grid against the
+  // melody's 8-step grid, a real laya interlock.
+  s("bd rim hh bd hh hh")
+    .bank("RolandTR909")
+    .gain(.28)
+    .swing(3) // <- dadra's 3-beat vibhag, not keherwa's 4+4
+    .degradeBy(.05)
+)
