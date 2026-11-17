@@ -1,0 +1,168 @@
+// ============================================================================
+// DAILY — 2026-11-17 (Tuesday) — Carnatic melakarta math
+// Melakarta #46: Shadvidhamargini
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (same chakra/position scheme every Tuesday this
+// project has used — 08-25's #22 through 11-10's #64):
+//   chakra = ceil(N / 6), position = N - 6*(chakra - 1)
+// For N = 46: chakra = ceil(46/6) = 8 ("Vasu" chakra) -> chakra > 6 means
+// PRATI Ma (M2). Ri-Ga combo index = ((chakra-1) mod 6)+1 = ((7) mod 6)+1
+// = 2 -> R1 G2 (shuddha Ri, sadharana Ga). position = 46 - 6*7 = 4 -> Dha-Ni
+// combo #4 of its own 6-combo cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2 5=D2N3
+// 6=D3N3) -> D2 N2 (chatushruti Dha, kaisiki Ni).
+// melakarta 46 = S R1 G2 M2 P D2 N2. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 1 3 6 7 9 10 — confirmed
+// against Wikipedia's Shadvidamargini entry (ascent S R1 G2 M2 P D2 N2 Ṡ) and
+// karnatik.com's mela table, independent of the chakra/position math above.
+//
+// WESTERN SCALE MATCH — checked this session with `npm install
+// @tonaljs/scale-type` and scanned all 92 of its built-in 7-note scales for
+// an exact chroma match to [0,1,3,6,7,9,10]: NONE MATCH (closest are
+// distance-2 near-misses — dorian b2, dorian #4, hungarian major — none
+// exact). Unlike most prior melakarta Tuesdays (08-25 Kharaharapriya/dorian,
+// 09-29 Keeravani/harmonic minor, 10-06 Kalyani/lydian, 10-27 Harikambhoji/
+// mixolydian, 11-03 Hanumatodi/phrygian, 11-10 Vachaspati/lydian dominant),
+// this one has no clean 7-tone Western-mode name — same situation 10-20's
+// Dhenuka hit (landed on a Balinese-pelog-adjacent set instead). Per the
+// standing rule for exactly this case (CLAUDE.md's Monday-thaat fallback,
+// applied here to a Tuesday number instead): don't guess a "close enough"
+// name — map scale degrees to semitones explicitly instead (MELAKARTA_46 /
+// toMidi below), same discipline as the explicit-notation fallback.
+// The actual character: a 1-2-3-1-2-1-2 semitone gap pattern — in
+// particular a 3-semitone gap between G2 and M2 (adjacent SCALE degrees a
+// minor third apart in pitch) where every named mode above has only 1 or 2.
+// That gap is this raga's whole identity and drives the melody below.
+//
+// KATAPAYADI CROSS-CHECK: first two consonants of "SHAdVIdhamargini" are
+// "sha" and the conjunct "dvi" (counts only its LAST consonant, "va", per
+// the katapayadi conjunct rule). Using this project's own consonant table
+// (established in 11-03's and 11-10's files): sha -> row 6 (ca/ta/sha),
+// va -> row 4 (gha/dha/bha/va). Digits in name order (6, 4) -> REVERSE to
+// get the melakarta number: 46. Matches the chakra/position math above
+// independently, and matches chakra 8's "Vasu" family (43 Gavambhodi,
+// 44 Bhavapriya, 45 Shubhapantuvarali, 46 Shadvidhamargini is the 4th of six
+// — position 4, confirmed a third way).
+//
+// THE MATH DRIVING TODAY'S PATTERN — four distinct derived numbers, each
+// with its own audible job:
+//   - N's own two digits (4, 6) -> phrase lengths. Call = 4 steps, response
+//     = 6 steps: the melakarta number itself generates the melody's
+//     structure, not an arbitrary substitute (the point of this slot).
+//   - chakra (8) -> lead filter-sweep LFO period, 8 cycles — chakra 8 is
+//     exactly what makes this prati Ma (the sharp 4th causing the
+//     exotic G-M gap), so the number that causes the color drives the
+//     parameter that lets it keep moving.
+//   - position (4) -> lead delay time, a quarter-note subdivision (1/4).
+//   - Ri-Ga combo index (2) -> the drone dyad's alternation period, 2
+//     cycles (see ARRANGEMENT below).
+//
+// ARRANGEMENT — compared directly against 11-10's Vachaspati (the most
+// recent prior Tuesday, also prati Ma): that file used a 3-voice consonant
+// harmonic stack drone, a square lead, and a pan LFO for its number-driven
+// accent. Today changes all three, driven by what's actually distinctive
+// about THIS melakarta — the unresolved G-M gap, not a consonant overtone
+// color:
+//   drone:  a 2-note dyad, tonic + the sharp-4 color tone (M2) — a true
+//           tritone against the tonic, left to ring rather than resolved —
+//           ALTERNATING every 2 cycles (Ri-Ga combo index) with tonic + Pa
+//           (a plain fifth), so the drone itself states tension then
+//           release, the same device the melody uses, instead of sitting
+//           on one static interval all the way through. Still plain sine
+//           (MUSIC-KNOWLEDGE.md §2.5), still slow attack/release.
+//   lead:   triangle (synth-basic) — not square (11-10) or sawtooth
+//           (11-03): triangle's harmonic content is the softest, least
+//           buzzy of the three, chosen because this scale's own color
+//           already supplies the tension (the G-M gap) — a harsher
+//           waveform on top of it would double up on edge rather than
+//           let the interval itself be heard clearly.
+//   accent: filter sweep (chakra) + delay time (position) on the lead
+//           itself, not a separate plucked layer or pan LFO — a different
+//           device from 11-10's pan automation.
+//   No percussion: a Carnatic alapana-style exposition over a drone has no
+//   metric kit (MUSIC-QC-LOOP.md's autopilot-percussion lesson, and the
+//   standing rule every melakarta Tuesday so far has kept).
+//
+// PITCH MAPPING — no .scale() name matches (see WESTERN SCALE MATCH above),
+// so scale degrees map to MIDI explicitly: MELAKARTA_46 holds the raga's own
+// semitone offsets, toMidi(d) wraps octaves and looks the degree up,
+// .withValue(toMidi) rewrites the degree-number pattern into real pitches —
+// the same raga-mapper technique MUSIC-KNOWLEDGE.md §13/§20 documents for
+// the songs lane (seq + withValue), used here because this is exactly that
+// situation: a real scale with no named Western equivalent to borrow.
+//
+// MELODY — four phrases (call / full descending run-with-resolution / drop-
+// with-anticipation / motif-variation), anchored on S (tonic), built to make
+// the G-M gap audible as a "step" rather than hide it:
+//   A (call, 4 steps — N's tens digit): tonic, rest, leap a fifth to Pa,
+//     leap a further minor third up into the flat-7 tension tone, left
+//     hanging:
+//                                          0 ~ 4 6
+//   B (full descending run, 6 steps — N's ones digit; call-and-response,
+//     answering A's hang by resuming from the same note A ended on): N
+//     D P M -then the G-M gap itself, scale-degree-adjacent (M->G) but a
+//     minor third in pitch- G, resolving down to S:
+//                                          6 5 4 3 2 0
+//   C (the drop, 6 steps; tension->release/anticipation device): octave-up
+//     tonic leapt down a tritone onto the color tone (M), rest, then a
+//     further big leap down onto the approach-tone from below (degree -1,
+//     the flat-7 of the octave below) — left hanging, unresolved:
+//                                          7 ~ 3 ~ -1 ~
+//   D (motif-and-variation of A, 4 steps; resolves C's hang): the same
+//     opening fifth-leap-then-minor-third as A, but closed with a near-
+//     octave leap straight back down to the tonic instead of hanging:
+//                                          0 4 6 0
+//
+// CYCLES = 20. setcpm(60) -> 20 * 60/60 = 20.0s, five clean passes of the
+// 4-phrase rotation (A/B/C/D). No tala implied (no drum layer to check a
+// genre BPM against) — cpm here just paces the phrase slots for legibility,
+// same reasoning prior melakarta Tuesdays used.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 20 // 20 * 60/60 = 20.0s; five clean passes of the 4-phrase melody
+
+// Melakarta 46 (Shadvidhamargini): S R1 G2 M2 P D2 N2 — semitones from tonic.
+// No tonaljs scale matches this set (see WESTERN SCALE MATCH above), so
+// degrees map to MIDI explicitly instead of through .scale().
+const MELAKARTA_46 = [0, 1, 3, 6, 7, 9, 10]
+const TONIC = 66 // F#4 — unused as a Tuesday tonic so far (C, D, E, F, G, A, B, Bb already used)
+const toMidi = (d) => {
+  const oct = Math.floor(d / 7)
+  const idx = ((d % 7) + 7) % 7
+  return TONIC + 12 * oct + MELAKARTA_46[idx]
+}
+
+stack(
+  // DRONE — tonic + the raga's own color tone (M2, a tritone against the
+  // tonic), alternating every 2 cycles (Ri-Ga combo index) with tonic + Pa
+  // (a plain fifth) — see ARRANGEMENT above for why this replaces last
+  // week's static 3-voice stack. f#2 = TONIC-24, c3 = +M2, cs3 = +P.
+  note("<[f#2,c3] [f#2,cs3]>/2")
+    .sound("sine")
+    .gain(.26)
+    .attack(2.6).release(3.3)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (a fifth, minor thirds, a
+  // tritone, a near-octave drop, an approach from below), rests,
+  // call-and-response (A/B), tension->release (C/D), and motif-and-
+  // variation (D vs A) as the required jazz-improv devices.
+  note(`<
+    0 ~ 4 6
+    6 5 4 3 2 0
+    7 ~ 3 ~ -1 ~
+    0 4 6 0
+  >`)
+    .withValue(toMidi)
+    .sound("triangle")
+    .attack(.01).decay(.15).sustain(.12).release(.25)
+    .lpf(sine.range(380, 2200).slow(8)) // chakra (8) -> sweep period
+    .lpq(5)
+    .rarely(x => x.add(note(12))) // improv hook: occasional octave leap
+    .gain(.44)
+    .room(2.3)
+    .delay(.2)
+    .delaytime(1/4) // position (4) -> quarter-note delay subdivision
+    .delayfeedback(.22)
+)
