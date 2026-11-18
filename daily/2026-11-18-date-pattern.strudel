@@ -1,0 +1,120 @@
+// ============================================================================
+// DAILY — 2026-11-18 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-11-18 -- day 18, month 11 (November), year 2026.
+//
+// THE DERIVATION (the whole point of the day):
+//   day x month = 18 x 11 = 198. Sum 198's own digits: 1+9+8 = 18 -- the
+//   DAY comes back out, exactly, after being multiplied by the month and
+//   digit-summed once. A genuine arithmetic round trip specific to today
+//   (recent Wednesdays compared sums, bits, GCDs, divisor sums, and a
+//   day==month palindrome -- none of them sent the day THROUGH an operation
+//   and got the day back).
+//
+//   Read 18 and 198 as scale-degree strings (this project's degree numbers
+//   already wrap by octave every 7 steps, so degree N and degree N+7 are
+//   the same pitch, an octave apart -- confirmed in 11-04's and 11-11's use
+//   of degrees past 7 and below 0):
+//     DAY's own two digits, 1 and 8, land on degree 1 and degree 8 -- and
+//     8 - 1 = 7, exactly one octave, so the day's two digits are secretly
+//     the SAME note, an octave apart, before any music is even written --
+//     that bare octave leap is the day's own motif.
+//   PRODUCT's digits, 1, 9, 8, carry the SAME two notes (1 and 8) with a
+//     "9" wedged textually between them -- but 9 is a step ABOVE 8, not a
+//     note between 1 and 8 in pitch. So the inserted digit isn't a passing
+//     tone filling a gap -- it's an OVERSHOOT past the octave that then
+//     resolves back down onto it. The month's own arithmetic (x11, then
+//     digit-sum) is what inserts that overshoot into the day's bare leap.
+//
+// PHRASE, four variants (one skeleton: tonic, step, [reach], step, return),
+// alternating across cycles for real phrase development:
+//   SEED        "0 1 ~ 8 7 ~ 1 0"   -- the bare octave leap (day's two
+//                                       digits, nothing else)
+//   FILLED      "0 1 ~ 9 8 7 ~ 0"   -- the product's overshoot-and-resolve
+//                                       (9 reaches past 8, then settles)
+//   RETROGRADE  "0 ~ 7 8 9 ~ 1 0"   -- FILLED stated backwards, token for
+//                                       token (true retrograde, a second
+//                                       improv device)
+//   MONTH-REACH "0 1 ~ 11 8 7 ~ 0"  -- the overshoot degree swapped for 11
+//                                       itself: the MONTH played directly
+//                                       as a pitch, the biggest reach of
+//                                       the four
+//   Real leaps (an octave, a ninth, an eleventh, and a descending seventh
+//   on the way home), a rest either side of the reach tone for breathing
+//   room, call (SEED) answered by response (FILLED), motif-and-variation
+//   across all four, and every variant anchored on the tonic (0) at both
+//   ends -- the alap-style "leave and return to Sa" shape.
+//
+// AUTOMATION -- per-note filter brightness, not a generic LFO sweep (fresh
+//   for this slot; the last two Wednesdays both leaned on a slow
+//   sine.range sweep). Each variant's lpf contour peaks exactly on its own
+//   reach tone(s) -- 8 in SEED, 9 then 8 in FILLED, 11 in MONTH-REACH --
+//   so the brightest moment in the sound lines up with the highest reach
+//   in the pitch, the modulation tracking the phrase instead of drifting
+//   independently of it.
+//
+// CYCLES = 18 -- the day itself, the number the whole derivation loops
+//   back to. setcpm(54) (3 x 18) x 18 cycles / 60 = 20s exactly.
+//
+// Scale: A minor -- fresh for this slot (recent Wednesdays used D, C, E,
+// G, B, and F minor).
+//
+// Instrumentation: `supersaw` lead -- a synth basic (MUSIC-KNOWLEDGE.md
+// §2.5: theory days use synth basics, not gm_* samples), its thick,
+// detuned reach fitting an overshoot-and-resolve phrase better than a
+// plain square or sawtooth (both already used on recent Wednesdays
+// anyway). Light distort + moderate resonance for the project's acid
+// taste layer, kept well under the whine threshold (MUSIC-QC-LOOP.md
+// failure 5). DRONE -- tanpura convention, tonic/fifth, sine, no
+// automation (the one moving parameter this week lives on the lead's
+// per-note filter).
+//
+// NO DRUM KIT, deliberately: the motif's own call/response/retrograde
+// transformation across cycles, and the per-note brightness tracking the
+// reach tones, ARE this piece's audible movement -- a metric kit
+// underneath would just restate a pulse the piece doesn't have
+// (MUSIC-QC-LOOP.md's reflexive-percussion note).
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous
+// pattern, no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(54) // 3 x 18
+let CYCLES = 18 // the day itself -- 18 x 60 / 54 = 20s
+
+const SEED       = "0 1 ~ 8 7 ~ 1 0"
+const FILLED     = "0 1 ~ 9 8 7 ~ 0"
+const RETROGRADE = "0 ~ 7 8 9 ~ 1 0"
+const MONTHREACH = "0 1 ~ 11 8 7 ~ 0"
+const PHRASE = `<[${SEED}] [${FILLED}] [${RETROGRADE}] [${MONTHREACH}]>`
+
+const LPF_SEED       = "900 900 900 2200 1400 900 900 900"
+const LPF_FILLED     = "900 900 900 2600 1900 1400 900 900"
+const LPF_RETROGRADE = "900 900 1400 1900 2600 900 900 900"
+const LPF_MONTHREACH = "900 900 900 3000 1900 1400 900 900"
+const LPF = `<[${LPF_SEED}] [${LPF_FILLED}] [${LPF_RETROGRADE}] [${LPF_MONTHREACH}]>`
+
+stack(
+  // LEAD -- the day's bare octave leap, transformed each cycle: bare,
+  // overshoot-filled, retrograde, then the month reached for directly.
+  n(PHRASE)
+    .scale("A:minor")
+    .sound("supersaw")
+    .attack(.01).decay(.25).sustain(.08).release(.3)
+    .lpf(LPF) // brightness peaks exactly on each variant's reach tone
+    .lpq(5)
+    .distort(.1)
+    .gain(.3)
+    .pan(.55)
+    .room(1.2),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full 18 cycles,
+  // no automation (the moving parameter this week lives on the lead).
+  note("[a2,e2]/18")
+    .sound("sine")
+    .attack(1.3).release(2)
+    .gain(.22)
+    .pan(.5)
+    .room(3)
+)
