@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-19",
+  "weekday": "Thursday",
+  "topic": "math-sequence",
+  "topic_label": "STERN-BROCOT TREE",
+  "pattern_file": "daily/2026-11-19-stern-brocot-sequence.strudel",
+  "cycles": 5,
+  "target_duration_sec": 17,
+  "code_highlight_lines": [
+    "setcpm(18)",
+    "$lead: n(\"<[0 2 1 2 0] [0 3 2 4 1 4 2 3 0] [0 4 3 6 2 7 4 6 1 6 4 7 2 6 3 4 0] [-7 -5 -6 -5 -7] -6>\")"
+  ]
+}

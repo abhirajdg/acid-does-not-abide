@@ -1,0 +1,92 @@
+// ============================================================================
+// DAILY — 2026-11-19 (Thursday): Pure math sequence — Stern's diatomic
+// sequence (OEIS A002487), the integer backbone of the Stern-Brocot tree
+// ============================================================================
+//
+// THE SEQUENCE: a(0)=0, a(1)=1, a(2n)=a(n), a(2n+1)=a(n)+a(n+1). Verified by
+// hand from that recursion, index by index:
+//   a(2)=a(1)=1, a(3)=a(1)+a(2)=2, a(4)=a(2)=1, a(5)=a(2)+a(3)=3,
+//   a(6)=a(3)=2, a(7)=a(3)+a(4)=3, a(8)=a(4)=1, a(9)=a(4)+a(5)=4,
+//   a(10)=a(5)=3, a(11)=a(5)+a(6)=5, a(12)=a(6)=2, a(13)=a(6)+a(7)=5,
+//   a(14)=a(7)=3, a(15)=a(7)+a(8)=4, a(16)=a(8)=1.
+// a(n)/a(n+1) walks every positive rational in lowest terms exactly once —
+// this is the Calkin-Wilf enumeration of the Stern-Brocot mediant tree.
+//
+// A REAL, VERIFIED SYMMETRY drives the piece's structure directly: the block
+// from index 2^k to 2^(k+1) (both ends included) is a PALINDROME —
+//   level2 (idx 4..8):  1,3,2,3,1
+//   level3 (idx 8..16): 1,4,3,5,2,5,3,4,1
+//   level4 (idx 16..32):1,5,4,7,3,8,5,7,2,7,5,8,3,7,4,5,1
+// and each level's exact center value is always 2 (idx 6, 12, 24 — the "2"
+// seeded at a(3) survives forever under a(2n)=a(n)). So "retrograde" isn't
+// imposed on this melody as a device — each generation's phrase IS its own
+// retrograde by construction, and all three generations share the same
+// center pitch, giving the piece a real anchor tone for free.
+//
+// PITCH, read straight off the values: value n -> scale degree n-1 (level2's
+// "1,3,2,3,1" -> degrees 0,2,1,2,0). No transform, no invented numbering.
+//
+// ARC / JAZZ-IMPROV DEVICES:
+//  - cycle1: level2's palindrome (5 notes) — the tree's first branching.
+//  - cycle2: level3's palindrome (9 notes) — motif-and-variation on cycle1:
+//    literally the mediant-insertion that builds the Stern-Brocot tree one
+//    layer deeper (a(2n+1)=a(n)+a(n+1) inserts a new term between each pair
+//    of cycle1's terms).
+//  - cycle3: level4's palindrome (17 notes, degrees reaching up an octave) —
+//    tension/climax, one more mediant-insertion deeper, widest leaps.
+//  - cycle4: cycle1's phrase restated an octave down — the structural return
+//    to the tree's root after climbing to depth 4.
+//  - cycle5 (coda): a single held tone on degree 1 — the center value (2)
+//    every level shares, an octave down. Anchoring on a structural tone,
+//    stated plainly once the climbing is done.
+//
+// ARRANGEMENT: one lead voice (triangle — pure/soft timbre, MUSIC-KNOWLEDGE
+// §1 — fitting a sequence about quietly recursive bookkeeping, not edge or
+// aggression). Filter cutoff and resonance step UP with each level (opening,
+// tightening) as the tree goes deeper, then step back DOWN for the return
+// and coda — tracking tree-depth, not just decorating. A sine drone appears
+// ONLY in cycle3, two octaves under the climax, adding weight exactly where
+// the melody's own range is widest, then drops back out — a layer added
+// because the moment needs it, not by default (removed everywhere else).
+// Different arrangement from the last two Thursdays: 11-05 (look-and-say)
+// was one square-wave voice with climbing delay feedback; 11-12 (golomb) was
+// two voices in sawtooth/sine contrast. This one is a single voice whose own
+// filter tracks recursion depth, plus a drone that appears for one cycle only.
+//
+// NO DRUM LAYER: this is an index into a tree, not a beat — there is no
+// metric pulse in a fraction-mediant walk to track (MUSIC-QC-LOOP.md's
+// percussion-as-default warning). The level-depth already has an audible
+// outlet in the filter automation above; it doesn't need a kick/hat grid too.
+//
+// TEMPO: setcpm(18), 4 beats/cycle = 72 BPM — contemplative, no dance pulse
+// to serve (same reasoning as 11-05's 80 BPM). CYCLES: 5.
+// 5 * 60 / 18 = 16.7s.
+// ============================================================================
+
+setcpm(18)
+
+$lead: n("<[0 2 1 2 0] [0 3 2 4 1 4 2 3 0] [0 4 3 6 2 7 4 6 1 6 4 7 2 6 3 4 0] [-7 -5 -6 -5 -7] -6>")
+  .scale("E:aeolian")
+  .sound("triangle")
+  .attack(.01)
+  .decay(.1)
+  .sustain("<.1 .1 .08 .12 .8>")
+  .release("<.15 .15 .12 .18 2.5>")
+  .lpf("<1200 1600 2200 1000 700>")
+  .lpq("<4 6 9 5 2>")
+  .delaytime(.15)
+  .delayfeedback(.2)
+  .delay(.25)
+  .room(.35)
+  .gain(.5)
+
+$drone: n("<~ ~ -14 ~ ~>")
+  .scale("E:aeolian")
+  .sound("sine")
+  .attack(.6)
+  .decay(.4)
+  .sustain(.8)
+  .release(1.5)
+  .lpf(500)
+  .gain(.22)
+  .room(.5)
