@@ -1,0 +1,160 @@
+// ============================================================================
+// DAILY — 2026-11-20 (Friday): Acid / psychedelia free jam — the lydian spiral
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction). Checked the last three Fridays before writing this one:
+// 11-13 used D hungarian minor / a hard-panned L-R call-response duel, kick
+// only. 11-06 used G bebop / a real 303 slide on one centered voice, kick
+// only. 10-30 used C altered / an automated VOWEL filter on one centered
+// voice, kick + sparse hat. None of them used a scale with a natural major
+// 3rd, and none used the "spiral arp" or "Goa kick" devices MUSIC-KNOWLEDGE.md
+// §18 researched (29 Oct, after Abhiraj's Hallucinogen-comparison correction:
+// "very loud, shrill... theirs are smoother, have distinct panned sounds and
+// create a whole environment") but never applied to a daily pattern — only to
+// the after-party set prototype.
+//
+//   SCALE: A lydian dominant (verified against tonaljs's own scale-type
+//   source, raw.githubusercontent.com/tonaljs/tonal, packages/scale-type/
+//   data.ts: "1P 2M 3M 4A 5P 6M 7M" -> wait, checked the actual line used —
+//   "1P 2M 3M 4A 5P 6M 7m", aliased "lydian b7"/"overtone" — same discipline
+//   as Bhairav's "gypsy" check). Mixolydian with a raised 4th: a bright,
+//   major-feeling scale with one sharp tension tone (#4) and a flat 7, the
+//   jazz scale played over a dominant-7#11 chord — real Berklee vocabulary,
+//   not a decorative pick, and a genuinely different color from the last
+//   three Fridays' minor/altered/bebop scales. Degrees: 0=A 1=B 2=C# 3=D#
+//   (#4, the scale's own tension tone) 4=E (P5, this file's pivot/anchor)
+//   5=F# 6=G(b7) 7=A'. 11=E' (the pivot an octave up), 13=G' (b7 an octave up).
+//
+//   PRODUCTION — two devices from MUSIC-KNOWLEDGE.md §18, neither tried on a
+//   daily pattern before:
+//   1. "Spiral arp" — a 5-note cell against the kick's 4 even pulses: true
+//      quintuplets, not a 16-step grid division, so the arp drifts against
+//      the downbeat on its own, no manual per-cycle shifting needed (§18:
+//      "odd-length loops... so the motif seems to keep changing"). The
+//      pivot (the 5th, degree 4/11) is struck every OTHER cell note and
+//      stays FIXED across phrases A/B/C — an anchor the way a raga's vadi
+//      anchors an improvisation, not a transposed copy of one shape — while
+//      the notes around it change each phrase. That's this file's jazz-
+//      improv structural device (MUSIC-QC-LOOP.md checklist).
+//   2. "Goa kick" (§18: "longer than a psytrance kick, with a mid-range
+//      knock and warm saturation") — a longer decay than the last three
+//      Fridays' identical short click-kick formula, plus `.shape()` (light
+//      waveshaper, verified in knowledge-base/strudel/learn/effects.md)
+//      for the warm saturation, not just a sine+click.
+//
+//   WIDTH — a mirrored echo, not a centered delay (§11/§18: "distinct panned
+//   sounds... each element in its own place", not everything Haas-widened
+//   the same way). The dry arp sits left (.3); a SEPARATE voice plays the
+//   same melody late by a dotted-8th (3/16 cycle) and carries its own delay/
+//   feedback trail, panned right (.75) — an echo that itself keeps echoing,
+//   not a single doubled copy. Its feedback is this file's ONE automated arc
+//   (§10's "fewer independently-drifting knobs"): it swells from .3 toward
+//   near self-oscillation (.82) over cycles 0-10, then snaps back to .25 on
+//   cycle 11 — which lands on phrase D, the release — exactly the "swelling
+//   toward near self-oscillation before a drop, snapping back" FX-as-
+//   instrument move §18 describes for Goa trance delay sends.
+//
+//   DRUMS — kick only, synthesised (MUSIC-KNOWLEDGE.md §19: no TR808/909
+//   sample bank), no hats. Checked deliberately, not by default (MUSIC-QC-
+//   LOOP.md's percussion item): the quintuplet arp against the kick's
+//   quarters is already the rhythmic interest this file has to offer, and a
+//   hi-hat grid would just fight that polyrhythm instead of framing it — the
+//   same "distinct panned sounds, not a filled top end" reasoning 10-30
+//   used for its own sparse-hat choice, taken one step further here.
+//   Resonance (lpq) on both arp voices is capped at 7, under the ~8 ceiling
+//   MUSIC-QC-LOOP.md's failure #5 flagged as reading as whine — this is
+//   meant to sit as atmosphere, not as a screaming 303.
+//
+//   BASS — a Goa trance split (MUSIC-KNOWLEDGE.md §6): a low, rolling sub,
+//   almost entirely on the tonic with one step to the 5th per cycle, doing a
+//   separate, simpler job from the melodic arp above it. Kick and bass both
+//   stay centered/mono (§18: "kick and bass mono").
+//
+// LEAD PHRASES — a 5-note cell per cycle, rotating <A B C D> every cycle
+// across 12 cycles (3 full rounds):
+//   A (call, low register, states the tonic and leaps a full 5th to the
+//     pivot, then neighbors it with the 3rd and the b7).
+//   B (variation — DIFFERENT neighbor tones around the SAME fixed pivot:
+//     the 2nd and the #4 instead of A's 3rd and b7, so the anchor reads as
+//     an anchor, not a coincidence).
+//   C (peak — register leap of a full octave+ up: tonic-up-an-octave to the
+//     pivot-up-an-octave, the file's widest leaps).
+//   D (release — tonic, rest, pivot, rest, tonic: sparse, resolving).
+//
+// TEMPO: setcpm(35) with a kick*4 -> BPM = 35*4 = 140, Goa/psy-techno
+// territory (MUSIC-KNOWLEDGE.md §12: Goa releases run 131-147). CYCLES: 12.
+// 12*60/35 = 20.6s.
+// ============================================================================
+
+setcpm(35)
+let CYCLES = 12
+
+// kick — "Goa kick" (MUSIC-KNOWLEDGE.md §18): longer decay + light waveshaper
+// warmth than the last three Fridays' short click-kick, still synthesised
+// (§19), tuned to A1, this file's tonic. Drives the sidechain on orbit 2.
+let kick = stack(
+  note("a1").s("sine").struct("x*4")
+    .penv(28).pdecay(.05)
+    .attack(.001).decay(.24).sustain(0).postgain(3.2)
+    .shape(.22),
+  s("white").struct("x*4")
+    .hpf(1200).lpf(5500).attack(.0005).decay(.015).sustain(0).postgain(1.1),
+)
+  .duckorbit(2).duckattack(.02).duckdepth(.45)
+  .gain(.55)
+
+// bass — Goa split (§6): a rolling sub, almost entirely on the tonic, one
+// step to the 5th per cycle. Centered, mono, its own separate job from the
+// arp above it.
+let bass = note("a1 a1 a1 e1")
+  .s("sine")
+  .attack(.01).decay(.3).sustain(.5).release(.08)
+  .lpf(500)
+  .pan(.5)
+  .orbit(2)
+  .gain(.38)
+
+// the spiral arp: a 5-note cell per cycle (quintuplets against the kick's 4
+// even pulses — a polyrhythm, not a shifting grid, so it drifts on its own).
+// Pivot = the 5th (degree 4, or 11 an octave up) at positions 1 and 3 of
+// every cell in A/B/C, fixed in place while the surrounding notes change —
+// the file's structural anchor. D drops to a sparse tonic/pivot/tonic release.
+let melody = n(`<
+  [0 4 2 4 6]
+  [1 4 6 4 3]
+  [7 11 9 11 13]
+  [0 ~ 4 ~ 0]
+>`).scale("A3:lydian:dominant")
+
+let leadDry = melody
+  .sound("saw")
+  .attack(.006).decay(.12).sustain(.08).release(.06)
+  .lpf(1700).lpq(7)
+  .distort(.12)
+  .pan(.3)
+  .gain(.3)
+  .orbit(2)
+
+// feedback arc for the echo voice only (this file's one automated parameter,
+// per §10): swells toward near self-oscillation over cycles 0-10, then snaps
+// back on cycle 11 — which lands on phrase D, the release (§18's "swelling
+// toward self-oscillation before a drop, snapping back when the kick
+// returns" FX-as-instrument move).
+let fb = `<.3 .34 .38 .43 .48 .53 .58 .64 .7 .76 .82 .25>`
+
+// the mirrored echo (§11/§18): the SAME melody, late by a dotted-8th (3/16
+// cycle), carrying its own delay/feedback trail, panned to the opposite
+// side from the dry arp — an echo that keeps echoing, not a single widened
+// copy sitting in the same place as the dry signal.
+let leadEcho = melody
+  .late(3/16)
+  .sound("saw")
+  .attack(.006).decay(.12).sustain(.08).release(.06)
+  .lpf(1300).lpq(7)
+  .delay(.6).delaytime(3/16).delayfeedback(fb)
+  .pan(.75)
+  .gain(.16)
+  .orbit(2)
+
+stack(kick, bass, leadDry, leadEcho)

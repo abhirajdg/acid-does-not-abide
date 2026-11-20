@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-20",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "LYDIAN SPIRAL",
+  "pattern_file": "daily/2026-11-20-acid-lydian-spiral.strudel",
+  "cycles": 12,
+  "target_duration_sec": 21,
+  "code_highlight_lines": [">`).scale(\"A3:lydian:dominant\")", ".delay(.6).delaytime(3/16).delayfeedback(fb)"]
+}
