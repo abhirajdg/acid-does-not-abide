@@ -62,6 +62,14 @@ The hour before dawn. Komal Re and komal Dha, both swinging, inside Bhairav's ow
 
 *Kind of Bageshri and Bhairav After Hours use no samples at all: their drums and electric piano are synthesised in the code.*
 
+### Bihag (single)
+
+**Bihag** - raag Bihag // full-on psytrance // 145 bpm
+
+The hour before midnight. Bihag climbs without Re or Dha and comes down through all of them, and its tivra Ma appears once, inside the phrase P m G. A saw lead gated in sixteenths climbs to the vadi, Ga, and answers back down through that one tivra Ma. Under it an acid line plays taans built by rule from the raga's notes and its grammar, a new run every eight bars, over a kick tuned to Pa and a rolling bass on F#. Every drum is synthesised in the code; the only recorded sound is the mridangam, retuned to Sa. In the climax the hook goes up an octave: the Goa pitch-lift.
+
+**To run:** paste [`releases/bihag.strudel`](https://github.com/abhirajdg/acid-does-not-abide/blob/main/releases/bihag.strudel) into [strudel.cc](https://strudel.cc) and hit play.
+
 ---
 
 ## Daily archive

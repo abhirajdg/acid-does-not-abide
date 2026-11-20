@@ -1,0 +1,405 @@
+// ============================================================================
+// BIHAG v3 -- raga Bihag, full-on psytrance 145, rebuilt on the after-party set's rules
+// Standalone single, 18 Dec 2026 (songs/EP-OPEN-AIR.md)
+// ============================================================================
+//
+// 10 Nov 2026, Abhiraj: make the Open Air run follow the approach the after-party set settled on
+// (sets/AFTER-PARTY-SET.md, MUSIC-KNOWLEDGE.md s16-19, MUSIC-QC-LOOP.md failures 7-11). What the
+// audit of v2 found, and what changed:
+//   - stock samples: v2's kick, clap and hats were strudel's RolandTR909 bank, the hits that got
+//     two Raga Clock tracks fingerprint-matched by DistroKid (s16). Every drum here is voiced in
+//     code. The mridangam fills stay (the one sampled sound): only ta and ki, the strokes that ring
+//     on Sa, retuned 25 cents up to it; na, dhin and nam ring on G natural, which Bihag lacks (failure 10)
+//   - shrill: v2 put -18.0 dB of its spectrum in 2-4 kHz, against -21.7 to -23.4 for the
+//     after-party masters (s18). The lead's filter tops out at 2.6k now, not 4k; the acid's
+//     resonance and drive are lower
+//   - narrow: v2's mids were half as wide (side/mid -10.9 dB in 300 Hz-1 kHz, the set -6 to -8),
+//     with Haas copies widening everything the same way. Now each sound has its own place (lead
+//     right with its echo thrown left, acid sweeping the stage against its mirrored echo, air at
+//     the edges, hats split, kick and bass mono); no Haas copies
+//   - looping: v2's acid played 21 distinct bars in its 177 (one bar 20 times). Its lines are now
+//     GENERATED from Bihag by taan rules, a new rule, start note or register every 8 bars
+//     (failure 11, as in Taan), and Bihag's grammar is enforced on every generated note (below)
+// Kept from v2: the hook (v1's bars, approved 14 Oct: "love this") gated in 16ths, the form and
+// its 32-bar DJ intro and outro, the rolling bass, shimmer, swell and zaps, Sa = F#, 145 BPM.
+// Different from Taan (the after-party set's 303 track) on purpose (failure 9): no cowbell, toms
+// or poly brass; a full-on kit (tight kick on Pa, a snare tuned to Sa); the composed hook leads
+// and the taans sit under it.
+//
+// SECTIONS (cycles @ 36.25 cpm, 1 cycle = 1 bar), as v2:
+//   intro      0-32    kick + offbeat hat; closed hats at 16; bass at 16
+//   groove    32-64    taans enter sparse, a pedal and paltas from 48; snare at 48;
+//                      shimmer hints the pakad from 48; mridangam fill at 63
+//   drop 1    64-104   the hook gated in 16ths, five 8-bar phrases that climb; five taans
+//   break 1  104-128   no drums: the hook slow and legato, its echo swelling into the drop;
+//                      sparse taans; air + shimmer; S P S' swell; fill at 127
+//   drop 2   128-176   the hook at the vadi (G') an octave up; six taans
+//   break 2  176-192   the alap: pakad, tivra phrase, home; swell; fill
+//   climax   192-224   16 cycles at the drop 2 register, then the Goa pitch-lift (the hook an
+//                      octave up for the last 16); four taans, the widest
+//   outro    224-256   kick, bass and hats; the bass leaves at 248
+//   = 256 cycles = 7:03.9
+//
+// RAGA BIHAG: aroh N. S G M P N S' (no R or D going up); avaroh S' N D P, m G M G, R S. Tivra
+//   Ma (m) only inside P m G. Vadi G, samvadi N. Pakad: N. S G M P, G M G R S. Sa = F#.
+//   The taan generator walks the seven shuddh notes and then applies the grammar: R and D never
+//   on the way up (R only falling into S, D only falling into P), and every second falling
+//   P M G becomes P m G, the tivra phrase. Every 4-bar phrase lands on the vadi Ga, every
+//   8-bar phrase on Sa.
+//
+// TEMPO: setcpm(36.25) x 4 = 145 BPM.
+// LAYERS: kick, bass, snare, open hat, closed hats, fills, taan acid (+ mirrored echo), lead
+//   (+ echo), air, shimmer, swell, zaps.
+// ============================================================================
+
+setcpm(36.25) // 145 BPM
+const CPS = 36.25 / 60
+
+// the eight sections, in cycles: one value per section
+//          intro groove drop1 break1 drop2 break2 climax outro
+const per = (a, b, c, d, e, f, g, h) =>
+  arrange([32, a], [32, b], [40, c], [24, d], [48, e], [16, f], [32, g], [32, h])
+
+// S R G M m P D N
+const BIHAG = [0, 2, 4, 5, 6, 7, 9, 11]
+const bihag = root => v => {
+  const o = Math.floor(v.n / 8), i = ((v.n % 8) + 8) % 8
+  const { n, ...rest } = v
+  return { ...rest, note: root + 12 * o + BIHAG[i] }
+}
+const seq = (...bars) => mini('<' + bars.join(' ') + '>')
+const perBar = bars => mini('<' + bars.join(' ') + '>')
+
+// ---------------------------------------------------------------- SLIDES --
+// acid(sa, bar1, bar2, ...) -> notes, one bar per cycle, 16 sargam tokens a bar:
+// ~P slide, ~~P meend, ^P accent, _ tie, - rest, .N low, S' high (MUSIC-KNOWLEDGE.md s17)
+const SW = { S: 0, r: 1, R: 2, g: 3, G: 4, M: 5, m: 6, P: 7, d: 8, D: 9, n: 10, N: 11 }
+const acid = (sa, ...bars) => {
+  const toks = bars.join(' ').trim().split(/\s+/)
+  const stepS = 1 / CPS / (toks.length / bars.length)
+  const evs = []
+  let open = null
+  toks.forEach((t, i) => {
+    if (t === '_') { if (open) open.len++; return }
+    if (t === '-') { open = null; evs.push({ at: i, rest: true }); return }
+    const m = t.match(/^(\^?)(~{0,2})(\.?)([SrRgGMmPdDnN])('?)$/)
+    if (!m) throw new Error('acid(): bad token ' + t)
+    const [, acc, sl, low, sw, high] = m
+    open = { at: i, len: 1, midi: sa + SW[sw] + (low ? -12 : 0) + (high ? 12 : 0), acc: !!acc, slide: sl.length }
+    evs.push(open)
+  })
+  const notes = evs.filter(e => !e.rest)
+  const parts = []
+  notes.forEach((e, k) => {
+    const prev = notes[(k - 1 + notes.length) % notes.length]
+    const next = notes[(k + 1) % notes.length]
+    const legato = next.slide && next.at === e.at + e.len
+    const sounding = legato ? e.len : Math.max(.55, e.len - .45)
+    const v = { note: e.midi, velocity: e.acc ? 1 : .72 }
+    if (e.slide) Object.assign(v, { penv: prev.midi - e.midi, pdecay: e.slide === 2 ? .65 * e.len * stepS : .085 })
+    if (k === 0 && e.at > 0) parts.push([e.at, silence])
+    parts.push([sounding, pure(v)])
+    const end = k + 1 < notes.length ? notes[k + 1].at : toks.length
+    if (end - e.at - sounding > 0) parts.push([end - e.at - sounding, silence])
+  })
+  return timeCat(...parts).slow(bars.length)
+}
+const R16 = '- - - - - - - - - - - - - - - -'
+const rest = n => Array(n).fill(R16)
+
+// ------------------------------------------------------------------ TAAN --
+// Bihag's seven shuddh notes over two octaves and more, as scale indices
+const BI = ['.P', '.D', '.N', 'S', 'R', 'G', 'M', 'P', 'D', 'N', 'S\'', 'R\'', 'G\'', 'M\'', 'P\'', 'D\'', 'N\'']
+const I = n => BI.indexOf(n)
+const nm = i => BI[i].replace(/[.']/g, '')
+// taan(rule) -> `bars` bars of 16 tokens. A cell of scale offsets ('p' = the pedal note, '-' = a
+// rest) is laid from a base note that moves `move` steps per cell, turning round at lo/hi;
+// accent on each cell's first note. Then Bihag's grammar, then the landings (bar 4 of each 4 ends
+// on lands[0], bar 8 on lands[1]), then slides on leaps of 3+ steps and alternate cell ends.
+const taan = ({ cell, from, lo = 'S', hi = 'S\'', move = 1, pedal = null, lands = ['G', 'S'], bars = 8 }) => {
+  const nums = cell.filter(o => typeof o === 'number')
+  const cmax = Math.max(...nums), cmin = Math.min(...nums)
+  const L = I(lo), H = I(hi)
+  const s = []
+  let base = I(from), dir = move > 0 ? 1 : -1, c = 0
+  while (s.length < bars * 16) {
+    cell.forEach((o, k) => s.push(o === '-' ? null
+      : { i: o === 'p' ? I(pedal) : base + o, acc: k === 0, end: k === cell.length - 1 && c % 2 === 1 }))
+    let next = base + dir * Math.abs(move)
+    if (next + cmax > H || next + cmin < L) { dir = -dir; next = base + dir * Math.abs(move) }
+    base = next; c++
+  }
+  s.length = bars * 16
+  // Bihag's grammar on the generated notes
+  const notes = s.filter(Boolean)
+  notes.forEach((e, k) => {
+    const prev = notes[k - 1], next = notes[k + 1]
+    if (nm(e.i) === 'R' && !(next && next.i === e.i - 1)) e.i -= 1            // R only falling into S
+    if (nm(e.i) === 'D' && !(prev && prev.i > e.i && next && next.i === e.i - 1))
+      e.i += (next && next.i > e.i) ? 1 : -1                                    // D only falling into P
+  })
+  let pmg = 0
+  notes.forEach((e, k) => {   // every second falling P M G is P m G
+    const a = notes[k - 1], b = notes[k + 1]
+    if (a && b && nm(e.i) === 'M' && a.i === e.i + 1 && b.i === e.i - 1 && pmg++ % 2 === 1) e.tivra = true
+  })
+  for (let b = 3; b < bars; b += 4) {
+    const at = b * 16 + 12
+    const before = s.slice(0, at).filter(Boolean).pop()
+    const name = lands[(b >> 2) % 2]
+    const cands = [I(name), I(name) + 7, I(name) - 7].filter(i => i >= 0 && i < BI.length)
+    const li = cands.reduce((a, x) => Math.abs(x - before.i) < Math.abs(a - before.i) ? x : a)
+    s[at] = { i: li, acc: true, land: true }; s[at + 1] = '_'; s[at + 2] = null; s[at + 3] = null
+  }
+  let prev = null
+  const toks = s.map(e => {
+    if (e === '_') return '_'
+    if (!e) return '-'
+    const leap = prev !== null && Math.abs(e.i - prev) >= 3 && pedal === null
+    const sl = e.land ? '~~' : (leap || (e.end && prev !== e.i)) ? '~' : ''
+    prev = e.i
+    return (e.acc ? '^' : '') + sl + (e.tivra ? BI[e.i].replace('M', 'm') : BI[e.i])
+  })
+  return Array.from({ length: bars }, (_, b) => toks.slice(b * 16, b * 16 + 16).join(' '))
+}
+const PEDAL = ['p', 0], PALTA3 = [0, 1, 2], PALTA4 = [0, 1, 2, 3], VAKRA = [0, 2, 1, 3]
+const GAMAK = [0, 2], CHHOOT = [0, 4, 1, 5], SAPAAT = [0], SPARSE = [0, '-', 4, '-', '-', 2, '-', '-']
+
+const TAAN = [
+  ...rest(32),                                                                       // 0-32 DJ intro
+  ...taan({ cell: SPARSE, from: 'S', lo: '.N', hi: 'S\'' }),                           // 32 groove: sparse
+  ...taan({ cell: SPARSE, from: 'P', move: -1, lo: '.N', hi: 'S\'' }),                 // 40
+  ...taan({ cell: PEDAL, pedal: 'S', from: 'G', lo: 'G', hi: 'S\'' }),                 // 48 the Goa pedal
+  ...taan({ cell: PALTA3, from: '.N', lo: '.N', hi: 'N' }),                            // 56
+  ...taan({ cell: PALTA4, from: 'P', move: -1, lo: '.N', hi: 'S\'' }),                 // 64 drop 1
+  ...taan({ cell: VAKRA, from: 'S', lo: '.N', hi: 'S\'' }),                            // 72
+  ...taan({ cell: PEDAL, pedal: 'G', from: 'M', lo: 'M', hi: 'G\'' }),                 // 80 pedal on the vadi
+  ...taan({ cell: CHHOOT, from: 'S', lo: '.N', hi: 'G\'', lands: ['N', 'S'] }),        // 88
+  ...taan({ cell: GAMAK, from: '.N', lo: '.N', hi: 'S\'' }),                           // 96
+  ...taan({ cell: SPARSE, from: 'G', lo: '.N', hi: 'S\'' }),                           // 104 break 1
+  ...taan({ cell: SPARSE, from: 'P', move: -1, lo: '.N', hi: 'S\'' }),                 // 112
+  ...rest(8),                                                                         // 120
+  ...taan({ cell: PEDAL, pedal: 'N', from: 'S\'', move: -1, lo: 'S', hi: 'G\'', lands: ['G', 'S'] }), // 128 drop 2: pedal on the samvadi
+  ...taan({ cell: PALTA3, from: 'G', lo: 'G', hi: 'P\'' }),                           // 136
+  ...taan({ cell: SAPAAT, from: '.N', lo: '.N', hi: 'G\'' }),                          // 144
+  ...taan({ cell: VAKRA, from: 'S\'', move: -1, lo: '.N', hi: 'G\'' }),                // 152
+  ...taan({ cell: CHHOOT, from: 'P', move: -1, lo: '.P', hi: 'G\'' }),                 // 160
+  ...taan({ cell: PEDAL, pedal: 'S\'', from: 'P', lo: 'M', hi: 'M\'' }),                // 168
+  ...taan({ cell: SPARSE, from: 'S', lo: '.N', hi: 'S\'' }),                           // 176 break 2
+  ...rest(8),                                                                         // 184
+  ...taan({ cell: PALTA4, from: 'S', lo: 'S', hi: 'G\'' }),                            // 192 climax
+  ...taan({ cell: GAMAK, from: 'G', lo: 'G', hi: 'P\'' }),                             // 200
+  ...taan({ cell: PEDAL, pedal: 'G\'', from: 'S\'', move: -1, lo: 'G', hi: 'M\'', lands: ['N', 'S'] }), // 208 the pitch-lift: pedal on the high vadi
+  ...taan({ cell: SAPAAT, from: '.P', lo: '.P', hi: 'P\'' }),                          // 216
+  ...rest(32),                                                                        // 224-256 DJ outro
+]
+if (TAAN.length !== 256) throw new Error('TAAN has ' + TAAN.length + ' bars')
+
+// the taan acid: saw, F#2-F#4, kept under ~2.2 kHz; it sweeps the stage edge to edge every 8
+// bars with its echo mirrored on the other side (darker, three 16ths late)
+const taanAcid = acid(42, ...TAAN)
+  .s('sawtooth')
+  .attack(.003).decay(.16).sustain(.2).release(.05)
+  .ftype('24db')
+  .lpf(per("500", saw.range(500, 1300).slow(16), sine.range(900, 1900).slow(8), "800",
+    sine.range(1000, 2100).slow(8), "800", sine.range(1100, 2200).slow(8), "500"))
+  .lpq(per("8", "8", "10", "6", "10", "6", "11", "8"))
+  .lpattack(.002).lpdecay(.12).lpsustain(.1).lpenv(per("2", "2", "2.2", "1", "2.4", "1", "2.6", "2"))
+  .distort(.15)
+  .hpf(70)
+  .pan(sine.range(.15, .85).slow(8))
+  .delay(per(".15", ".2", ".15", ".45", ".15", ".45", ".15", ".15")).delaytime(3 / 16 / CPS)
+  .delayfeedback(per(".3", ".3", ".3", ".55", ".3", ".55", ".3", ".3"))
+  .room(per(".15", ".15", ".15", ".5", ".15", ".5", ".15", ".15")).roomsize(5)
+  .orbit(2)
+  .gain(per(".3", ".3", ".26", ".3", ".26", ".3", ".26", ".3"))   // and the envelope eased: room for the hook
+  .superimpose(x => x.late(3 / 16).lpf(1200).hpf(250).pan(sine.range(.85, .15).slow(8)).mul(velocity(.36)))
+
+// -- LEAD BARS (v1's hook) -- 8 slots per bar; degrees 0=S 1=R 2=G 3=M 4=m 5=P 6=D 7=N 8=S'
+const call   = '[-1 0 2 ~ 3 5 ~ 2]'     // N. S G . M P . G   -- the pakad
+const answer = '[2 3 2@3 1 0@2]'        // G M G~ R S
+const call2  = '[-1 0 2 3 5 7 ~ 5]'     // N. S G M P N . P   -- reaches N
+const tivra  = '[5 4 2 3 2@2 1 0]'      // P m G M G~ R S     -- the tivra phrase
+const rise   = '[2 3 5 7 8@2 ~ 7]'      // G M P N S' . N
+const fall   = '[8 7 6 5 4 2 3 2]'      // S' N D P m G M G
+const rise2  = '[3 5 7 8 10@3 ~]'       // M P N S' G'~       -- the vadi, up
+const fall2  = '[10 9 8 7 6 5@3]'       // G' R' S' N D P~
+const reach  = '[5 7 8 10@3 ~ 8]'       // P N S' G'~ . S'
+const down   = '[7 6 5 4 2 3 2@2]'      // N D P m G M G~
+const pakad  = '[-1 0 2 3 5@2 3 2]'     // N. S G M P~ M G
+const home   = '[2 1 0@6]'              // G R S~
+
+const blk = (...bars) => n(seq(...bars))
+const A = blk(call, answer, call2, tivra, call, answer, call2, answer)
+const B = blk(call, answer, call2, tivra, call, answer, rise, fall)
+const C = blk(rise, fall, rise, tivra, rise2, fall2, rise, tivra)
+const D = blk(call2, tivra, call2, answer, rise, fall, rise2, fall2)
+const E = blk(rise2, fall2, rise, tivra, rise2, fall2, pakad, home)
+const F = blk(reach, down, reach, fall2, pakad, tivra, pakad, home)
+const G = blk(rise2, fall2, reach, down, rise2, fall2, reach, tivra)
+const H = blk(call2, tivra, rise, fall, call2, tivra, rise2, fall2)
+const J = blk(reach, down, rise2, fall2, reach, down, pakad, tivra)
+const K = blk(rise, fall, rise2, fall2, reach, down, reach, fall2)
+const L = blk(reach, down, reach, fall2, rise2, fall2, pakad, home)
+const X = blk(reach, down, reach, fall2, rise2, fall2, reach, tivra)
+const Y = blk(reach, down, rise2, fall2, rise2, fall2, reach, down)
+const Z = blk(call, answer, call2, tivra, call, answer, call2, tivra)
+const W = blk(rise, fall, rise, tivra, pakad, tivra, pakad, home)
+const slow2 = (...bars) => blk(...bars).slow(2)
+
+const SA = 66   // F#4
+const lift = p => p.withValue(bihag(SA + 12))   // the Goa pitch-lift: an octave up
+const base = p => p.withValue(bihag(SA))
+
+// the hook, right of centre; its echo thrown hard left. In the breaks it is slow and legato on a
+// supersaw, and its delay feedback climbs over the last 4 bars towards self-oscillation, then
+// snaps back when the kick returns (FX as an instrument, s18)
+const lead = arrange(
+    [64, "~"],
+    [40, base(arrange([8, A], [8, B], [8, C], [8, D], [8, E]).segment(16))],
+    [24, base(arrange([8, slow2(call, answer, rise, fall)],
+                      [8, slow2(pakad, tivra, rise2, fall2)],
+                      [8, slow2(call2, tivra, reach, down)]))],
+    [48, base(arrange([8, F], [8, G], [8, H], [8, J], [8, K], [8, L]).segment(16))],
+    [16, base(arrange([8, slow2(pakad, tivra, rise2, fall2)],
+                      [8, slow2(reach, down, fall2, home)]))],
+    [16, base(arrange([8, X], [8, Y]).segment(16))],
+    [16, lift(arrange([8, Z], [8, W]).segment(16))],
+    [32, "~"],
+  )
+  .s(per("supersaw", "supersaw", "sawtooth", "supersaw", "sawtooth", "supersaw", "sawtooth", "sawtooth"))
+  .unison(4).spread(.6).detune(.12)
+  .attack(.005)
+  .decay(per(".6", ".6", ".09", ".6", ".09", ".6", ".09", ".09"))
+  .sustain(per(".5", ".5", ".38", ".5", ".38", ".5", ".38", ".38"))
+  .release(per(".5", ".5", ".05", ".5", ".05", ".5", ".05", ".05"))
+  .ftype('24db')
+  // the filter opens drop by drop, 2.0k, 2.3k, then 2.6k in the climax (v2 went to 4k: shrill)
+  .lpf(per("1800", "1800", "2000", sine.range(1000, 1800).slow(8), "2300", sine.range(1000, 1800).slow(8), "2600", "1800")).lpq(1.5)
+  .hpf(180)
+  // stems (drop 2): at .42 peaks the hook sat +0.6 dB over the rest in 300 Hz-3 kHz (MUSIC-QC-LOOP
+  // failure 8); taken to -3.4 dB, but then it was only +1 dB over the taan acid, and Abhiraj heard
+  // it lost in the acid (10 Nov). Now +4.8 dB over the acid, level with the rest
+  .gain(per(".13", ".13", "[.35 .25 .31 .25]*4", ".16", "[.35 .25 .31 .25]*4", ".16", "[.34 .24 .28 .24]*4", ".13"))
+  .pan(.68)
+  .delay(per("0", "0", ".12", ".4", ".12", ".4", ".12", "0")).delaytime(3 / 8 / CPS)
+  .delayfeedback(arrange([104, ".3"], [20, ".45"], [4, saw.range(.5, .88).slow(4)], [48, ".3"], [12, ".45"], [4, saw.range(.5, .88).slow(4)], [64, ".3"]))
+  .room(per(".2", ".2", ".2", ".55", ".2", ".55", ".2", ".2")).roomsize(6)
+  .orbit(3)
+  .superimpose(x => x.late(3 / 16).lpf(1500).pan(.18).mul(velocity(.3)))
+
+// ------------------------------------------------------------------ BASS --
+// rolling KBBB 16ths, mono, F#1. It moves with the phrase now (v2 played 2 distinct bars): a bar
+// on Ma (the lift), a turn through low Ni and Pa, a bar on Ga under the vadi landings
+const B1 = ['- S S S - S S S - S S S - S S S']
+const B2 = ['- S S S - S S S - S S S - S S S', '- S S S - S S S - S S S - S S S',
+  '- S S S - S S S - S S S - S S S', '- S S S - S S S - .N .N .N - .P ~.N S']
+const B3 = ['- S S S - S S S - S S S - S S S', '- M M M - M M M - M M M - M ~G S',
+  '- S S S - S S S - S S S - S S S', '- G G G - G G G - .N .N .N - .N ~.P .N']
+const rep = (n, ...bars) => Array.from({ length: n }, () => bars).flat()
+const BASS = [
+  ...rest(16), ...rep(16, ...B1),                // 0-32: in at 16
+  ...rep(8, ...B2),                              // 32-64 groove
+  ...rep(4, ...B2), ...rep(4, ...B3), ...rep(2, ...B2),   // 64-104 drop 1
+  ...rest(24),                                   // break 1
+  ...rep(4, ...B3), ...rep(4, ...B2), ...rep(4, ...B3),   // 128-176 drop 2
+  ...rest(16),                                   // break 2
+  ...rep(4, ...B3), ...rep(4, ...B2),            // 192-224 climax
+  ...rep(24, ...B1), ...rest(8),                 // outro: out at 248
+]
+if (BASS.length !== 256) throw new Error('BASS has ' + BASS.length + ' bars')
+const bass = acid(30, ...BASS)   // Sa = F#1
+  .s('sawtooth')
+  .attack(.002).decay(.12).sustain(.12).release(.03)
+  .ftype('24db')
+  .lpf(per("260", saw.range(240, 360).slow(32), saw.range(280, 420).slow(40), "300", saw.range(300, 440).slow(48), "300", "440", "340"))
+  .lpq(3).lpattack(.002).lpdecay(.08).lpsustain(.2).lpenv(.8)
+  .orbit(1)
+  .gain(.56)
+
+// ------------------------------------------------------------------ KICK --
+// full-on kick, voiced in code: a sine on Pa (C#2, 69 Hz) with a fast pitch drop from ~300 Hz,
+// short and tight, plus a 14 ms click. Out for the breaks; ducks the bass hard, the acid and lead
+// lightly
+const kickV = p => stack(
+  note('c#2').s('sine').struct(p).penv(25).pdecay(.025).attack(.0008).decay(.17).sustain(0).postgain(3.6),
+  s('white').struct(p).hpf(1800).lpf(6500).attack(.0005).decay(.012).sustain(0).postgain(1.2))
+const kick = kickV(arrange([104, "x*4"], [24, "~"], [48, "x*4"], [16, "~"], [64, "x*4"]))
+  .orbit(0)
+  .duckorbit("1:2:3").duckattack(.012).duckdepth(".85:.28:.22")
+  .gain(.5)
+
+// ----------------------------------------------------------------- SNARE --
+// on 2 and 4 from 48, out for the breaks and the outro: a triangle body on Sa (F#3) with a short
+// pitch drop under band-passed noise, a little room, right of centre
+const snareV = p => stack(
+  note('f#3').s('triangle').struct(p).penv(7).pdecay(.03).attack(.0008).decay(.09).sustain(0).postgain(1.6),
+  s('white').struct(p).bpf(2600).bpq(.8).attack(.0008).decay(.14).sustain(0).postgain(1.1))
+const snare = snareV('~ x ~ x')
+  .mask(arrange([48, "~"], [56, "x"], [24, "~"], [48, "x"], [16, "~"], [32, "x"], [32, "~"]))
+  .room(.25).roomsize(3).pan(.58).orbit(4).gain(.3)
+
+// ------------------------------------------------------------------ HATS --
+// band-limited noise plus a cluster of high squares on S G P N (F#6 A#6 C#7 E#7), so even the
+// metal is in Bihag. Open hat on the offbeat, right; closed hats in 16ths, left
+const hatV = (p, d) => stack(
+  s('white').struct(p).hpf(5200).lpf(10500).attack(.0005).decay(d).sustain(0).postgain(1.5),
+  note("[f#6,a#6,c#7,f7]").s('square').struct(p).hpf(4500).lpf(9000).attack(.0005).decay(d).sustain(0).postgain(.3))
+const openOn = arrange([104, "x"], [16, "~"], [8, "~"], [48, "x"], [16, "~"], [64, "x"])
+const openHat = hatV('[~ x]*4', .2).mask(openOn).pan(.82).orbit(5).gain(.17)
+const closedOn = arrange([16, "~"], [88, "x"], [16, "~"], [8, "x"], [48, "x"], [8, "~"], [8, "x"], [64, "x"])
+const closedHat = hatV('x*16', .035).mask(closedOn)
+  .mul(gain("[.7 .45 1 .5]*4")).pan(.2).orbit(5).gain(.13)
+
+// ----------------------------------------------------------------- FILLS --
+// mridangam into each drop: rising 16ths on the last cycle. Only ta and ki, the strokes that ring
+// on Sa (measured F#4 -14c and F#3 -35c), retuned 25 cents up; na, dhin and nam ring on G
+// natural, which Bihag does not have (MUSIC-QC-LOOP failure 10)
+const fillB = s("[mridangam_ta mridangam_ki mridangam_ki mridangam_ki]*4").speed(1.0145)
+  .gain("[.1 .12 .14 .15 .17 .19 .2 .22 .24 .25 .27 .29 .3 .32 .34 .36]")
+const fills = arrange([63, "~"], [1, fillB], [63, "~"], [1, fillB], [63, "~"], [1, fillB], [64, "~"])
+  .hpf(120).pan(saw.range(.2, .8)).orbit(6)
+
+// ---------------------------------------------------------- ATMOSPHERE --
+// AIR -- vadi + samvadi (G+N), then S+P, 8 cycles each, two voices at the edges of the stage a
+// few cents apart; up front in the breaks, a low bed under the drops, ducked by the kick
+const airV = note("<[a#3,e#4] [f#3,c#4]>/8").s("supersaw").unison(5).spread(.8).detune(.15)
+  .attack(3).release(5).lpf(sine.range(450, 1100).slow(16)).lpq(1)
+const air = arrange([32, silence], [192, stack(airV.add(note(-.1)).pan(.05), airV.add(note(.1)).pan(.95))], [32, silence])
+  .room(.8).roomsize(6)
+  .orbit(7)
+  .gain(per(".05", ".09", ".07", ".18", ".07", ".18", ".07", ".05"))
+
+// SHIMMER -- the pakad and the tivra phrase two octaves above the lead's drop register, plucked,
+// L/R, through a big room and a long delay: the hook hinted in the groove, then the breaks
+const shimLine = n("<[-1 0 2 ~ 3 5 ~ 2] ~ [5 4 2 3 2 ~ 1 0] ~>").withValue(bihag(90))
+const shimmer = arrange([48, "~"], [16, shimLine], [40, "~"], [24, shimLine], [48, "~"], [16, shimLine], [64, "~"])
+  .s("triangle").attack(.005).decay(.5).sustain(0).release(.3)
+  .pan("[.1 .9]*4")
+  .delay(.5).delaytime(3 / 16 / CPS).delayfeedback(.6)
+  .room(.9).roomsize(8)
+  .orbit(8)
+  .gain(.12)
+
+// SWELL -- S P S' on a wide supersaw, filter and level rising over the last 4 cycles of each break
+const swell = arrange([124, "~"], [4, note("[f#3,c#4,f#4]")], [60, "~"], [4, note("[f#3,c#4,f#4]")], [64, "~"])
+  .s("supersaw").unison(5).spread(1).detune(.2)
+  .attack(3.5).release(.2)
+  .lpf(saw.range(300, 2600).slow(4)).lpq(2)
+  .room(.5)
+  .orbit(9)
+  .gain(saw.range(.02, .18).slow(4))
+
+// ZAPS -- the Goa laser: a square diving two octaves onto Sa on the last 8th of every 4th bar in
+// the drops, alternating hard left and hard right
+const zap = note("<~ ~ ~ [~ ~ ~ ~ ~ ~ ~ f#4]>")
+  .s("square").penv(24).pdecay(.3)
+  .decay(.35).sustain(0).release(.1)
+  .lpf(2400)
+  .pan("<~ ~ ~ .05 ~ ~ ~ .95>")
+  .delay(.5).delaytime(3 / 16 / CPS).delayfeedback(.5)
+  .room(.5)
+  .orbit(10)
+const zaps = arrange([64, "~"], [40, zap], [24, "~"], [48, zap], [16, "~"], [32, zap], [32, "~"]).gain(.11)
+
+stack(kick, bass, snare, openHat, closedHat, fills, taanAcid, lead, air, shimmer, swell, zaps)
