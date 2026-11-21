@@ -1,0 +1,136 @@
+// ============================================================================
+// DAILY — 2026-11-21 (Saturday): Xenharmonic tuning experiment — 5EDO
+// ============================================================================
+//
+// THE TUNING: 5 equal divisions of the octave, step = 1200/5 = 240c. The
+// coarsest edo tried on this slot so far (12 edos + hexany + Bohlen-Pierce +
+// 41edo, 22 Aug-14 Nov) by a wide margin — a deliberate contrast to LAST
+// Saturday (41edo), which had this slot's most accurate 5th/4th yet and
+// built a lush septimal 4:5:6:7 tetrad under a Goa arp. 5edo cannot do that
+// (checked against the same low-limit ratios every prior Saturday's edo was
+// graded on):
+//   degree 2 (480c) vs 4/3 (498.04c, 4th)         -> off by -18.04c
+//   degree 3 (720c) vs 3/2 (701.96c, 5th)         -> off by +18.04c
+//     (480+720=1200: the 4th's and 5th's errors are octave-complement
+//     mirrors of each other, same magnitude, opposite direction)
+//   degree 1 (240c) vs 8/7 (231.17c, septimal tone) -> off by +8.83c
+//   degree 4 (960c) vs 7/4 (968.83c, harmonic 7th)   -> off by -8.83c
+//     (same octave-complement pairing, and a TIGHTER fit than the "basic"
+//     4th/5th get to theirs)
+// So this tuning's one usably-in-tune interval isn't a triad at all — it's
+// degree 4, an accidental septimal-seventh color tone landed on by a scale
+// too coarse to aim for it. No real harmony is on offer here, so unlike
+// 41edo there is no sustained chord to build a pad under. 5-tone equal is
+// also the standard equal-step shorthand for Indonesian slendro (not
+// identical to any one real gamelan's tuning, which varies set to set, but
+// close enough in character) — so the honest move is to borrow slendro's
+// own idiom rather than reach for last week's Goa pad/arp/kick formula
+// again with new pitch numbers.
+//
+// ARRANGEMENT: a two-voice KOTEKAN — the interlocking Balinese/Javanese
+// technique where "polos" and "sangsih" trade alternating notes of one
+// combined line fast enough to read as a single continuous stream
+// (MUSIC-KNOWLEDGE.md §2's hocket device, reached for on real precedent
+// here — kotekan's interlocking literally IS a hocket, not a stylistic
+// borrow). No drum kit: a colotomic GONG marks the downbeat of every cycle
+// instead (one low tone, degree -5, long decay) — gamelan's own structural
+// device for punctuating cyclic form, not a pulse borrowed from acid/
+// techno. The kotekan's interlocking already supplies the rhythmic
+// interest; a hi-hat/kick grid under it would just restate a pulse the two
+// voices already make together (MUSIC-QC-LOOP.md's percussion check, asked
+// and answered no — this time for a reason specific to this genre, not a
+// generic "daily pattern doesn't need drums" rule).
+//
+// TIMBRE: two synth-basics metallophone stand-ins (MUSIC-KNOWLEDGE.md
+// §2.5 — no gm_* samples), contrasted per §2 so the ear tracks which voice
+// is which: polos on `triangle` (softer, lower-register, carries the scale
+// alone in the demo), sangsih on `square` filtered bright (harder-edged,
+// usually the higher note in the interlock), panned hard left/right (the
+// Pink Floyd "duel" device, §7). Gong on a plain `sine`, centered.
+//
+// MELODY (the combined kotekan line, before splitting into polos/sangsih —
+// TONIC=0, STEP=1, 4TH-ish=2, 5TH-ish=3, 7TH-ish(color)=4, OCT=5):
+//   demo:  0 ~ 1 ~ 2 ~ 3 ~               (scale ascent, polos alone —
+//                                          sangsih stays silent so its
+//                                          entrance at A is a real arrival,
+//                                          not a given from cycle 1)
+//   A (call):      0 3 1 4 0 ~ 3 0       (tonic, leap to 5TH-ish, step,
+//                                          leap to the color tone, home)
+//   B (response):  4 2 0 ~ 1 3 2 0       (opens on the color tone, answers
+//                                          through the 4TH-ish, closes home)
+//   C (retrograde of A, literal reverse): 0 3 ~ 0 4 1 3 0
+//   D (peak & release, +1 octave):   OCT OCT+5TH ~ OCT 5TH STEP ~ TONIC
+//   — A B C D repeated once with B/D varied (B', D') for real development
+//   rather than an identical loop — then LIFT (+2 octaves, the peak) and a
+//   sparse final resolve landing both voices on the tonic.
+// TONIC (0) and the 5TH-ish (3) recur as the structural anchors across
+// every phrase — this tuning's nearest thing to a vadi/samvadi pair, even
+// without real harmonic support underneath them.
+//
+// CYCLES: 11. setcpm(35) -> 11*60/35 = 18.9s. No drum kit, so the acid/
+// techno BPM check doesn't apply directly; the interlocking itself (8
+// slots/cycle, two voices alternating) is gamelan's own fast kotekan rate,
+// not a borrowed club tempo.
+// ============================================================================
+
+setcpm(35)
+let CYCLES = 11
+
+// POLOS — the kotekan's "front" voice, mostly the lower/stepwise notes.
+// triangle: softer and rounder than sangsih's square, so the two
+// interlocking voices stay legible as two things trading, not one blur.
+let polos = i(`<
+  [0 ~ 1 ~ 2 ~ 3 ~]
+  [0 ~ 1 ~ 0 ~ 3 ~]
+  [4 ~ 0 ~ 1 ~ 2 ~]
+  [0 ~ ~ ~ 4 ~ 3 ~]
+  [5 ~ ~ ~ 3 ~ ~ ~]
+  [0 ~ 1 ~ 0 ~ 3 ~]
+  [1 ~ 0 ~ 2 ~ 4 ~]
+  [0 ~ ~ ~ 4 ~ 3 ~]
+  [5 ~ ~ ~ 4 ~ ~ ~]
+  [10 ~ ~ ~ 8 ~ ~ ~]
+  [0 ~ 3 ~ 1 ~ 0 ~]
+>`).xen("5edo")
+  .sound("triangle")
+  .attack(.005).decay(.3).sustain(.1).release(.25)
+  .lpf(sine.range(1400, 3200).slow(11))
+  .room(.35)
+  .gain(.34)
+  .pan(.18)
+
+// SANGSIH — the kotekan's "filling" voice: true hocket, resting exactly
+// where polos plays and vice versa. square, filtered bright — the
+// harder-edged complement to polos's triangle.
+let sangsih = i(`<
+  [~ ~ ~ ~ ~ ~ ~ ~]
+  [~ 3 ~ 4 ~ ~ ~ 0]
+  [~ 2 ~ ~ ~ 3 ~ 0]
+  [~ 3 ~ 0 ~ 1 ~ 0]
+  [~ 8 ~ 5 ~ 1 ~ 0]
+  [~ 3 ~ 4 ~ ~ ~ 0]
+  [~ 4 ~ ~ ~ 3 ~ 0]
+  [~ 3 ~ 0 ~ 1 ~ 0]
+  [~ 8 ~ 5 ~ 1 ~ 0]
+  [~ 13 ~ 10 ~ 5 ~ 5]
+  [~ ~ ~ ~ ~ ~ ~ 0]
+>`).xen("5edo")
+  .sound("square")
+  .attack(.004).decay(.18).sustain(.05).release(.15)
+  .lpf(sine.range(1800, 4200).slow(11))
+  .lpq(6)
+  .room(.35)
+  .gain(.26)
+  .pan(.82)
+
+// GONG — colotomic marker (gamelan's real structural device: one low tone
+// on every cycle's downbeat, not a metric kit), an octave below the tonic,
+// long decay so it rings through the cycle it opens.
+let gong = i("-5").xen("5edo")
+  .sound("sine")
+  .attack(.01).decay(1.8).sustain(.1).release(1.2)
+  .room(.5)
+  .gain(.22)
+  .pan(.5)
+
+stack(polos, sangsih, gong)

@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-21",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "5EDO KOTEKAN",
+  "pattern_file": "daily/2026-11-21-xenharmonic-5edo.strudel",
+  "cycles": 11,
+  "target_duration_sec": 19,
+  "code_highlight_lines": ["let gong = i(\"-5\").xen(\"5edo\")", "[0 ~ 1 ~ 0 ~ 3 ~]"]
+}
