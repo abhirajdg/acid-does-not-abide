@@ -1,0 +1,140 @@
+// ============================================================================
+// DAILY — 2026-11-22 (Sunday): Wildcard — the Stern-Brocot tree read as
+// TUNING, not melody: its own rational numbers become real frequency ratios
+// ============================================================================
+//
+// WHY THIS (checked against this week + the last two Sundays before writing
+// a note): 11-08 read one fixed degree sequence through two different
+// SCALES (a jazz contrafact); 11-15 found two unrelated scales landing on
+// one shared pitch. Neither reused device fits — this week's own Thursday
+// (daily/2026-11-19-stern-brocot-sequence.strudel) already used Stern's
+// diatomic sequence a(n), but strictly as scale DEGREES (value n -> degree
+// n-1, read through a 12-tone aeolian scale). Today pulls on the same
+// sequence from the OTHER end: the Calkin-Wilf tree built from a(n) doesn't
+// just enumerate integers, it enumerates every positive RATIONAL exactly
+// once (CW(n) = a(n)/a(n+1)) — and a rational number IS a frequency ratio.
+// So today the sequence tunes the piece instead of just shaping its melody:
+// real just intonation, derived from the week's own math, not a borrowed
+// edo (that was Saturday's device, on unrelated numbers) and not a named
+// scale at all.
+//
+// THE DERIVATION, verified by hand from Thursday's own recursion (a(0)=0,
+// a(1)=1, a(2n)=a(n), a(2n+1)=a(n)+a(n+1)): a(1..16) = 1,1,2,1,3,2,3,1,4,3,
+// 5,2,5,3,4,1. The first 15 Calkin-Wilf fractions, CW(n)=a(n)/a(n+1):
+//   n: 1    2    3    4    5    6    7    8    9    10   11   12   13   14   15
+//   CW:1/1  1/2  2/1  1/3  3/2  2/3  3/1  1/4  4/3  3/5  5/2  2/5  5/3  3/4  4/1
+// Octave-reduce each into [1,2) (multiply/divide by 2 until it lands there —
+// "scales repeat at octave," same assumption knowledge-base/strudel/learn/
+// xen.md's xen() makes):
+//   1/1->1/1  1/2->1/1  2/1->1/1  1/3->4/3  3/2->3/2  2/3->4/3  3/1->3/2
+//   1/4->1/1  4/3->4/3  3/5->6/5  5/2->5/4  2/5->8/5  5/3->5/3  3/4->3/2
+//   4/1->1/1
+// Collapsing duplicates leaves exactly SEVEN distinct pitch classes, in
+// ascending order: 1/1, 6/5, 5/4, 4/3, 3/2, 8/5, 5/3 — a real 7-tone just-
+// intonation scale that fell out of the tree's first 15 terms, not chosen.
+// Two of those (6/5, 5/4) sit a 25/24 apart (1200*log2(25/24) = 70.7 cents)
+// — the classic JI "chromatic comma," under a 12-TET semitone and
+// impossible to land exactly on a keyboard: THE scale's own color, degrees
+// 1 and 2 right next to each other. (For reference, 5/4 sits ~13.7c flat of
+// an equal-tempered major third and 6/5 sits ~15.6c sharp of an equal-
+// tempered minor third — both audibly "purer"/narrower-beating than 12-TET.)
+//
+// Degree 7 is the plain octave (2/1). Degree 8 reaches OUTSIDE the octave-
+// reduced scale back to a RAW, un-reduced early term of the same tree —
+// CW(7) = 3/1 — landing the lead an octave above the drone's own third
+// harmonic (see ARRANGEMENT). That's today's tension->release/climax device:
+// break out of the tidy reduced scale and touch the tree's raw register,
+// then come home.
+//
+// ARRANGEMENT — a genuine harmonic-series drone, not the usual tempered
+// tonic+fifth tanpura pair: DRONE_BASE=110 (A2), and the three partials
+// played are literally the tree's own simplest raw, UN-reduced terms —
+// CW(1)=1/1, CW(3)=2/1, CW(7)=3/1 — i.e. harmonics 1, 2, and 3 of the
+// fundamental (110, 220, 330 Hz). The lead's own tonic, via xen()'s default
+// 220Hz base, lands exactly on the drone's second harmonic — a deliberate
+// coincidence, not left implicit: the lead's whole scale grows out of the
+// same note the drone's middle voice already states. Timbre: `pulse` on the
+// lead (reedy, unused anywhere else this week — Mon/Sat used square+
+// triangle, Tue/Thu triangle, Wed supersaw, Fri saw — a fresh color for a
+// genuinely different pitch system), `sine` on the drone (purest waveform,
+// MUSIC-KNOWLEDGE.md §1/§2.5, still the project's standing drone choice,
+// just voicing real harmonics instead of a tempered interval this time).
+//
+// MELODY — six phrases, anchored on degree 0 (tonic, Sa-analog) and degree
+// 4 (3/2, the purest fifth available, Pa-analog — also the drone's own
+// top-register interval), <A B C D E F> over two full passes:
+//   A (call): tonic, rest, leap to the pure fifth, rest, leap on to the
+//     5/3 color tone, left hanging — 0 ~ 4 ~ 6 ~ ~ ~
+//   B (response, resumes exactly where A hung): descends 6 5 4 3 back to
+//     tonic — call-and-response, the required improv device — ~ 6 ~ 5 ~ 3 ~ 0
+//   C (motif-and-variation of A — same call shape, now reaching for the
+//     25/24 crunch instead of the higher color tone): 0 ~ 1 ~ 2 ~ 4 ~
+//   D (literal retrograde of C, token order reversed exactly): ~ 4 ~ 2 ~ 1 ~ 0
+//   E (climax — breaks the octave-reduced scale for the raw tree register,
+//     see DERIVATION above): 7 ~ 8 ~ 7 ~ 4 ~
+//   F (resolve): tonic alone, the rest of the bar left silent — 0 ~ ~ ~ ~ ~ ~ ~
+//
+// AUTOMATION — lpf stepped PER PHRASE (not an independent LFO): dim for the
+// plain call/response (A/B), brightest for the crunch (C) and its
+// retrograde (D) so the 25/24 is actually audible, brightest of all for the
+// raw-register climax (E), dark again for the resolve (F) — the filter
+// tracks which phrase is playing, same convention Monday's file used for
+// its call/answer voices.
+//
+// NO DRUM LAYER (percussion check, MUSIC-QC-LOOP.md, asked explicitly): this
+// is a tuning/math exploration, not a genre dance track and not an alap —
+// there's no metric convention to serve here, and a kit would just compete
+// with the one thing this piece is actually about (a comma most listeners
+// have never heard land exactly where a familiar third "should" be).
+//
+// TEMPO: no genre/BPM mandate (comparative/derivation piece, no drum layer
+// to check a BPM against — same reasoning Tue/Wed/Thu took this week).
+// setcpm(36). CYCLES = 12 (two full passes of the 6-phrase rotation).
+// 12 * 60 / 36 = 20.0s.
+// ============================================================================
+
+setcpm(36)
+let CYCLES = 12
+
+// The Stern-Brocot tree's first 15 terms, octave-reduced to seven classes
+// (degrees 0-6), plus the plain octave (7) and a RAW un-reduced term, CW(7)
+// = 3/1, reached for only in the climax (8) — see DERIVATION above.
+let JI_RATIOS = [1, 6/5, 5/4, 4/3, 3/2, 8/5, 5/3, 2, 3]
+
+let PHRASE = `<
+  [0 ~ 4 ~ 6 ~ ~ ~]
+  [~ 6 ~ 5 ~ 3 ~ 0]
+  [0 ~ 1 ~ 2 ~ 4 ~]
+  [~ 4 ~ 2 ~ 1 ~ 0]
+  [7 ~ 8 ~ 7 ~ 4 ~]
+  [0 ~ ~ ~ ~ ~ ~ ~]
+>`
+
+let LPF = `<1200 1200 2600 1900 3200 900>`
+
+stack(
+  // DRONE — the tree's own raw, un-reduced simplest terms (CW(1)=1/1,
+  // CW(3)=2/1, CW(7)=3/1): harmonics 1, 2, 3 of 110Hz, not a tempered
+  // tonic+fifth pair. The lead's xen() scale roots at 220Hz by default,
+  // landing exactly on this drone's middle voice.
+  freq(`[110,220,330]/${CYCLES}`)
+    .sound("sine")
+    .attack(2.4).release(3)
+    .gain(.2)
+    .room(4)
+    .pan(.5),
+
+  // LEAD — see MELODY/AUTOMATION above. pulse: reedy, unused elsewhere
+  // this week, fitting for a genuinely different (non-equal-tempered)
+  // pitch system.
+  i(PHRASE)
+    .xen(JI_RATIOS)
+    .sound("pulse")
+    .attack(.01).decay(.2).sustain(.15).release(.3)
+    .lpf(LPF)
+    .lpq(5)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.38)
+    .pan(.55)
+    .room(1.8)
+)

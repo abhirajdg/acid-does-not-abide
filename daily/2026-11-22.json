@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-22",
+  "weekday": "Sunday",
+  "topic": "wildcard",
+  "topic_label": "STERN-BROCOT JI",
+  "pattern_file": "daily/2026-11-22-wildcard-stern-brocot-just-intonation.strudel",
+  "cycles": 12,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "let JI_RATIOS = [1, 6/5, 5/4, 4/3, 3/2, 8/5, 5/3, 2, 3]",
+    ".xen(JI_RATIOS)"
+  ]
+}
