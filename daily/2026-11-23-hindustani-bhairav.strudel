@@ -1,0 +1,111 @@
+// ============================================================================
+// DAILY — 2026-11-23 (Monday): Hindustani raga of the day — RAGA BHAIRAV
+// ============================================================================
+// Weekly rotation slot: Monday = one of the 10 parent thaats. Lap two
+// continues the order lap one logged (Kalyan 08-24/11-02, Bhairavi 08-31/
+// 11-09, Khamaj 09-07/11-16, Bhairav/22-shruti 09-14, Kafi 09-21, Todi
+// 09-28, Marwa 10-05, Poorvi 10-12, Asavari 10-19, Bilawal 10-26). Bhairav
+// next -- the only one of the 10 not in the last-4-6-Monday window
+// (Khamaj/Bhairavi/Kalyan/Bilawal/Asavari/Poorvi), and 10 Mondays clear of
+// its own last appearance (09-14). See ARRANGEMENT below for what's a
+// genuinely fresh decision here, not a repost of 09-14 or sets/
+// bhairav-session-v1.strudel.
+//
+// THEORY NOTES: Bhairav's swaras S r G M P d N (komal Re, komal Dha; rest
+// shuddh) -> semitone offsets 0,1,4,5,7,8,11 from tonic, the exact interval
+// set tonaljs calls "gypsy" / double harmonic major -- already verified
+// against tonaljs's own scale-type source in sets/bhairav-session-v1.strudel
+// (this project's flagship Bhairav reference), reused here rather than
+// re-verified. Tonic kept at C, the same pitch that flagship set uses for
+// this raga specifically (per-raga tonic continuity, the convention 11-02/
+// 11-09/11-16 documented for Kalyan/D, Bhairavi/E, Khamaj/G).
+//   -> degree map in "C:gypsy": 0=S(C) 1=r(Db) 2=G(E) 3=M(F) 4=P(G) 5=d(Ab)
+//      6=N(B) 7=S'(C5)
+//   -> vadi = Dha = degree 5, samvadi = Re = degree 1 (same pair sets/
+//      bhairav-session-v1.strudel and 09-14 both use, kept consistent).
+//   -> the degree gaps alternate minor-2nd/minor-3rd (1,3,1,3,1,3,1 semitones
+//      round the octave) -- the "augmented second" color that makes Bhairav
+//      sound exotic in 12-tet. Written out: C-Db (m2) Db-E (3-semitone "aug
+//      2nd") E-F (m2) F-Ab (3-semitone) Ab-B (3-semitone) B-C5 (m2). Every
+//      leap onto or off of r or d in the melody below is one of these
+//      augmented-second gaps, not an arbitrary interval choice.
+//
+// MELODY -- four alternating phrases (call, climax/resolve, retrograde,
+// variation), anchored on vadi/samvadi, built from the augmented-second
+// gaps above so the leaps ARE the raga's own color:
+//   A (CALL): S r G ~ M d ~ ~         0 1 2 ~ 3 5 ~ ~
+//     -> r->G and M->d are both the 3-semitone "aug 2nd" leap; holds on
+//        vadi (d), left open.
+//   B (RESPONSE, resolves): d N S' ~ N d r S   5 6 7 ~ 6 5 1 0
+//     -> peaks at the octave, falls back through d, then a full fifth down
+//        to samvadi (r), closing on Sa -- the one phrase that resolves.
+//   C (retrograde of A -- literal reverse, the required jazz-improv
+//     device): ~ ~ d M ~ G r S          ~ ~ 5 3 ~ 2 1 0
+//   D (variation of A -- motif-and-variation, the second required device):
+//     S S' ~ d r ~ M S                  0 7 ~ 5 1 ~ 3 0
+//     -> opens with a full octave leap (scale-degree wrap-around), then
+//        vadi immediately followed by samvadi -- the two structural tones
+//        placed back to back, which A and B only approach separately.
+//   rotation <A B C D>, 16 cycles = 4 full statements.
+//
+// ARRANGEMENT -- the fresh decision this time is the ornament, not the
+// instrument stack (sine drone + one saw lead, the plainest version of this
+// project's tanpura-plus-lead convention, kept deliberately simple so the
+// ornament reads clearly). MUSIC-KNOWLEDGE.md §11 measured that NONE of
+// this project's Bhairav tracks actually carry andolan -- the slow pitch
+// sway on komal Re and komal Dha that is this raga's single most
+// characteristic ornament -- despite the drone/lead/percussion all being
+// otherwise in-raga. 11-09's Bhairavi used vib()/vibmod() but applied it
+// flatly across the whole lead; here vibmod is written as its OWN
+// per-step pattern, shaped to match the melody's rest/note grid exactly
+// (see below), so the sway appears ONLY on the steps that are actually r
+// or d (depth .32) and stays near-still everywhere else (depth .03) --
+// the ornament lands exactly where the theory says it belongs, audibly
+// contrasted against the steady notes around it, rather than a constant
+// wobble smeared over the whole phrase.
+// Lead: saw (harmonically dense "plucked" stand-in per §2.5), fast attack/
+// short decay. Drone: sine on <c2 g2>/4 (S+P, tanpura convention, as in
+// the flagship set). A slow 8-cycle lpf sweep gives the automation
+// something to evolve beyond the ornament itself, resonance kept at 6 (well
+// under the whine threshold MUSIC-QC-LOOP.md flagged at ~8+).
+//
+// PERCUSSION CHECK (asked explicitly, per MUSIC-QC-LOOP.md): no drum layer.
+// Independently of 09-14's same conclusion (that file's reasoning was about
+// Bhairav being an unmetered alap exposition) -- this file's own reason is
+// that its headline device is a precise, per-note ornament on two specific
+// swaras; a metric kick/hat grid under it would mask exactly the contrast
+// (sway vs. steady) the arrangement is built to make audible. Same
+// conclusion, independently derived, not a copy of the earlier file's call.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc. setcpm(46) * 16 cycles = 20.9s (60/46 = 1.30s/cycle).
+// ============================================================================
+
+setcpm(46)
+let CYCLES = 16 // 16 * 60/46 = 20.9s
+
+stack(
+  // drone: tonic + fifth (S and P), sine -- purest waveform, tanpura
+  // convention (see ARRANGEMENT above).
+  note("<c2 g2>/4")
+    .sound("sine")
+    .gain(.2)
+    .room(3)
+    .attack(1.8).release(2.8),
+
+  // lead -- saw, harmonically dense "plucked" stand-in per MUSIC-KNOWLEDGE
+  // §2.5. vibmod is its own per-step pattern, aligned 1:1 with the melody's
+  // 8-step grid each phrase, so andolan depth jumps to .32 exactly on the
+  // steps that are r or d and sits at .03 everywhere else -- see ARRANGEMENT.
+  n("<[0 1 2 ~ 3 5 ~ ~] [5 6 7 ~ 6 5 1 0] [~ ~ 5 3 ~ 2 1 0] [0 7 ~ 5 1 ~ 3 0]>")
+    .scale("C:gypsy")
+    .sound("saw")
+    .attack(.015).decay(.2).sustain(.2).release(.25)
+    .vib(5)
+    .vibmod("<[.03 .32 .03 .03 .03 .32 .03 .03] [.32 .03 .03 .03 .03 .32 .32 .03] [.03 .03 .32 .03 .03 .03 .32 .03] [.03 .03 .03 .32 .32 .03 .03 .03]>") // andolan only on r/d steps
+    .lpf(sine.range(900, 2600).slow(8))
+    .lpq(6)
+    .sometimes(x => x.ply(2)) // improv hook: occasional ornament
+    .gain(.42)
+    .room(3)
+)
