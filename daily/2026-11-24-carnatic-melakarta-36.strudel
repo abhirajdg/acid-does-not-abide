@@ -1,0 +1,191 @@
+// ============================================================================
+// DAILY — 2026-11-24 (Tuesday) — Carnatic melakarta math
+// Melakarta #36: Chalanata
+// ============================================================================
+//
+// THE NUMBERING SYSTEM (same chakra/position scheme every Tuesday this
+// project has used — 08-25's #22 through 11-17's #46):
+//   chakra = ceil(N / 6), position = N - 6*(chakra - 1)
+// For N = 36: chakra = ceil(36/6) = 6 ("Rutu" chakra, the LAST of the six
+// shuddha-Ma chakras) -> chakra <= 6 means SHUDDHA Ma (M1), not prati Ma —
+// a change of color from the last three melakarta Tuesdays (28, 8 shuddha;
+// 64, 46 prati), landing back on shuddha this time. Ri-Ga combo index =
+// ((chakra-1) mod 6)+1 = ((5) mod 6)+1 = 6 -> R3 G3 (shatshruti Ri /
+// antara Ga — the 6th and final Ri-Ga combo). position = 36 - 6*5 = 6 ->
+// Dha-Ni combo #6 of its own 6-combo cycle (1=D1N1 2=D1N2 3=D1N3 4=D2N2
+// 5=D2N3 6=D3N3) -> D3 N3 (shatshruti Dha, kakali Ni).
+// melakarta 36 = S R3 G3 M1 P D3 N3. Semitones (S=0 R1=1 R2/G1=2 R3/G2=3
+// G3=4 M1=5 M2=6 P=7 D1=8 D2/N1=9 D3/N2=10 N3=11): 0 3 4 5 7 10 11 —
+// confirmed by web search against Wikipedia's Chalanata entry (ascent
+// S R3 G3 M1 P D3 N3 S', "raga 6 of the Rutu chakra" — matching chakra 6,
+// position 6 computed independently above).
+//
+// A GENUINE COINCIDENCE WORTH NAMING: 36 = 6x6. Because of that, THREE
+// independently-computed structural indices for this raga all land on the
+// same number — chakra (6), position (6), AND the Ri-Ga combo index (6).
+// That's not reuse-by-default, it's a real fact about this specific
+// melakarta (the only perfect-square one on a Tuesday so far) — see THE
+// MATH DRIVING TODAY'S PATTERN below for why only ONE parameter gets this
+// number, to avoid the number reading as a single automation applied three
+// times under different names.
+//
+// WESTERN SCALE MATCH — the semitone set [0,3,4,5,7,10,11] has gap pattern
+// 3-1-1-2-3-1-1. Checked by hand against the standard named heptatonic
+// families (the seven major-scale modes, melodic/harmonic minor and their
+// modes, double harmonic/Byzantine, Hungarian major/minor, Neapolitan
+// major/minor, enigmatic): none match. Closest is double harmonic major
+// (0,1,4,5,7,8,11) but its first two gaps run 1-then-3, the reverse of
+// this scale's 3-then-1, and it doesn't carry Chalanata's doubled-third
+// color (see below) at all. (No tonaljs run this session — this is a
+// cloud text-only step, not the local render session — so this is a
+// by-hand interval check, not a machine-verified one; falling back to
+// explicit MIDI mapping below either way, same discipline as 11-17's #46.)
+// THE ACTUAL CHARACTER: R3 (3 semitones above S) and G3 (4 semitones above
+// S) sit a bare half-step apart — a "minor third" scale position and a
+// "major third" scale position adjacent in pitch, the same cluster a blues
+// scale gets from stacking a flat third against a natural third. That
+// cluster, reached by a real 3-semitone LEAP straight from the tonic (no
+// scale tone sits between S and R3), is this raga's whole identity and
+// drives both the drone and the melody below.
+//
+// KATAPAYADI CROSS-CHECK: Chalanata's Sanskrit form is "Cālanāṭa" — first
+// two consonants are "ca" (unaspirated, not "cha") and "la". Katapayadi
+// table (verified by web search, standard ka-ta-pa-ya rows): ca -> row 6
+// (ca/ta/ṣa), la -> row 3 (ga/ḍa/ba/la). Digits in name order (6, 3) ->
+// REVERSE to get the melakarta number: 36. Matches the chakra/position
+// math above independently, and matches "raga 6 of Rutu chakra" a third
+// way (position 6 within chakra 6).
+//
+// THE MATH DRIVING TODAY'S PATTERN — three distinct derived numbers, each
+// with its own audible job (kept to three, not four, specifically so the
+// 6/6/6 coincidence above doesn't get stretched across multiple params):
+//   - N's own two digits (3, 6) -> phrase lengths. Call = 3 steps, response
+//     = 6 steps: the melakarta number itself generates the melody's
+//     structure, not an arbitrary substitute (the point of this slot).
+//   - the chakra/position/Ri-Ga-combo coincidence (6) -> the supersaw
+//     lead's unison SPREAD automation period, 6 cycles — a fresh device
+//     for this slot (no prior melakarta Tuesday has automated spread/
+//     detune; 11-10 automated pan, 11-03 automated a euclidRot pluck,
+//     11-17 automated only filter+delay). One number, one job.
+//   - the digit SUM (3+6=9) -> lead delay time, a ninth-note subdivision
+//     (1/9) — fresh fraction (used so far: 1/12, 1/11, 1/5, 1/3, 1/5, 1/3,
+//     1/2, 1/4, 1/5, 1/8, 1/4). The digit PRODUCT (3x6=18) drives the
+//     filter sweep period instead (18 cycles — a long, slow-evolving
+//     sweep across most of the pattern's 24 cycles), so sum and product
+//     each get their own outlet rather than collapsing into one.
+//
+// ARRANGEMENT — compared directly against 11-17's Shadvidhamargini (the
+// most recent prior Tuesday): that file alternated a 2-note drone dyad
+// every 2 cycles, used a triangle lead, and automated filter+delay only.
+// Today changes all of it, driven by what's actually distinctive about
+// THIS melakarta (the R3/G3 half-step cluster) rather than reused by
+// default:
+//   drone:  a STATIC 4-note cluster chord (tonic, R3, G3, Pa) instead of
+//           an alternating dyad — because the half-step cluster itself
+//           already supplies permanent tension, there's nothing to
+//           alternate toward or away from; the drone just states the
+//           raga's identity directly and holds it. Still plain sine
+//           (MUSIC-KNOWLEDGE.md §2.5), still slow attack/release, the
+//           chord's own 3-cycle repeat period chosen to roughly match its
+//           attack so it keeps swelling rather than settling.
+//   lead:   supersaw (synth-basic per §2.5), not triangle (11-17), square
+//           (11-10), or sawtooth (11-03) — chosen for its own built-in
+//           cluster of detuned voices, an instrument-level echo of the
+//           R3/G3 pitch cluster the raga itself carries.
+//   accent: unison spread automation (coincidence number) + independent
+//           filter sweep (digit product) + delay time (digit sum) on the
+//           lead itself — three different devices, none reused from 11-17
+//           or 11-10's pan LFO or 11-03's euclidRot drone pluck.
+//   No percussion: a Carnatic alapana-style exposition over a drone has no
+//   metric kit (MUSIC-QC-LOOP.md's autopilot-percussion lesson, and the
+//   standing rule every melakarta Tuesday so far has kept).
+//
+// PITCH MAPPING — no scale name matches (see WESTERN SCALE MATCH above),
+// so scale degrees map to MIDI explicitly: MELAKARTA_36 holds the raga's
+// own semitone offsets, toMidi(d) wraps octaves and looks the degree up,
+// .withValue(toMidi) rewrites the degree-number pattern into real pitches
+// — the same raga-mapper technique used in 11-17's file for the same
+// reason.
+//
+// MELODY — four phrases (call / response-from-the-same-landing-note /
+// drop-with-anticipation / motif-variation), anchored on S, built to make
+// the R3-G3 half-step cluster audible as the raga's own color rather than
+// smoothed over:
+//   A (call, 3 steps — N's tens digit): tonic, rest, a real 3-semitone
+//     leap straight up into G3 (skipping past R3 entirely), left hanging:
+//                                          0 ~ 2
+//   B (response, 6 steps — N's ones digit; call-and-response device,
+//     resuming from the SAME note A hung on): step down through the
+//     cluster itself (G3 -> R3, a bare half-step even though it's a full
+//     scale degree) then the identity leap in reverse (R3 -> S), rest,
+//     then a fresh leap up a fifth to Pa, left hanging on the dominant:
+//                                          2 1 0 ~ 4 ~
+//   C (the drop, 6 steps; tension->release/anticipation device): octave-up
+//     tonic leapt down a major sixth onto the color tone (G3), rest, then
+//     a further leap down onto the approach tone from below (degree -1,
+//     the N3 of the octave below) — left hanging, unresolved:
+//                                          7 ~ 2 ~ -1 ~
+//   D (motif-and-variation of A, 4 steps; resolves C's hang): the same
+//     opening 3-semitone leap up to G3 as A, but this time walked back
+//     down THROUGH the cluster (G3 -> R3 -> S) instead of hanging,
+//     closing the whole arc at home:
+//                                          0 2 1 0
+//
+// CYCLES = 24. setcpm(72) -> 24 * 60/72 = 20.0s, six clean passes of the
+// 4-phrase rotation (A/B/C/D). No tala implied (no drum layer to check a
+// genre BPM against) — cpm here just paces the phrase slots for
+// legibility, same reasoning prior melakarta Tuesdays used.
+// ============================================================================
+
+setcpm(72)
+let CYCLES = 24 // 24 * 60/72 = 20.0s; six clean passes of the 4-phrase melody
+
+// Melakarta 36 (Chalanata): S R3 G3 M1 P D3 N3 — semitones from tonic.
+// No named scale matches this set (see WESTERN SCALE MATCH above), so
+// degrees map to MIDI explicitly instead of through .scale().
+const MELAKARTA_36 = [0, 3, 4, 5, 7, 10, 11]
+const TONIC = 68 // Ab4/G#4 — unused as a Tuesday tonic so far (E, G, A,
+// F, B, D, C, Bb, F# already used)
+const toMidi = (d) => {
+  const oct = Math.floor(d / 7)
+  const idx = ((d % 7) + 7) % 7
+  return TONIC + 12 * oct + MELAKARTA_36[idx]
+}
+
+stack(
+  // DRONE — the raga's own half-step cluster stated directly and held:
+  // tonic (Ab2), R3 (B2), G3 (C3) a bare half-step above R3, and Pa (Eb3)
+  // for grounding — see ARRANGEMENT above for why this is static rather
+  // than alternating. Repeats every 3 cycles so the slow attack keeps
+  // swelling instead of resetting every single (short, 0.83s) cycle.
+  note("[44,47,48,51]/3")
+    .sound("sine")
+    .gain(.22)
+    .attack(2.6).release(3.2)
+    .room(4.5),
+
+  // MELODY — see MELODY note above. Real leaps (the raga's own 3-semitone
+  // identity jump, a fifth, an octave, a major sixth, an approach from
+  // below), rests, call-and-response (A/B share the landing note),
+  // tension->release (C/D), and motif-and-variation (D vs A) as the
+  // required jazz-improv devices.
+  note(`<
+    0 ~ 2
+    2 1 0 ~ 4 ~
+    7 ~ 2 ~ -1 ~
+    0 2 1 0
+  >`)
+    .withValue(toMidi)
+    .sound("supersaw")
+    .unison(5)
+    .spread(sine.range(.3, 1).slow(6)) // coincidence number (6) -> spread LFO period
+    .attack(.01).decay(.13).sustain(.14).release(.22)
+    .lpf(sine.range(450, 2400).slow(18)) // digit product (3x6=18) -> sweep period
+    .lpq(5)
+    .rarely(x => x.add(note(-12))) // improv hook: occasional octave-down drop
+    .gain(.42)
+    .room(2.3)
+    .delay(.2)
+    .delaytime(1/9) // digit sum (3+6=9) -> a ninth-note delay subdivision
+    .delayfeedback(.2)
+)

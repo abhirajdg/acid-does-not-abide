@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-24",
+  "weekday": "Tuesday",
+  "topic": "carnatic-melakarta",
+  "topic_label": "MELAKARTA 36",
+  "pattern_file": "daily/2026-11-24-carnatic-melakarta-36.strudel",
+  "cycles": 24,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [
+    "const MELAKARTA_36 = [0, 3, 4, 5, 7, 10, 11]",
+    ".spread(sine.range(.3, 1).slow(6)) // coincidence number (6) -> spread LFO period"
+  ]
+}
