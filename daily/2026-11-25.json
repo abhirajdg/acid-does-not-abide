@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-25",
+  "weekday": "Wednesday",
+  "topic": "date-pattern",
+  "topic_label": "25 . 11 . 2026",
+  "pattern_file": "daily/2026-11-25-date-pattern.strudel",
+  "cycles": 25,
+  "target_duration_sec": 25,
+  "code_highlight_lines": ["setcpm(60)", "const PHRASE_DAY = `<[${SQUARES_UP}] [${SQUARES_DOWN}] [${GNOMON_OSC}] [${GNOMON_OSC_RETRO}]>`"]
+}

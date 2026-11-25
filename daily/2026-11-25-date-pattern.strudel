@@ -1,0 +1,140 @@
+// ============================================================================
+// DAILY — 2026-11-25 (Wednesday): Today's date as pattern
+// ============================================================================
+// Weekly rotation slot: the calendar date itself drives the pattern. Today
+// (IST) is 2026-11-25 -- day 25, month 11 (November), year 2026.
+//
+// THE DERIVATION (this is the whole point of the day):
+//   Recent Wednesdays each found a different relationship between day and
+//   month: a product/digit-sum round trip (11-18), a day==month palindrome
+//   canon (11-11), squareness vs. primality (11-04), a perfect/deficient
+//   divisor-sum contrast (10-28), and the Euclidean algorithm's own
+//   quotient/remainder steps (10-21). Today's pair isn't a coincidence to
+//   compare -- day and month are locked together by one identity: 25 = 5^2,
+//   and the classic way to BUILD a square is to add consecutive odd numbers
+//   (gnomons) to the previous one: 1+3+5+7+9 = 25 (five gnomons, running
+//   total = 1^2, 2^2, 3^2, 4^2, 5^2 -- the squares ARE the partial sums).
+//   The next gnomon in that same sequence -- 2x6-1 = 11 -- is exactly
+//   today's MONTH, and it's exactly what 25 needs to become the NEXT square:
+//   25 + 11 = 36 = 6^2. So month isn't a second, separate fact about today;
+//   it's the specific number that would extend day's own square into the
+//   next one. (General identity: (n+1)^2 - n^2 = 2n+1, here n=5: 36-25=11.)
+//
+//   Degree numbers wrap by octave every 7 steps (confirmed in prior
+//   Wednesdays' use of degrees past 7 and below 0), so both voices can use
+//   the real numbers from the math directly instead of substituting smaller
+//   stand-ins:
+//   DAY voice -- the partial sums themselves, as degrees: 0, 1, 4, 9, 16, 25
+//   (0^2 through 5^2). Climbing this run is literally climbing from no
+//   square up to today's own day number, one gnomon-leap at a time -- the
+//   biggest reach this slot has used (25, about three and a half octaves
+//   up), because today's day number genuinely is that large a reach.
+//   MONTH voice -- the raw gnomons themselves, as degrees: 1, 3, 5, 7, 9, 11
+//   (the building blocks DAY's run is made of), climbing to 11 -- today's
+//   month, the SAME mechanism's next step, not an unrelated number.
+//
+//   DAY (call/response/variation, four phrases alternating for real phrase
+//   development): SQUARES-UP states the partial sums rising to the peak and
+//   back to tonic; SQUARES-DOWN is SQUARES-UP's exact token-for-token
+//   retrograde (reaches the peak immediately, then descends square by
+//   square); GNOMON-OSC shows the SAME math from the other angle -- each
+//   individual gnomon (1,3,5,7,9) launched fresh from the tonic rather than
+//   accumulated, the way each new square literally borders the previous one
+//   at its own corner; GNOMON-OSC-RETRO is GNOMON-OSC's exact retrograde.
+//   Two independent devices (retrograde, and the same identity viewed as
+//   cumulative sums vs. raw increments) count as the jazz-improv structural
+//   device this file needs, anchored throughout on the tonic (0) at both
+//   ends of every phrase -- the alap-style "leave and return to Sa" shape.
+//
+//   MONTH (its own, independently-cycling three-phrase alternator):
+//   GNOMONS-UP climbs the raw odd numbers to 11 and back to tonic;
+//   GNOMONS-DOWN is its exact retrograde; GNOMONS-TIGHT restates the same
+//   six numbers with every rest removed -- a genuine variation (same
+//   pitches, compressed density), not a new melody.
+//
+//   CYCLES = 25 -- today's own day number, the number the whole identity is
+//   about (same move as 11-18's CYCLES = 18). setcpm(60) x 25 cycles / 60 =
+//   25s exactly -- the day number is the cycle count AND the duration in
+//   seconds, not just a pitch.
+//
+// Scale: G minor -- fresh for this slot (last five Wednesdays used B, F, D,
+// C, and A minor); the square/gnomon identity is the idea, not the mode.
+//
+// NO DRUM KIT, deliberately, not by default: DAY's gnomon-leap climb/
+// retrograde and MONTH's independent odd-number climb ARE this piece's
+// audible movement, read straight off the identity that links today's day
+// and month -- a metric kit underneath would just restate a pulse that
+// isn't there (MUSIC-QC-LOOP.md's reflexive-percussion note).
+//
+// Instrumentation (MUSIC-KNOWLEDGE.md §2.5: theory days use synth basics,
+// not gm_* samples), a fresh pairing from recent Wednesdays (sawtooth+pulse
+// on 11-04, square+triangle on 11-11, supersaw solo on 11-18, square+
+// sawtooth on 10-21): DAY gets `pulse` -- its narrower harmonic content
+// carries the acid taste layer (light distortion + filter sweep) without
+// turning harsh at the climactic high reach. MONTH gets `square` -- a
+// plainer, hollower synth basic for the "raw building block" voice,
+// deliberately left clean (no automation) so only one voice carries the
+// moving parameter, per this project's own convention. DRONE stays `sine`
+// -- tanpura convention, tonic and fifth, no automation. Only DAY carries
+// the acid taste layer; the filter sweep period (5 cycles) is sqrt(25) --
+// today's day number's own square root, tying the one automated parameter
+// back to the squareness at the center of the day's identity.
+//
+// This is a DAILY quick clip, not a flagship set -- one continuous pattern,
+// no alap/jor/jhala arc.
+// ============================================================================
+
+setcpm(60)
+let CYCLES = 25 // today's own day number -- 25 x 60 / 60 = 25s exactly
+
+// DAY -- partial sums of the first five odd numbers (0^2..5^2), the squares
+// themselves, climbing to today's day number as the peak reach.
+const SQUARES_UP        = "0 ~ 1 ~ 4 ~ 9 ~ 16 ~ 25 ~ 0"
+const SQUARES_DOWN      = "0 ~ 25 ~ 16 ~ 9 ~ 4 ~ 1 ~ 0" // exact retrograde of SQUARES_UP
+const GNOMON_OSC        = "0 1 ~ 0 3 ~ 0 5 ~ 0 7 ~ 0 9 ~ 0" // same math, raw increments
+const GNOMON_OSC_RETRO  = "0 ~ 9 0 ~ 7 0 ~ 5 0 ~ 3 0 ~ 1 0" // exact retrograde of GNOMON_OSC
+const PHRASE_DAY = `<[${SQUARES_UP}] [${SQUARES_DOWN}] [${GNOMON_OSC}] [${GNOMON_OSC_RETRO}]>`
+
+// MONTH -- the raw gnomons (odd numbers) DAY's run is built from, climbing
+// to 11 (today's month): the SAME mechanism's next step, not a separate
+// number. Cycles in its own alternator, independently of DAY's.
+const GNOMONS_UP    = "1 ~ 3 ~ 5 ~ 7 ~ 9 ~ 11 ~ 0"
+const GNOMONS_DOWN  = "0 ~ 11 ~ 9 ~ 7 ~ 5 ~ 3 ~ 1" // exact retrograde of GNOMONS_UP
+const GNOMONS_TIGHT = "1 3 5 7 9 11 0" // same six numbers, rests removed
+const PHRASE_MONTH = `<[${GNOMONS_UP}] [${GNOMONS_DOWN}] [${GNOMONS_TIGHT}]>`
+
+stack(
+  // DAY -- the squares themselves (0,1,4,9,16,25), real leaps throughout
+  // (thirds up to a near four-octave reach on the peak), always anchored on
+  // the tonic at both ends. Carries the acid taste layer: the filter sweep
+  // period (5) is sqrt(25), the day's own square root.
+  n(PHRASE_DAY)
+    .scale("G:minor")
+    .sound("pulse")
+    .attack(.007).decay(.13).sustain(0).release(.06)
+    .distort(.12) // acid taste layer, kept light so the big reach stays legible
+    .lpf(sine.range(500, 2600).slow(5)) // sweep period = sqrt(25) = day's own square root
+    .gain(.3)
+    .pan(.62)
+    .room(1.2),
+
+  // MONTH -- the raw gnomons (1,3,5,7,9,11), the building blocks DAY's
+  // climb is made of, reaching today's month number directly. Deliberately
+  // left clean -- no automation -- so only DAY carries the moving filter.
+  n(PHRASE_MONTH)
+    .scale("G:minor")
+    .sound("square")
+    .attack(.035).decay(.28).sustain(.12).release(.55)
+    .gain(.26)
+    .pan(.4)
+    .room(2.3),
+
+  // DRONE -- tanpura convention, tonic/fifth, held for the full 25 cycles,
+  // no automation (the one moving parameter this week lives on DAY).
+  note("[g2,d2]/25")
+    .sound("sine")
+    .attack(1.3).release(2)
+    .gain(.22)
+    .pan(.5)
+    .room(3.1)
+)
