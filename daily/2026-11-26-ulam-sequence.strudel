@@ -1,0 +1,98 @@
+// ============================================================================
+// DAILY — 2026-11-26 (Thursday): Pure math sequence — the Ulam numbers
+// (OEIS A002858)
+// ============================================================================
+//
+// THE SEQUENCE: U(1)=1, U(2)=2. Each later U(n) is the smallest integer
+// greater than U(n-1) that is the sum of two DISTINCT earlier terms in
+// EXACTLY ONE way. Verified by hand, term by term, checking every pairwise
+// sum from the growing term set each step (not copied from a table):
+//   terms {1,2}: 3 = 1+2 only -> U3=3
+//   terms {1,2,3}: 4 = 1+3 only (2+2 isn't two distinct terms) -> U4=4
+//   terms {1,2,3,4}: 5 = 1+4 AND 2+3 (two ways, rejected);
+//                    6 = 2+4 only -> U5=6
+//   terms {..,6}: 7 = 1+6 AND 3+4 (rejected); 8 = 2+6 only -> U6=8
+//   terms {..,8}: 9=1+8&3+6(rej); 10=2+8&4+6(rej); 11=3+8 only -> U7=11
+//   terms {..,11}: 12=1+11&4+8(rej); 13=2+11 only -> U8=13
+//   terms {..,13}: 14=1+13&3+11&6+8(rej); 15=2+13&4+11(rej);
+//                  16=3+13 only -> U9=16
+//   terms {..,16}: 17=1+16&4+13&6+11(rej); 18=2+16 only -> U10=18
+// giving 1, 2, 3, 4, 6, 8, 11, 13, 16, 18 — matches OEIS A002858.
+//
+// THE MUSICAL IDEA: that generating rule IS a call-and-response — two
+// earlier terms (the unique addend pair) resolve onto their sum, every
+// single step. Each cycle plays exactly that: addend, addend, then the sum
+// they alone produce. No transform, no invented numbering — straight off
+// the hand-verified decompositions above, value -> scale degree (value-1):
+//   U3:  1+2=3   -> degrees 0,1 -> 2
+//   U4:  1+3=4   -> degrees 0,2 -> 3
+//   U5:  2+4=6   -> degrees 1,3 -> 5
+//   U6:  2+6=8   -> degrees 1,5 -> 7
+//   U7:  3+8=11  -> degrees 2,7 -> 10
+//   U8:  2+11=13 -> degrees 1,10 -> 12
+//   U9:  3+13=16 -> degrees 2,12 -> 15
+//   U10: 2+16=18 -> degrees 1,15 -> 17
+//
+// JAZZ-IMPROV / ARC DEVICE: the addend pair is always "low note, higher
+// note", and the sum always lands higher still — so each cycle is its own
+// tiny arc (depart, reach, resolve), while the eight cycles stack those
+// arcs into one long climb, because every Ulam number is strictly bigger
+// than the last. The piece's overall shape (register only ever rising) is
+// the sequence's own definition made audible, not a decorative crescendo.
+//
+// ARRANGEMENT: two voices in deliberate timbral contrast, because the
+// generating rule itself is a pair of roles (the unresolved addends vs.
+// the resolved sum) — MUSIC-KNOWLEDGE.md §2, contrast not blend:
+//   - $addends (square — full odd harmonics, "unresolved" edge): states
+//     the two addend notes, short and plucky, answered by silence on beat 3.
+//   - $sum (sine — pure, "resolved" tone): silent for beats 1-2, then
+//     states the sum note alone, longer release than the addends get. Its
+//     lowpass cutoff climbs across the 8 cycles (600Hz -> 2.6kHz) tracking
+//     the sequence's own unbounded growth directly, not as decoration.
+// Different arrangement from the last two Thursdays: 11-12 (Golomb) paired
+// sawtooth-value against sine-count as two simultaneous voices; 11-19
+// (Stern-Brocot) was one triangle voice whose own filter tracked tree
+// depth. This one is call-and-response between two voices that never
+// sound at the same instant — the addends and their sum are never
+// simultaneous, because the rule itself is sequential (you need the
+// addends first to get the sum).
+//
+// NO DRUM LAYER: a generating RULE checked one integer at a time has no
+// metric pulse to track — it's arithmetic, not a beat. The thing that
+// "needs an audible outlet" (each step's growth) already gets one directly,
+// in the sum voice's own climbing filter — a kick/hat grid under this would
+// just be decoration with nothing in the math to justify it (MUSIC-QC-
+// LOOP.md's percussion-as-default warning).
+//
+// TEMPO: setcpm(24), 1 beat/cycle (3-way subdivided) -> CYCLES: 8.
+// 8 * 60 / 24 = 20s.
+// ============================================================================
+
+setcpm(24)
+
+$addends: n("<[0 1 ~] [0 2 ~] [1 3 ~] [1 5 ~] [2 7 ~] [1 10 ~] [2 12 ~] [1 15 ~]>")
+  .scale("A:phrygian")
+  .sound("square")
+  .attack(.005)
+  .decay(.07)
+  .sustain(.05)
+  .release(.08)
+  .lpf(1500)
+  .lpq(5)
+  .delaytime(.1)
+  .delayfeedback("<.1 .12 .15 .18 .22 .26 .3 .35>")
+  .delay(.25)
+  .room(.25)
+  .gain(.4)
+
+$sum: n("<[~ ~ 2] [~ ~ 3] [~ ~ 5] [~ ~ 7] [~ ~ 10] [~ ~ 12] [~ ~ 15] [~ ~ 17]>")
+  .scale("A:phrygian")
+  .sound("sine")
+  .attack(.02)
+  .decay(.2)
+  .sustain(.35)
+  .release(.6)
+  .lpf("<600 850 1100 1400 1750 2100 2350 2600>")
+  .lpq(1.5)
+  .room(.5)
+  .gain(.5)
