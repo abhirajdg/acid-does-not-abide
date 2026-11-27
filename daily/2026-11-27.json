@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-27",
+  "weekday": "Friday",
+  "topic": "acid-freeform",
+  "topic_label": "HARMONIC MAJOR WOBBLE",
+  "pattern_file": "daily/2026-11-27-acid-harmonic-wobble.strudel",
+  "cycles": 12,
+  "target_duration_sec": 20,
+  "code_highlight_lines": [">`).scale(\"F3:harmonic:major\")", ".lpf(sine.range(140, 1000).fast(\"<4 2>\"))"]
+}

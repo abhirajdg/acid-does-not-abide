@@ -1,0 +1,165 @@
+// ============================================================================
+// DAILY — 2026-11-27 (Friday): Acid / psychedelia free jam — half-time wobble
+// ============================================================================
+//
+// Friday is taste-forward, not theory-first (CREATIVE-DIRECTION.md's 10 Sep
+// correction). Checked the last three Fridays before writing this one: 11-20
+// used A lydian dominant / a quintuplet "spiral arp" + Goa kick + mirrored
+// echo, tonic A. 11-13 used D hungarian minor / a hard-panned stereo duel,
+// tonic D. 11-06 used G bebop / a real 303 slide on one voice, tonic G. None
+// of them used a dubstep-family rhythm device, and the recent tonic run
+// (C,C,C,G,D,A) skipped F entirely — today changes both:
+//
+//   SCALE: F harmonic major (verified against tonaljs's own scale-type
+//   source this session, raw.githubusercontent.com/tonaljs/tonal,
+//   packages/scale-type/data.ts: "1P 2M 3M 4P 5P 6m 7M" = "harmonic major" —
+//   same discipline as Bhairav's "gypsy" check). A major scale with a
+//   flatted 6th: bright major 3rd, but the b6->maj7 step (Db->E) is an
+//   augmented second, the same exotic gap harmonic MINOR has, just
+//   relocated into a scale that otherwise reads as happy/major — a genuine
+//   light/dark collision none of the last several Fridays' scales had.
+//   Degrees: 0=F 1=G 2=A 3=Bb 4=C(P5, this file's pivot/anchor) 5=Db(b6, the
+//   aug-2nd's low end) 6=E(maj7, the aug-2nd's high end) 7=F'. 11=C' (the
+//   pivot an octave up, this file's widest leap target), 12=Db', 13=E'.
+//
+//   PRODUCTION — the new device is MUSIC-KNOWLEDGE.md §9's dubstep pairing,
+//   never tried on a Friday before (its one prior use, 2026-09-01, was on a
+//   Tuesday/Carnatic day): a wobble bass (a sine sub whose lowpass is swept
+//   by a FAST sine LFO, not the slow multi-cycle sweeps §4's acid convention
+//   uses) UNDER a kick/clap/hat grid that alternates every single cycle
+//   between four-on-the-floor and a half-time feel (kick on beats 1&3 of a
+//   16-step bar, hats doubling up underneath to fill the stretched-out low
+//   end) — §9's "the two are genuinely different rhythmic personalities at
+//   the same BPM... worth alternating within one piece." The wobble LFO's
+//   own rate is tied to that same alternation (`.fast("<4 2>")`): one sweep
+//   per beat under four-on-the-floor, one sweep per TWO beats under
+//   half-time, so the bass's own motion breathes with whichever feel is
+//   currently playing rather than running on an unrelated clock.
+//
+//   DRUMS — kick, clap, and hats all synthesised in code (MUSIC-KNOWLEDGE.md
+//   §16/§19: no RolandTR808/909 sample bank — those are stock one-shots that
+//   have gotten tracks fingerprint-matched). Kick: sine + pitch envelope +
+//   noise click, tuned to F1 (this track's tonic), alternating grids drive
+//   both the sidechain source and the wobble-rate sync described above.
+//   Clap only sounds in the half-time bars (on beat 3) — four-on-the-floor
+//   bars carry no clap at all, the techno convention. This is deliberate
+//   drum use, not autopilot (MUSIC-QC-LOOP.md's percussion check): acid/
+//   dubstep genuinely has a metric pulse, unlike the raga-exposition days
+//   that check exists for, and the kit's actual grid is itself the device
+//   being explored this week, not a default fill.
+//
+// LEAD PHRASES — 16 steps/cycle, rotating <A B C D> every cycle across 12
+// cycles (3 full rounds). Anchored throughout on the pivot (degree 4, the
+// 5th) the way a raga improvisation returns to its vadi — the structural
+// device for this file (MUSIC-QC-LOOP.md's jazz-improv checklist item):
+//   A (call — states tonic, leaps a 5th to the pivot, then the scale's own
+//     aug-2nd tension pair (b6->maj7), resolving back through the pivot to
+//     tonic).
+//   B (variation — SAME fixed pivot, but DIFFERENT neighbor tones (the 2nd
+//     and 3rd, not the aug-2nd pair) and a shifted starting degree, so the
+//     anchor reads as a real anchor rather than a coincidence of range).
+//   C (peak — opens with this file's widest leap, straight from D's resting
+//     tonic into the pivot an octave up (0 -> 11), restates A's shape an
+//     octave higher including the aug-2nd tension pair up top).
+//   D (release — tonic, long rest, pivot once, rest, tonic again: sparse,
+//     resolving, the tension/release arc that pairs with C).
+//
+// FX — ONE slow arc only (§10's "fewer independently-drifting knobs"): the
+// lead's distortion drifts upward across the whole clip (saw-driven one-way
+// ramp, not a cyclic sine), a slow psychedelic drift rather than a sudden
+// swell-and-snap (both already used on recent Fridays). lpf/lpq on the lead
+// stay fixed; lpq capped at 6, under MUSIC-QC-LOOP.md failure #5's ~8
+// whine ceiling.
+//
+// TEMPO: setcpm(36) with a kick*4-slot grid -> BPM = 36*4 = 144. The
+// four-on-the-floor bars read as straight 144 BPM psy-techno (MUSIC-
+// KNOWLEDGE.md §12: psy-techno runs 128-138+); the half-time bars, same
+// BPM, read as roughly half that (~72) by §9's own description of how
+// dubstep's half-time feel works at a techno tempo — genre-correct for
+// BOTH halves of the alternation, not a mismatch. CYCLES: 12.
+// 12*60/36 = 20s.
+// ============================================================================
+
+setcpm(36)
+let CYCLES = 12
+
+// drum grids — alternate every cycle: [four-on-the-floor, half-time].
+// Kick drives both the sidechain and the bass's own wobble-rate sync below.
+let kickGrid = `<
+  x ~ ~ ~ x ~ ~ ~ x ~ ~ ~ x ~ ~ ~
+  x ~ ~ ~ ~ ~ ~ ~ x ~ ~ ~ ~ ~ ~ ~
+>`
+let clapGrid = `<
+  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+  ~ ~ ~ ~ ~ ~ ~ ~ x ~ ~ ~ ~ ~ ~ ~
+>`
+let hatGrid = `<
+  ~ ~ x ~ ~ ~ x ~ ~ ~ x ~ ~ ~ x ~
+  x ~ x ~ x ~ x ~ x ~ x ~ x ~ x ~
+>`
+
+// kick — synthesised (MUSIC-KNOWLEDGE.md §19), not a sample bank: a sine
+// with a fast pitch drop plus a short noise click, tuned to F1, this
+// track's tonic. Drives the sidechain on orbit 2 (bass + lead).
+let kick = stack(
+  note("f1").s("sine").struct(kickGrid)
+    .penv(26).pdecay(.04)
+    .attack(.0008).decay(.2).sustain(0).postgain(3.4),
+  s("white").struct(kickGrid)
+    .hpf(1400).lpf(6000).attack(.0005).decay(.013).sustain(0).postgain(1.2),
+)
+  .duckorbit(2).duckattack(.03).duckdepth(.35)
+  .gain(.55)
+
+// clap — band-passed noise, half-time bars only (beat 3). Synthesised, not
+// a sample bank.
+let clap = s("white").struct(clapGrid)
+  .bpf(950).bpq(6)
+  .attack(.001).decay(.09).sustain(0).postgain(1.5)
+  .pan(.5).gain(.26)
+
+// hats — high-passed noise. Sparse offbeat 8ths under four-on-the-floor,
+// doubled up to 8th-note-dense under half-time (§9: "doubling up
+// underneath to keep the top end busy while the low end feels stretched
+// out").
+let hats = s("white").struct(hatGrid)
+  .hpf(7500).attack(.001).decay(.025).sustain(0).postgain(1)
+  .pan(.62).gain(.16)
+
+// wobble bass (§9) — a sine sub, mostly parked on the tonic (one visit to
+// the 5th under the peak phrase C). The filter LFO's rate is synced to the
+// SAME alternation as the drum grids above: one sweep per beat under
+// four-on-the-floor, one sweep per two beats under half-time, so the bass's
+// motion breathes with whichever feel is currently playing.
+let bass = note(`<f1 f1 c1 f1>`)
+  .s("sine")
+  .attack(.02).decay(.1).sustain(.9).release(.15)
+  .lpf(sine.range(140, 1000).fast("<4 2>"))
+  .lpq(4)
+  .pan(.5)
+  .orbit(2)
+  .gain(.4)
+
+// the lead — anchored on the pivot (degree 4, the 5th) across all four
+// phrases; see header for the call/variation/peak/release shape and the
+// aug-2nd tension device. lpf/lpq fixed; distortion is this file's one slow
+// arc, drifting upward across the whole clip rather than swelling-and-
+// snapping (both already used on recent Fridays).
+let melody = n(`<
+  [0 ~ 4 ~ 5 6 ~ 4 ~ ~ 0 ~ ~ ~ ~ ~]
+  [1 ~ 4 ~ 2 3 ~ 4 ~ ~ 1 ~ ~ ~ ~ ~]
+  [11 ~ 7 ~ 12 13 ~ 11 ~ 7 ~ ~ ~ ~ ~ ~]
+  [0 ~ ~ ~ ~ ~ ~ ~ 4 ~ ~ ~ ~ ~ 0 ~]
+>`).scale("F3:harmonic:major")
+
+let lead = melody
+  .sound("saw")
+  .attack(.005).decay(.1).sustain(.06).release(.05)
+  .lpf(1800).lpq(6)
+  .distort(saw.range(.08, .3).slow(CYCLES))
+  .delay(.25).delaytime(.1875).delayfeedback(.35)
+  .pan(.4)
+  .gain(.32)
+  .orbit(2)
+
+stack(kick, clap, hats, bass, lead)
