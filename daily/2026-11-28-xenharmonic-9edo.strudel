@@ -1,0 +1,140 @@
+// ============================================================================
+// DAILY — 2026-11-28 (Saturday): Xenharmonic tuning experiment — 9EDO
+// ============================================================================
+//
+// THE TUNING: 9 equal divisions of the octave, step = 1200/9 = 133.33c.
+// Checked against low-limit just ratios the same way every prior Saturday's
+// edo was graded (17/19/31/15/24/22/13/11/16/hexany/23/Bohlen-Pierce/41/5edo,
+// 22 Aug-21 Nov):
+//   degree 4 (533.33c) vs 4/3 (498.04c, 4th)  -> off by +35.29c (a "wolf" 4th)
+//   degree 5 (666.67c) vs 3/2 (701.96c, 5th)  -> off by -35.29c (mirror wolf 5th)
+//   degree 3 (400.00c) vs 5/4 (386.31c, maj 3rd) -> off by +13.69c (sharp 3rd)
+//   degree 6 (800.00c) vs 8/5 (813.69c, min 6th) -> off by -13.69c (mirror)
+//   degree 7 (933.33c) vs 12/7 (933.13c, septimal supermajor 6th) -> off by
+//     +0.2 CENTS — the tightest fit any edo has landed on this slot yet
+//     (5edo's best, last week, was +/-8.83c). A genuinely rare, strange color
+//     tone: almost nowhere in 12edo does anything sit this close to 12/7.
+// No usable 4th or 5th (same wolf-pair shape 5edo had, mirrored at 400/800c
+// instead of 240/960c) — so again no triad to build a consonant pad under,
+// same conclusion as 5edo, for a different structural reason: 9 = 3x3, so
+// degree 3 stacked three times (0, 3, 6, 9=octave) divides the octave into
+// three EQUAL sharp-major-thirds — a true symmetric/augmented division, not
+// an irregular pentatonic. There is no single tonic the ear settles on: 0, 3,
+// and 6 are structurally identical, each one third of the way around. That
+// symmetry, not the (already-tried) idea of "coarse edo = world-music
+// borrow," is what's actually distinctive about THIS edo, so the arrangement
+// below is built around tonal vertigo between three equal "false homes"
+// rather than reaching for 5edo's gamelan/kotekan answer again.
+//
+// ARRANGEMENT: a slow drone migrates 0 -> 0 -> 3 -> 3 -> 6 -> 6 -> 3 -> 0 ->
+// 0 -> 0 across the 10 cycles — physically landing on each of the three
+// equal "corners" in turn, then circling back, so the ear hears the
+// symmetry structurally instead of just reading it as a number. A single
+// lead voice is built from real phrase-development devices anchored on
+// those same three corners (call, response, LITERAL retrograde, a peak
+// using the 12/7 color tone, then the whole call/response/retrograde block
+// transposed up to the next corner for real motif variation, then a
+// release phrase descending back through all three corners to the tonic).
+// A third, near-silent voice — a single high "shift bell" (degree 16 = one
+// octave + the 12/7 color tone) — sounds only at the four moments the drone
+// actually changes corner; it is not a recurring pulse, it exists only to
+// mark those four specific structural events, so it does not read as a
+// percussion layer by the MUSIC-QC-LOOP.md autopilot-percussion check.
+//
+// NO DRUM KIT (checked deliberately, not by default): this is a slow tonal-
+// vertigo piece about a symmetric division of the octave, not a dance
+// pattern — there's no genre convention here calling for a metric pulse,
+// and the drone's own corner-to-corner migration plus the shift-bell above
+// already give the piece its sense of motion. Two melodic layers (drone,
+// lead) is deliberately fewer than usual (MUSIC-KNOWLEDGE.md §10 — "fewer
+// layers, each with one job" over more independently-modulated parameters),
+// with the shift bell as a structural marker, not a third "job."
+//
+// TIMBRE (MUSIC-KNOWLEDGE.md §2.5 — synth basics, no gm_* samples): drone on
+// `sine` (purest waveform, tanpura-style stillness, §1's pure/soft row) so
+// it reads as a different thing from the lead on `sawtooth` (harmonically
+// denser, §1's sharp/abrasive row) — deliberate timbre CONTRAST (§2) so the
+// ear always knows which voice is which even though both share the same
+// three pitches at different points. The shift bell is a plain `sine` an
+// octave+ above either, so it reads as a bell partial, not a third melody.
+//
+// AUTOMATION: one slow lpf sweep over the lead across the full 10 cycles
+// (not a fast acid wobble, not a Goa-style sweep — a single slow creeping
+// drift matches this piece's mood) plus a slow pan drift, both full-length
+// so they're part of the piece's one arc rather than a separate layer.
+//
+// MELODY (absolute 9edo scale-step indices; octave = +9 steps):
+//   demo (bar 1):      0 ~ 1 ~ 2 ~ 3 ~        (climb to the first corner)
+//   A, call (bar 2):   0 ~ 3 ~ 7 ~ 3 0         (corner, leap to the color
+//                                               tone, step back, home)
+//   B, response (3):   7 ~ 4 ~ 2 ~ 6 ~         (opens on the color tone,
+//                                               answers through the wolf
+//                                               4th, closes on the SECOND
+//                                               corner, not home — the
+//                                               vertigo, stated directly)
+//   C, retrograde of A, exact reverse (bar 4):  0 3 ~ 7 ~ 3 ~ 0
+//   D, peak, +1 octave (bar 5):                 9 ~ 12 ~ 16 ~ 12 9
+//   A' = A transposed +6, i.e. to the THIRD corner (bar 6): 6 ~ 9 ~ 13 ~ 9 6
+//   B' = B transposed +6 (bar 7):                13 ~ 10 ~ 8 ~ 12 ~
+//   C' = retrograde of A' (bar 8):               6 9 ~ 13 ~ 9 ~ 6
+//   D', release — descend through all three corners back to tonic (bar 9):
+//                                                 16 12 ~ 9 ~ 6 ~ 0
+//   resolve (bar 10): 0 ~ ~ ~ ~ ~ ~ ~            (lead and drone both land
+//                                               on the SAME corner for the
+//                                               first time all piece)
+// The three corners (0, 3, 6) are this tuning's structural anchors — not a
+// vadi/samvadi pair (there's no single dominant when all three are equal),
+// but functioning the same way: everything leaps from and lands on them.
+//
+// CYCLES: 10. setcpm(30) -> 10*60/30 = 20s.
+// ============================================================================
+
+setcpm(30)
+let CYCLES = 10
+
+// DRONE — migrates through the three equal corners of the octave (0, 3, 6)
+// and back, so the symmetric division is heard as motion, not just stated.
+// sine: purest waveform available, tanpura-style stillness under the lead.
+let drone = i("<0 0 3 3 6 6 3 0 0 0>")
+  .xen("9edo")
+  .sound("sine")
+  .attack(.6).decay(.4).sustain(.8).release(1.2)
+  .room(.5)
+  .gain(.24)
+  .pan(.5)
+
+// LEAD — the phrase-development voice (see MELODY above). sawtooth:
+// harmonically dense, deliberately contrasted against the drone's sine.
+let lead = i(`<
+  [0 ~ 1 ~ 2 ~ 3 ~]
+  [0 ~ 3 ~ 7 ~ 3 0]
+  [7 ~ 4 ~ 2 ~ 6 ~]
+  [0 3 ~ 7 ~ 3 ~ 0]
+  [9 ~ 12 ~ 16 ~ 12 9]
+  [6 ~ 9 ~ 13 ~ 9 6]
+  [13 ~ 10 ~ 8 ~ 12 ~]
+  [6 9 ~ 13 ~ 9 ~ 6]
+  [16 12 ~ 9 ~ 6 ~ 0]
+  [0 ~ ~ ~ ~ ~ ~ ~]
+>`).xen("9edo")
+  .sound("sawtooth")
+  .attack(.04).decay(.4).sustain(.35).release(.7)
+  .lpf(sine.range(400, 2000).slow(CYCLES))
+  .lpq(3)
+  .distort(.12)
+  .room(.4)
+  .pan(sine.range(.35, .65).slow(CYCLES))
+  .gain(.3)
+
+// SHIFT BELL — sounds only at the four moments the drone actually changes
+// corner (bars 3, 5, 7, 8), to mark that structural event, not a pulse.
+// degree 16 = one octave + the 12/7 color tone: a bright, bell-like partial.
+let shiftBell = i("<~ ~ 16 ~ 16 ~ 16 16 ~ ~>")
+  .xen("9edo")
+  .sound("sine")
+  .attack(.002).decay(.9).sustain(0).release(.6)
+  .room(.6)
+  .gain(.16)
+  .pan(.5)
+
+stack(drone, lead, shiftBell)

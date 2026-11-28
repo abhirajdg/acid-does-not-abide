@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-28",
+  "weekday": "Saturday",
+  "topic": "xenharmonic",
+  "topic_label": "9EDO SYMMETRIC THIRDS",
+  "pattern_file": "daily/2026-11-28-xenharmonic-9edo.strudel",
+  "cycles": 10,
+  "target_duration_sec": 20,
+  "code_highlight_lines": ["let drone = i(\"<0 0 3 3 6 6 3 0 0 0>\")", "[0 ~ 3 ~ 7 ~ 3 0]"]
+}
